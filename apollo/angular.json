@@ -94,6 +94,23 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "version": 2
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "apollo:build:production",
+              "serveTarget": "apollo:serve:production"
+            },
+            "development": {
+              "buildTarget": "apollo:build:development",
+              "serveTarget": "apollo:serve:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }

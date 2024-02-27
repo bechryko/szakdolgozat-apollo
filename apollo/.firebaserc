@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "szakdolgozat-apollo": {
+      "hosting": {
+        "apollo": [
+          "szakdolgozat-apollo"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "szakdolgozat-apollo"
+  }
+}
