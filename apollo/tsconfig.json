@@ -23,7 +23,9 @@
       "ES2022",
       "dom"
     ],
-    "paths": {}
+    "paths": {
+      "@apollo-shared/*": ["./src/app/shared/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

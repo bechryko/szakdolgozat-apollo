@@ -1,0 +1,22 @@
+@use '../../../../styles/colors';
+
+$header-height: 6rem;
+
+.header-wrapper {
+   background-color: colors.$primary-main;
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+   height: $header-height;
+}
+
+nav {
+   display: flex;
+   width: 40%;
+   
+   button {
+      flex: 1;
+      height: $header-height;
+      font-size: 1.5rem;
+   }
+}

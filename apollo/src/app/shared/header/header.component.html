@@ -1,0 +1,10 @@
+<div class="header-wrapper">
+   <h1>Apollo</h1>
+   <nav>
+      @for(menuItemKey of menuItemKeys; track $index) {
+         <button mat-button 
+            (click)="navigateTo(menuItemKey)">{{ ('NAVIGATION.' + menuItemKey) | transloco }}</button>
+      }
+   </nav>
+   <button mat-fab>user</button>
+</div>
