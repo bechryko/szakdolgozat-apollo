@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@apollo-shared/header';
-import { TranslocoService } from '@ngneat/transloco';
+import { LanguageService } from '@apollo-shared/services';
 
 @Component({
    selector: 'apo-root',
@@ -18,8 +18,8 @@ import { TranslocoService } from '@ngneat/transloco';
 })
 export class AppComponent {
    constructor(
-      private readonly translocoService: TranslocoService
+      private readonly languageService: LanguageService
    ) {
-      this.translocoService.setActiveLang('en');
+      this.languageService.setInitialLanguage();
    }
 }
