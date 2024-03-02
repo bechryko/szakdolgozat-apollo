@@ -3,6 +3,7 @@ import { MenuEffects, menuFeature } from '@apollo-menu/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
 import { MenuComponent } from './menu/menu.component';
+import { TimetableComponent } from './timetable/timetable.component';
 
 export enum RouteUrls {
    MENU = 'menu',
@@ -19,6 +20,10 @@ export const routes: Routes = [
          provideState(menuFeature),
          provideEffects(MenuEffects)
       ]
+   },
+   {
+      path: RouteUrls.TIMETABLE,
+      component: TimetableComponent
    },
    {
       path: RouteUrls.MENU,
