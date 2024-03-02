@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
+import { MenuComponent } from '@apollo-menu/menu.component';
 import { MenuEffects, menuFeature } from '@apollo-menu/store';
+import { TimetableComponent } from '@apollo-timetable/timetable.component';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
-import { MenuComponent } from './menu/menu.component';
-import { TimetableComponent } from './timetable/timetable.component';
 
 export enum RouteUrls {
    MENU = 'menu',
