@@ -1,0 +1,14 @@
+@use '../../../styles/colors';
+
+.sidebar-container {
+   background-color: colors.$primary-lighter;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   .time {
+      padding: 1rem;
+      font-size: 2rem;
+      text-align: center;
+   }
+}

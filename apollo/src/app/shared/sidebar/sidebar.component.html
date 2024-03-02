@@ -1,0 +1,6 @@
+<div class="sidebar-container">
+   <div class="time" *ngIf="(currentTime$ | async) as currentTime">
+      <p>{{ currentTime[0] }}</p>
+      <p>{{ currentTime[1] }}</p>
+   </div>
+</div>

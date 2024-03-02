@@ -1,0 +1,12 @@
+.content {
+   display: flex;
+   height: 100%;
+}
+
+apo-sidebar {
+   flex: 1;
+}
+
+main {
+   flex: 4;
+}

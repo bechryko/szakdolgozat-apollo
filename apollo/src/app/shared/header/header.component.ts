@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { TranslocoPipe } from '@ngneat/transloco';
-import { RouteUrls } from '../../../app.routes';
+import { RouteUrls } from '../../app.routes';
 
 @Component({
    selector: 'apo-header',

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@apollo-shared/header';
 import { LanguageService } from '@apollo-shared/services';
+import { SidebarComponent } from '@apollo-shared/sidebar';
 
 @Component({
    selector: 'apo-root',
@@ -10,7 +11,8 @@ import { LanguageService } from '@apollo-shared/services';
    imports: [
       CommonModule,
       RouterOutlet,
-      HeaderComponent
+      HeaderComponent,
+      SidebarComponent
    ],
    templateUrl: './app.component.html',
    styleUrls: ['./app.component.scss'],
