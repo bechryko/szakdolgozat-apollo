@@ -1,0 +1,28 @@
+<div class="timetable-settings-dialog-container">
+   <h2>{{ "TIMETABLE.SETTINGS_DIALOG.TITLE" | transloco }}</h2>
+   @if(data.selectedSemester) {
+      <mat-tab-group>
+         <mat-tab [label]="'TIMETABLE.SETTINGS_DIALOG.SEMESTER_SETTINGS.LABEL' | transloco">
+            <div class="settings">
+               <mat-form-field>
+                  <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_SETTINGS.NAME" | transloco }}</mat-label>
+                  <input matInput [value]="data.selectedSemester.name">
+               </mat-form-field>
+            </div>
+         </mat-tab>
+      </mat-tab-group>
+      <button mat-raised-button 
+         color="accent"
+         (click)="save()">{{ "TIMETABLE.SETTINGS_DIALOG.CLOSE" | transloco }}</button>
+   } @else {
+      <p>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_SELECT_ALERT" | transloco }}</p>
+      <mat-form-field>
+         <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_SELECT_LABEL" | transloco }}</mat-label>
+         <mat-select [(value)]="data.selectedSemester">
+            @for (semester of data.semesters; track semester.name) {
+               <mat-option [value]="semester">{{ semester.name }}</mat-option>
+            }
+         </mat-select>
+      </mat-form-field>
+   }
+</div>

@@ -1,0 +1,14 @@
+@use '../../../styles/colors';
+
+.timetable-settings-dialog-container {
+   width: 70vw;
+   height: 70vh;
+   background-color: colors.$primary-background;
+   padding: 2.5rem;
+}
+
+.settings {
+   display: flex;
+   flex-direction: column;
+   padding: 1.5rem;
+}

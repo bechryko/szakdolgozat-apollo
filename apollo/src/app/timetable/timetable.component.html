@@ -1,1 +1,13 @@
-<div class="timetable"></div>
+@if(selectedSemester()) {
+   <div class="timetable-container">
+      <div class="semester-name">{{ selectedSemester()!.name }}</div>
+      <div class="day-headers"></div>
+      <div class="hour-headers"></div>
+      <div class="timetable"></div>
+   </div>
+} @else {
+   <div>{{ "TIMETABLE.NO_SEMESTER" | transloco }}</div>
+}
+<button mat-raised-button class="settings-button"
+   color="accent" 
+   (click)="openTimetableSettings()">{{ "TIMETABLE.SETTINGS.BUTTON" | transloco }}</button>
