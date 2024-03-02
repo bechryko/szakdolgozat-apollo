@@ -24,7 +24,8 @@
       "dom"
     ],
     "paths": {
-      "@apollo-shared/*": ["./src/app/shared/*"]
+      "@apollo-shared/*": ["./src/app/shared/*"],
+      "@apollo-menu/*": ["./src/app/menu/*"],
     }
   },
   "angularCompilerOptions": {

@@ -1,0 +1,14 @@
+<div class="menu-cards">
+   @for(card of cards$ | async; track $index) {
+      <mat-card>
+         <mat-card-header>{{ card.title | multiLanguage }}</mat-card-header>
+         <mat-card-content>{{ card.description | multiLanguage }}</mat-card-content>
+         <img mat-card-image [src]="card.imageUrl">
+         @if(card.button) {
+            <mat-card-actions>
+               <a [href]="card.button.href">{{ card.button.text | multiLanguage }}</a>
+            </mat-card-actions>
+         }
+      </mat-card>
+   }
+</div>
