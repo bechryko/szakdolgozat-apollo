@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MultiLanguagePipe } from '@apollo-shared/pipes';
-import { Observable, of } from 'rxjs';
+import { concat } from 'lodash';
+import { Observable, combineLatest, map } from 'rxjs';
 import { MenuCard } from './models';
+import { MenuCardsService } from './services';
 
 @Component({
    selector: 'apo-menu',
@@ -20,7 +22,14 @@ import { MenuCard } from './models';
 export class MenuComponent {
    public readonly cards$: Observable<MenuCard[]>;
 
-   constructor() {
-      this.cards$ = of([]);
+   constructor(
+      private readonly menuCardsService: MenuCardsService
+   ) {
+      this.cards$ = combineLatest([
+         this.menuCardsService.fixedCards$,
+         this.menuCardsService.shuffledCards$
+      ]).pipe(
+         map(([fixedCards, shuffledCards]) => concat(fixedCards, shuffledCards))
+      );
    }
 }

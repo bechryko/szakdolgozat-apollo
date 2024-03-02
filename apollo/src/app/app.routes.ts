@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
+import { MenuEffects, menuFeature } from '@apollo-menu/store';
+import { provideEffects } from '@ngrx/effects';
+import { provideState } from '@ngrx/store';
+import { MenuComponent } from './menu/menu.component';
 
 export enum RouteUrls {
+   MENU = 'menu',
    AVERAGES = 'averages',
    MAJOR_COMPLETION = 'major-completion',
    TIMETABLE = 'timetable'
@@ -9,7 +14,15 @@ export enum RouteUrls {
 export const routes: Routes = [
    {
       path: '',
-      redirectTo: RouteUrls.AVERAGES,
+      component: MenuComponent,
+      providers: [
+         provideState(menuFeature),
+         provideEffects(MenuEffects)
+      ]
+   },
+   {
+      path: RouteUrls.MENU,
+      redirectTo: '',
       pathMatch: 'full'
    },
    {

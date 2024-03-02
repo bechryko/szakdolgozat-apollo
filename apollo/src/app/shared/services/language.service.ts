@@ -5,7 +5,7 @@ import { TranslocoService } from '@ngneat/transloco';
    providedIn: 'root'
 })
 export class LanguageService {
-   private readonly defaultLanguage = 'hu';
+   private readonly defaultLanguage = 'en';
    private activeLanguage!: string;
 
    constructor(
