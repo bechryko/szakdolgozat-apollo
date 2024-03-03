@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Semester } from '../models';
+import { ActivityCategory, Semester } from '../models';
 
 @Injectable({
    providedIn: 'root'
@@ -14,18 +14,22 @@ export class TimetableService {
             name: 'Fall 2020',
             activities: [
                {
-                  name: 'Lecture',
+                  name: 'Lecture1',
                   courseCode: 'CSC207',
                   location: 'Online',
                   time: {
                      day: 1,
-                     startingHour: 10,
+                     startingHour: 4,
                      startingMinute: 0,
                      length: 90
-                  }
+                  },
+                  category: {
+                     color: '#0000ff',
+                     temporary: true
+                  } as ActivityCategory
                },
                {
-                  name: 'Tutorial',
+                  name: 'Tutorial1',
                   courseCode: 'CSC207',
                   location: 'Online',
                   time: {
@@ -36,7 +40,7 @@ export class TimetableService {
                   }
                },
                {
-                  name: 'Lecture',
+                  name: 'Lecture2',
                   courseCode: 'CSC373',
                   location: 'Online',
                   time: {
@@ -47,7 +51,7 @@ export class TimetableService {
                   }
                },
                {
-                  name: 'Tutorial',
+                  name: 'Tutorial2',
                   courseCode: 'CSC373',
                   location: 'Online',
                   time: {

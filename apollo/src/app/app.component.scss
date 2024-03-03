@@ -1,6 +1,8 @@
+@use '../styles/variables' as *;
+
 .content {
    display: flex;
-   height: 100%;
+   height: calc(100dvh - $header-height);
 }
 
 apo-sidebar {

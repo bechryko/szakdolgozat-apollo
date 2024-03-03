@@ -1,6 +1,8 @@
 //@index('./*', (f, _) => `export { ${_.pascalCase(f.name)} } from '${f.path}';`)
-export { Activity } from './activity';
-export { ActivityCategory } from './activity-category';
-export { ActivityTime } from './activity-time';
-export { Semester } from './semester';
+export { ActivityCategory } from './activity-category.d';
+export { ActivityTime } from './activity-time.d';
+export { Activity } from './activity.d';
+export { Interval } from './interval.d';
+export { Semester } from './semester.d';
+export { TimetableSizeData } from './timetable-size-data.d';
 //@endindex

@@ -1,13 +1,29 @@
 @if(selectedSemester()) {
    <div class="timetable-container">
       <div class="semester-name">{{ selectedSemester()!.name }}</div>
-      <div class="day-headers"></div>
-      <div class="hour-headers"></div>
-      <div class="timetable"></div>
+      <div class="day-headers"
+         [ngStyle]="additionalSelectedSemesterData.dayHeadersStyle()">
+         @for(day of displayable.days(); track day) {
+            <h3>{{ ("TIMETABLE.WEEK_DAY_" + day) | transloco }}</h3>
+         }
+      </div>
+      <div class="hour-headers"
+         [ngStyle]="additionalSelectedSemesterData.hourHeadersStyle()">
+         @for(hour of displayable.hours(); track hour) {
+            <h3>{{ hour }}</h3>
+         }
+      </div>
+      <div class="timetable" #timetable>
+         @if(timetableAreaSize$) {
+            @for(activity of selectedSemester()!.activities; track $index) {
+               <apo-activity [activityData]="activity" [ngStyle]="(timetableAreaSize$ | async)! | activityStyle: activity"></apo-activity>
+            }
+         }
+      </div>
    </div>
 } @else {
-   <div>{{ "TIMETABLE.NO_SEMESTER" | transloco }}</div>
+   <p class="error">{{ "TIMETABLE.NO_SEMESTER" | transloco }}</p>
+   <button mat-raised-button class="settings-button"
+      color="accent"
+      (click)="openTimetableSettings()">{{ "TIMETABLE.SETTINGS.BUTTON" | transloco }}</button>
 }
-<button mat-raised-button class="settings-button"
-   color="accent" 
-   (click)="openTimetableSettings()">{{ "TIMETABLE.SETTINGS.BUTTON" | transloco }}</button>

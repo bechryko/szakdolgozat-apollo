@@ -1,6 +1,5 @@
 @use '../../../styles/colors';
-
-$header-height: 6rem;
+@use '../../../styles/variables' as *;
 
 .header-container {
    background-color: colors.$primary-main;
