@@ -42,14 +42,16 @@ export class TimetableComponent implements AfterViewInit {
       hours: Signal<number[]>
    };
    @ViewChild('timetable') private readonly timetableContainer!: ElementRef<HTMLDivElement>;
-   public timetableAreaSize$?: Observable<TimetableSizeData>;
+   public readonly timetableAreaSize$: WritableSignal<Observable<TimetableSizeData> | undefined>;
 
    constructor(
       private readonly timetableService: TimetableService,
       private readonly dialog: MatDialog
    ) {
-      this.semesters = toSignal(this.timetableService.semesters$);
-      this.selectedSemesterName = signal(undefined);
+      this.semesters = toSignal(this.timetableService.semesters$.pipe(
+         map(semesters => semesters?.map(sem => TimetableSplitUtils.splitTimetable(sem)))
+      ));
+      this.selectedSemesterName = signal("Fall 2020");
       this.selectedSemester = computed(() => {
          if (!this.semesters()?.length || !this.selectedSemesterName()) {
             return undefined;
@@ -78,20 +80,26 @@ export class TimetableComponent implements AfterViewInit {
             (_, i) => i + this.additionalSelectedSemesterData.displayableHours().start
          ))
       };
+
+      this.timetableAreaSize$ = signal(undefined);
+
+      effect(() => console.log(this.selectedSemester()));
    }
 
    public ngAfterViewInit(): void {
-      this.timetableAreaSize$ = fromEvent(globalThis, 'resize').pipe(
-         startWith(null),
-         map(_ => {
-            const container = this.timetableContainer.nativeElement;
-            return {
-               dayWidth: container.offsetWidth / this.additionalSelectedSemesterData.displayableDays().count,
-               hourHeight: container.offsetHeight / this.additionalSelectedSemesterData.displayableHours().count,
-               startingDay: this.additionalSelectedSemesterData.displayableDays().start,
-               startingHour: this.additionalSelectedSemesterData.displayableHours().start
-            };
-         })
+      this.timetableAreaSize$.set(
+         fromEvent(globalThis, 'resize').pipe(
+            startWith(null),
+            map(_ => {
+               const container = this.timetableContainer.nativeElement;
+               return {
+                  dayWidth: container.offsetWidth / this.additionalSelectedSemesterData.displayableDays().count,
+                  hourHeight: container.offsetHeight / this.additionalSelectedSemesterData.displayableHours().count,
+                  startingDay: this.additionalSelectedSemesterData.displayableDays().start,
+                  startingHour: this.additionalSelectedSemesterData.displayableHours().start
+               };
+            })
+         )
       );
    }
 
@@ -105,6 +113,7 @@ export class TimetableComponent implements AfterViewInit {
          if (!data) {
             return;
          }
+         console.log(data);
          this.selectedSemesterName.set(data.selectedSemester?.name);
          // TODO: dispatch semester update action
       });

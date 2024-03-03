@@ -8,5 +8,6 @@ export interface Activity {
    location?: string;
    people?: string;
    time: ActivityTime;
-   category?: ActivityCategory; 
+   category?: ActivityCategory;
+   locationInterval?: ActivityLocationInterval;
 }

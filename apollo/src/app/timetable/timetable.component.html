@@ -14,9 +14,9 @@
          }
       </div>
       <div class="timetable" #timetable>
-         @if(timetableAreaSize$) {
+         @if(timetableAreaSize$()) {
             @for(activity of selectedSemester()!.activities; track $index) {
-               <apo-activity [activityData]="activity" [ngStyle]="(timetableAreaSize$ | async)! | activityStyle: activity"></apo-activity>
+               <apo-activity [activityData]="activity" [ngStyle]="(timetableAreaSize$() | async)! | activityStyle: activity"></apo-activity>
             }
          }
       </div>

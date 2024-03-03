@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { multicast } from '@apollo-shared/operators';
 import { Observable, of } from 'rxjs';
 import { ActivityCategory, Semester } from '../models';
 
@@ -18,7 +19,7 @@ export class TimetableService {
                   courseCode: 'CSC207',
                   location: 'Online',
                   time: {
-                     day: 1,
+                     day: 2,
                      startingHour: 4,
                      startingMinute: 0,
                      length: 90
@@ -27,6 +28,15 @@ export class TimetableService {
                      color: '#0000ff',
                      temporary: true
                   } as ActivityCategory
+               },
+               {
+                  name: 'asd',
+                  time: {
+                     day: 2,
+                     startingHour: 5,
+                     startingMinute: 0,
+                     length: 90
+                  }
                },
                {
                   name: 'Tutorial1',
@@ -63,6 +73,8 @@ export class TimetableService {
                }
             ]
          }
-      ]);
+      ]).pipe(
+         multicast()
+      );
    }
 }
