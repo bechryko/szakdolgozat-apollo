@@ -1,0 +1,16 @@
+<div class="general-dialog-container">
+   <h2>{{ data.title | transloco }}</h2>
+   <p>{{ data.content | transloco }}</p>
+   <div class="actions">
+      @if(data.accept) {
+         <button mat-raised-button
+            color="primary"
+            (click)="close(true)">{{ data.accept | transloco }}</button>
+      }
+      @if(data.cancel) {
+         <button mat-raised-button
+            color="accent"
+            (click)="close(false)">{{ data.cancel | transloco }}</button>
+      }
+   </div>
+</div>

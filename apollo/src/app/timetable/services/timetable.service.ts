@@ -1,80 +1,37 @@
 import { Injectable } from '@angular/core';
 import { multicast } from '@apollo-shared/operators';
-import { Observable, of } from 'rxjs';
-import { ActivityCategory, Semester } from '../models';
+import { timetableActions, timetableFeature } from '@apollo-timetable/store';
+import { Store } from '@ngrx/store';
+import { Observable, distinctUntilChanged, tap } from 'rxjs';
+import { Semester } from '../models';
 
 @Injectable({
    providedIn: 'root'
 })
 export class TimetableService {
    public readonly semesters$: Observable<Semester[]>;
+   public readonly selectedSemesterId$: Observable<string | undefined>;
 
-   constructor() {
-      this.semesters$ = of([
-         {
-            name: 'Fall 2020',
-            activities: [
-               {
-                  name: 'Lecture1',
-                  courseCode: 'CSC207',
-                  location: 'Online',
-                  time: {
-                     day: 2,
-                     startingHour: 4,
-                     startingMinute: 0,
-                     length: 90
-                  },
-                  category: {
-                     color: '#0000ff',
-                     temporary: true
-                  } as ActivityCategory
-               },
-               {
-                  name: 'asd',
-                  time: {
-                     day: 2,
-                     startingHour: 5,
-                     startingMinute: 0,
-                     length: 90
-                  }
-               },
-               {
-                  name: 'Tutorial1',
-                  courseCode: 'CSC207',
-                  location: 'Online',
-                  time: {
-                     day: 3,
-                     startingHour: 11,
-                     startingMinute: 0,
-                     length: 45
-                  }
-               },
-               {
-                  name: 'Lecture2',
-                  courseCode: 'CSC373',
-                  location: 'Online',
-                  time: {
-                     day: 2,
-                     startingHour: 10,
-                     startingMinute: 30,
-                     length: 90
-                  }
-               },
-               {
-                  name: 'Tutorial2',
-                  courseCode: 'CSC373',
-                  location: 'Online',
-                  time: {
-                     day: 4,
-                     startingHour: 16,
-                     startingMinute: 0,
-                     length: 180
-                  }
-               }
-            ]
-         }
-      ]).pipe(
-         multicast()
+   constructor(
+      private readonly store: Store
+   ) {
+      this.semesters$ = this.store.select(timetableFeature.selectSemesters).pipe(
+         tap(semesters => {
+            if(!semesters.length) { // TODO: handle if database is empty
+               this.store.dispatch(timetableActions.loadTimetable());
+            }
+         }),
+         multicast(),
+         distinctUntilChanged()
       );
+
+      this.selectedSemesterId$ = this.store.select(timetableFeature.selectSelectedSemesterId).pipe(
+         multicast(),
+         distinctUntilChanged()
+      );
+   }
+
+   public saveTimetableData(semesters: Semester[], selectedSemesterId?: string): void {
+      this.store.dispatch(timetableActions.updateTimetable({ newState: { semesters, selectedSemesterId } }));
    }
 }

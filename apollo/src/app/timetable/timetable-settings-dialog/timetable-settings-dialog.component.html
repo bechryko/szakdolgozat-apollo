@@ -1,14 +1,31 @@
 <div class="timetable-settings-dialog-container">
    <h2>{{ "TIMETABLE.SETTINGS_DIALOG.TITLE" | transloco }}</h2>
-   @if(data.selectedSemester) {
-      <mat-tab-group>
+   @if(selectedSemester()) {
+      <mat-tab-group class="settings-tabs">
          <mat-tab [label]="'TIMETABLE.SETTINGS_DIALOG.SEMESTER_SETTINGS.LABEL' | transloco">
-            <div class="settings">
+            <form class="settings" [formGroup]="semesterForm()">
                <mat-form-field>
                   <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_SETTINGS.NAME" | transloco }}</mat-label>
-                  <input matInput [value]="data.selectedSemester.name">
+                  <input matInput formControlName="name">
                </mat-form-field>
-            </div>
+            </form>
+            <p>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_CHANGE_ALERT" | transloco }}</p>
+            <mat-form-field>
+               <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_CHANGE_LABEL" | transloco }}</mat-label>
+               <mat-select [value]="selectedSemesterId()" (valueChange)="selectSemester($event)">
+                  @for (semester of data.semesters; track semester.name) {
+                     <mat-option [value]="semester.id">{{ semester.name }}</mat-option>
+                  }
+               </mat-select>
+            </mat-form-field>
+            <p>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_ADD_ALERT" | transloco }}</p>
+            <button mat-raised-button
+               color="primary"
+               (click)="addSemester()">{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_ADD_LABEL" | transloco }}</button>
+            <p>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_DELETE_ALERT" | transloco }}</p>
+            <button mat-raised-button
+               color="warn"
+               (click)="deleteSemester()">{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_DELETE_LABEL" | transloco }}</button>
          </mat-tab>
       </mat-tab-group>
       <button mat-raised-button 
@@ -18,9 +35,9 @@
       <p>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_SELECT_ALERT" | transloco }}</p>
       <mat-form-field>
          <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_SELECT_LABEL" | transloco }}</mat-label>
-         <mat-select [(value)]="data.selectedSemester">
+         <mat-select [value]="selectedSemesterId()" (valueChange)="selectSemester($event)">
             @for (semester of data.semesters; track semester.name) {
-               <mat-option [value]="semester">{{ semester.name }}</mat-option>
+               <mat-option [value]="semester.id">{{ semester.name }}</mat-option>
             }
          </mat-select>
       </mat-form-field>

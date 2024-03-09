@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Signal, ViewChild, WritableSignal, computed, effect, signal } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Signal, ViewChild, WritableSignal, computed, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,8 +9,8 @@ import { ActivityStylePipe } from './activity/activity-style.pipe';
 import { ActivityComponent } from './activity/activity.component';
 import { Interval, Semester, TimetableSizeData } from './models';
 import { TimetableService } from './services';
+import { TimetableState } from './store';
 import { TimetableSettingsDialogComponent } from './timetable-settings-dialog';
-import { TimetableSettingsDialogData } from './timetable-settings-dialog/timetable-settings-dialog-data';
 import { TimetableSplitUtils, TimetableUtils } from './utils';
 
 @Component({
@@ -27,9 +27,9 @@ import { TimetableSplitUtils, TimetableUtils } from './utils';
    styleUrl: './timetable.component.scss',
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimetableComponent implements AfterViewInit {
+export class TimetableComponent implements AfterViewChecked {
    private readonly semesters: Signal<Semester[] | undefined>;
-   private readonly selectedSemesterName: WritableSignal<string | undefined>;
+   private readonly selectedSemesterId: Signal<string | undefined>;
    public readonly selectedSemester: Signal<Semester | undefined>;
    public readonly additionalSelectedSemesterData: {
       displayableDays: Signal<Interval>,
@@ -51,12 +51,12 @@ export class TimetableComponent implements AfterViewInit {
       this.semesters = toSignal(this.timetableService.semesters$.pipe(
          map(semesters => semesters?.map(sem => TimetableSplitUtils.splitTimetable(sem)))
       ));
-      this.selectedSemesterName = signal("Fall 2020");
+      this.selectedSemesterId = toSignal(this.timetableService.selectedSemesterId$);
       this.selectedSemester = computed(() => {
-         if (!this.semesters()?.length || !this.selectedSemesterName()) {
+         if (!this.semesters()?.length || !this.selectedSemesterId()) {
             return undefined;
          }
-         return this.semesters()!.find(semester => semester.name === this.selectedSemesterName());
+         return this.semesters()!.find(semester => semester.id === this.selectedSemesterId());
       });
 
       this.additionalSelectedSemesterData = {
@@ -82,40 +82,45 @@ export class TimetableComponent implements AfterViewInit {
       };
 
       this.timetableAreaSize$ = signal(undefined);
-
-      effect(() => console.log(this.selectedSemester()));
    }
 
-   public ngAfterViewInit(): void {
-      this.timetableAreaSize$.set(
-         fromEvent(globalThis, 'resize').pipe(
-            startWith(null),
-            map(_ => {
-               const container = this.timetableContainer.nativeElement;
-               return {
-                  dayWidth: container.offsetWidth / this.additionalSelectedSemesterData.displayableDays().count,
-                  hourHeight: container.offsetHeight / this.additionalSelectedSemesterData.displayableHours().count,
-                  startingDay: this.additionalSelectedSemesterData.displayableDays().start,
-                  startingHour: this.additionalSelectedSemesterData.displayableHours().start
-               };
-            })
-         )
+   public ngAfterViewChecked(): void {
+      this.timetableAreaSize$.set(this.getTimetableAreaSize());
+   }
+
+   private getTimetableAreaSize(): Observable<TimetableSizeData> | undefined {
+      if(!this.timetableContainer) {
+         return;
+      }
+
+      return fromEvent(globalThis, 'resize').pipe(
+         startWith(null),
+         map(_ => {
+            const container = this.timetableContainer.nativeElement;
+            return {
+               dayWidth: container.offsetWidth / this.additionalSelectedSemesterData.displayableDays().count,
+               hourHeight: container.offsetHeight / this.additionalSelectedSemesterData.displayableHours().count,
+               startingDay: this.additionalSelectedSemesterData.displayableDays().start,
+               startingHour: this.additionalSelectedSemesterData.displayableHours().start
+            };
+         })
       );
    }
 
+
    public openTimetableSettings(): void {
-      this.dialog.open<TimetableSettingsDialogComponent, TimetableSettingsDialogData, TimetableSettingsDialogData>(TimetableSettingsDialogComponent, {
+      this.dialog.open<TimetableSettingsDialogComponent, TimetableState, TimetableState>(TimetableSettingsDialogComponent, {
          data: {
-            semesters: this.semesters(),
-            selectedSemester: this.selectedSemester()
+            semesters: this.semesters()!,
+            selectedSemesterId: this.selectedSemester()?.id
          }
       }).afterClosed().subscribe(data => {
          if (!data) {
             return;
          }
          console.log(data);
-         this.selectedSemesterName.set(data.selectedSemester?.name);
-         // TODO: dispatch semester update action
+         this.timetableAreaSize$.set(undefined);
+         this.timetableService.saveTimetableData(data.semesters, data.selectedSemesterId);
       });
    }
 }

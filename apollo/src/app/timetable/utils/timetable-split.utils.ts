@@ -5,7 +5,7 @@ import { TimetableUtils } from "./timetable.utils";
 export class TimetableSplitUtils {
    public static splitTimetable(semester: Semester): Semester {
       const newSemester: Semester = {
-         name: semester.name,
+         ...semester,
          activities: []
       };
       const { start, end } = TimetableUtils.getDisplayableDays(semester);

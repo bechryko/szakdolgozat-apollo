@@ -16,6 +16,11 @@
    display: flex;
    justify-content: center;
    align-items: center;
+
+   h2 {
+      user-select: none;
+      cursor: pointer;
+   }
 }
 
 .day-headers {
@@ -28,7 +33,8 @@
 }
 
 .hour-headers {
-   height: fit-content;
+   display: grid;
+   height: 100%;
 
    h3 {
       border-top: 1px solid colors.$primary-text;

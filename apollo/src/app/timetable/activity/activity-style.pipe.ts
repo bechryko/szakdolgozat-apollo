@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { isColorDark } from '@apollo-shared/functions';
-import { Activity, TimetableSizeData } from '@apollo-timetable/models';
+import { Activity, ActivityCategory, TimetableSizeData } from '@apollo-timetable/models';
 
 @Pipe({
    name: 'activityStyle',
@@ -9,7 +9,7 @@ import { Activity, TimetableSizeData } from '@apollo-timetable/models';
 export class ActivityStylePipe implements PipeTransform {
    private readonly TEMPORARY_ACTIVITY_OPACITY = 0.65;
 
-   public transform(timetableSizeData: TimetableSizeData, activity: Activity): Record<string, string> {
+   public transform(timetableSizeData: TimetableSizeData, activity: Activity, categories: ActivityCategory[]): Record<string, string> {
       try {
          const style: Record<string, string> = {};
          let leftPos = (activity.time.day - timetableSizeData.startingDay) * timetableSizeData.dayWidth;
@@ -24,18 +24,26 @@ export class ActivityStylePipe implements PipeTransform {
          style['width'] = `${ width }px`;
          style['top'] = `${ (activity.time.startingHour - timetableSizeData.startingHour) * timetableSizeData.hourHeight }px`;
          style['height'] = `${ activity.time.length / 60 * timetableSizeData.hourHeight }px`;
-         style['background-color'] = activity.category?.color || 'white';
+         const category = this.getCategory(activity, categories);
+         style['background-color'] = category?.color || 'white';
          if(isColorDark(style['background-color'])) {
             style['color'] = 'white';
          }
-         if(activity.category?.temporary) {
+         if(category?.temporary) {
             style['opacity'] = this.TEMPORARY_ACTIVITY_OPACITY.toString();
          }
          return style;
-      } catch (_) {
+      } catch (error) {
          return {
             'display': 'none'
          };
       }
+   }
+
+   private getCategory(activity: Activity, categories: ActivityCategory[]): ActivityCategory | undefined {
+      if(!activity.categoryName) {
+         return undefined;
+      }
+      return categories.find(category => category.name === activity.categoryName);
    }
 }

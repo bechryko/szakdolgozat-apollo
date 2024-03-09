@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
-import { MenuState } from "./menu-state";
 import { menuActions } from "./menu.actions";
+import { MenuState } from "./menu.state";
 
 const initialState: MenuState = {
    cards: []

@@ -1,6 +1,8 @@
 @if(selectedSemester()) {
    <div class="timetable-container">
-      <div class="semester-name">{{ selectedSemester()!.name }}</div>
+      <div class="semester-name">
+         <h2 (click)="openTimetableSettings()">{{ selectedSemester()!.name }}</h2>
+      </div>
       <div class="day-headers"
          [ngStyle]="additionalSelectedSemesterData.dayHeadersStyle()">
          @for(day of displayable.days(); track day) {
@@ -16,7 +18,10 @@
       <div class="timetable" #timetable>
          @if(timetableAreaSize$()) {
             @for(activity of selectedSemester()!.activities; track $index) {
-               <apo-activity [activityData]="activity" [ngStyle]="(timetableAreaSize$() | async)! | activityStyle: activity"></apo-activity>
+               <apo-activity 
+                  [activityData]="activity" 
+                  [ngStyle]="(timetableAreaSize$() | async)! | activityStyle: activity: selectedSemester()!.categories">
+               </apo-activity>
             }
          }
       </div>
