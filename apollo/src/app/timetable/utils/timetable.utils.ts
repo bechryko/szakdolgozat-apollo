@@ -41,7 +41,7 @@ export class TimetableUtils {
          if(activity.time.startingHour < firstHour) {
             firstHour = activity.time.startingHour;
          }
-         const endingHour = activity.time.startingHour + Math.floor(activity.time.length / 60);
+         const endingHour = activity.time.startingHour + Math.floor((activity.time.startingMinute + activity.time.length) / 60);
          if(endingHour > lastHour) {
             lastHour = endingHour;
          }

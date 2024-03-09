@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { numberize } from '@apollo-shared/functions';
 import { GeneralDialogService } from '@apollo-shared/general-dialog';
+import { SnackBarService } from '@apollo-shared/services';
 import { Semester } from '@apollo-timetable/models';
 import { TimetableState } from '@apollo-timetable/store';
 import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
@@ -61,7 +62,8 @@ export class TimetableSettingsDialogComponent {
       @Inject(MAT_DIALOG_DATA) data: TimetableState,
       private readonly fb: FormBuilder,
       private readonly dialog: GeneralDialogService,
-      private readonly translateService: TranslocoService
+      private readonly translateService: TranslocoService,
+      private readonly snackbarService: SnackBarService
    ) {
       this.data = cloneDeep(data);
       this.selectedSemesterId = signal(data.selectedSemesterId);
@@ -192,6 +194,11 @@ export class TimetableSettingsDialogComponent {
    }
 
    public save(): void {
+      if(!this.semesterForm().valid || !this.categoryForm().valid || !this.activityForm().valid) {
+         this.snackbarService.open("TIMETABLE.SETTINGS_DIALOG.SAVE_ERROR_SNACKBAR", { duration: 5000 });
+         return;
+      }
+
       this.updateData();
       this.dialogRef.close(this.data);
    }

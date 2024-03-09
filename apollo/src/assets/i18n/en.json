@@ -48,6 +48,7 @@
    "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_ADD_LABEL": "Add activity",
    "TIMETABLE.SETTINGS_DIALOG.NEW_ACTIVITY_DEFAULT_NAME": "New activity",
    "TIMETABLE.SETTINGS_DIALOG.CLOSE": "Close and save",
+   "TIMETABLE.SETTINGS_DIALOG.SAVE_ERROR_SNACKBAR": "You cannot save the settings with invalid values!",
    "TIMETABLE.WEEK_DAY_1": "Monday",
    "TIMETABLE.WEEK_DAY_2": "Tuesday",
    "TIMETABLE.WEEK_DAY_3": "Wednesday",

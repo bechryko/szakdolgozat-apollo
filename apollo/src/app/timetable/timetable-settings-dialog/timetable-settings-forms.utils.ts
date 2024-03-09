@@ -35,9 +35,9 @@ export class TimetableSettingsFormsUtils {
          people: [activity.people],
          time: fb.group({
             day: [activity.time.day, Validators.required],
-            startingHour: [activity.time.startingHour, Validators.required],
-            startingMinute: [activity.time.startingMinute, Validators.required],
-            length: [activity.time.length, Validators.required]
+            startingHour: [activity.time.startingHour, [Validators.required, Validators.min(0), Validators.max(23)]],
+            startingMinute: [activity.time.startingMinute, [Validators.required, Validators.min(0), Validators.max(59)]],
+            length: [activity.time.length, [Validators.required, Validators.min(1)]]
          }),
          categoryName: [activity.categoryName]
       });

@@ -22,8 +22,9 @@ export class ActivityStylePipe implements PipeTransform {
             width = activity.locationInterval.size * timetableSizeData.dayWidth / activity.locationInterval.split;
          }
          style['width'] = `${ width }px`;
-         style['top'] = `${ (activity.time.startingHour - timetableSizeData.startingHour) * timetableSizeData.hourHeight }px`;
-         style['height'] = `${ activity.time.length / 60 * timetableSizeData.hourHeight }px`;
+         const topPos = Math.round((activity.time.startingHour - timetableSizeData.startingHour + activity.time.startingMinute / 60) * timetableSizeData.hourHeight);
+         style['top'] = `${ topPos }px`;
+         style['height'] = `${ Math.round(activity.time.length / 60 * timetableSizeData.hourHeight) }px`;
          const category = this.getCategory(activity, categories);
          style['background-color'] = category?.color || 'white';
          if(isColorDark(style['background-color'])) {
