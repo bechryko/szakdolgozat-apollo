@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, map, switchMap, tap } from "rxjs";
+import { catchError, map, switchMap } from "rxjs";
 import { TimetableFetcherService } from './../services/timetable-fetcher.service';
 import { timetableActions } from "./timetable.actions";
 
@@ -10,7 +10,6 @@ export class TimetableEffects {
       this.actions$.pipe(
          ofType(timetableActions.loadTimetable),
          switchMap(_ => this.timetableFetcherService.getSemestersForCurrentUser()),
-         tap(semesters => console.log('Timetable loaded', semesters)),
          map(semesters => timetableActions.saveTimetableToStore({ newState: {
             semesters,
             selectedSemesterId: semesters.length >= 1 ? semesters[0].id : undefined

@@ -27,8 +27,42 @@
                color="warn"
                (click)="deleteSemester()">{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_DELETE_LABEL" | transloco }}</button>
          </mat-tab>
+         <mat-tab [label]="'TIMETABLE.SETTINGS_DIALOG.CATEGORY_SETTINGS.LABEL' | transloco">
+            <form class="settings" [formGroup]="categoryForm()">
+               <ng-container formArrayName="categories">
+                  @for(category of selectedSemester()!.categories; track $index) {
+                     <div class="settings-tile" [formGroupName]="$index">
+                        <mat-form-field>
+                           <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_SETTINGS.NAME" | transloco }}</mat-label>
+                           <input matInput formControlName="name" (change)="categoryNameChanged($index)">
+                        </mat-form-field>
+                        <div class="color-picker-form-field">
+                           <input [(colorPicker)]="category.color"
+                              [value]="category.color"
+                              [style.backgroundColor]="category.color"
+                              [cpCancelButton]="true"
+                              [cpEyeDropper]="true"
+                              cpOutputFormat="hex"
+                              [cpPresetColors]="PRESET_CATEGORY_COLORS"
+                              [cpAddColorButton]="true"
+                              readonly required>
+                        </div>
+                        <mat-checkbox formControlName="temporary">
+                           {{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_SETTINGS.TEMPORARY" | transloco }}
+                        </mat-checkbox><br>
+                        <button mat-raised-button class="unit-delete-button"
+                           color="warn"
+                           (click)="deleteCategory($index)">{{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_SETTINGS.DELETE" | transloco }}</button>
+                     </div>
+                  }
+               </ng-container>
+            </form>
+            <button mat-raised-button
+               color="primary"
+               (click)="addCategory()">{{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_ADD_LABEL" | transloco }}</button>
+         </mat-tab>
       </mat-tab-group>
-      <button mat-raised-button 
+      <button mat-raised-button  class="close-button"
          color="accent"
          (click)="save()">{{ "TIMETABLE.SETTINGS_DIALOG.CLOSE" | transloco }}</button>
    } @else {
