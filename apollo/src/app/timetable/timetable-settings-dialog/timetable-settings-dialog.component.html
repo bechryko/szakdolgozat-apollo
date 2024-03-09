@@ -4,10 +4,12 @@
       <mat-tab-group class="settings-tabs">
          <mat-tab [label]="'TIMETABLE.SETTINGS_DIALOG.SEMESTER_SETTINGS.LABEL' | transloco">
             <form class="settings" [formGroup]="semesterForm()">
-               <mat-form-field>
-                  <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_SETTINGS.NAME" | transloco }}</mat-label>
-                  <input matInput formControlName="name">
-               </mat-form-field>
+               <div class="settings-tile">
+                  <mat-form-field>
+                     <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_SETTINGS.NAME" | transloco }}</mat-label>
+                     <input matInput formControlName="name">
+                  </mat-form-field>
+               </div>
             </form>
             <p>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_CHANGE_ALERT" | transloco }}</p>
             <mat-form-field>
@@ -60,6 +62,76 @@
             <button mat-raised-button
                color="primary"
                (click)="addCategory()">{{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_ADD_LABEL" | transloco }}</button>
+         </mat-tab>
+         <mat-tab [label]="'TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.LABEL' | transloco">
+            <form class="settings" [formGroup]="activityForm()">
+               <ng-container formArrayName="activities">
+                  @for(activity of activityForm().value.activities; track activity.name) {
+                     <div class="settings-tile" [formGroupName]="$index">
+                        <mat-form-field>
+                           <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.NAME" | transloco }}</mat-label>
+                           <input matInput formControlName="name">
+                        </mat-form-field><br>
+                        <mat-form-field>
+                           <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.COURSE_CODE" | transloco }}</mat-label>
+                           <input matInput formControlName="courseCode">
+                        </mat-form-field><br>
+                        <mat-form-field>
+                           <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.LOCATION" | transloco }}</mat-label>
+                           <input matInput formControlName="location">
+                        </mat-form-field><br>
+                        <mat-form-field>
+                           <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.PEOPLE" | transloco }}</mat-label>
+                           <input matInput formControlName="people">
+                        </mat-form-field><br>
+                        <fieldset class="activity-time-container" formGroupName="time">
+                           <legend>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.LABEL" | transloco }}</legend>
+                           <mat-form-field>
+                              <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.DAY" | transloco }}</mat-label>
+                              <mat-select formControlName="day">
+                                 @for(day of DAYS; track day) {
+                                    <mat-option [value]="day">{{ "TIMETABLE.WEEK_DAY_" + day | transloco }}</mat-option>
+                                 }
+                              </mat-select>
+                           </mat-form-field>
+                           <mat-form-field>
+                              <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.HOUR" | transloco }}</mat-label>
+                              <input matInput formControlName="startingHour">
+                           </mat-form-field>
+                           <mat-form-field>
+                              <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.MINUTE" | transloco }}</mat-label>
+                              <input matInput formControlName="startingMinute">
+                           </mat-form-field>
+                           <mat-form-field>
+                              <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.LENGTH" | transloco }}</mat-label>
+                              <input matInput formControlName="length">
+                           </mat-form-field>
+                           <p>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.END" | transloco: (activity.time | endTime) }}</p>
+                        </fieldset>
+                        <mat-form-field>
+                           <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.CATEGORY" | transloco }}</mat-label>
+                           <mat-select formControlName="categoryName">
+                              <mat-option [value]="null">{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.CATEGORY.NONE" | transloco }}</mat-option>
+                              @for (category of selectedSemester()!.categories; track $index) {
+                                 <mat-option [value]="category.name">{{ category.name }}</mat-option>
+                              }
+                           </mat-select>
+                        </mat-form-field><br>
+                        <div class="actions">
+                           <button mat-raised-button class="left"
+                              color="warn"
+                              (click)="deleteActivity($index)">{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.DELETE" | transloco }}</button>
+                           <button mat-raised-button class="right"
+                              color="primary"
+                              (click)="duplicateActivity($index)">{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.DUPLICATE" | transloco }}</button>
+                        </div>
+                     </div>
+                  }
+               </ng-container>
+            </form>
+            <button mat-raised-button
+               color="primary"
+               (click)="addActivity()">{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_ADD_LABEL" | transloco }}</button>
          </mat-tab>
       </mat-tab-group>
       <button mat-raised-button  class="close-button"

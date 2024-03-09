@@ -1,5 +1,5 @@
 import { FormBuilder, Validators } from "@angular/forms";
-import { ActivityCategory, Semester } from "@apollo-timetable/models";
+import { Activity, ActivityCategory, Semester } from "@apollo-timetable/models";
 
 export class TimetableSettingsFormsUtils {
    public static buildSemesterForm(fb: FormBuilder, semester: Semester) {
@@ -10,7 +10,7 @@ export class TimetableSettingsFormsUtils {
 
    public static buildCategoryFormArray(fb: FormBuilder, categories: ActivityCategory[]) {
       return fb.group({
-         categories: fb.array(categories.map(category => TimetableSettingsFormsUtils.buildCategoryForm(fb, category)))
+         categories: fb.array(categories.map(category => this.buildCategoryForm(fb, category)))
       });
    }
 
@@ -18,6 +18,28 @@ export class TimetableSettingsFormsUtils {
       return fb.group({
          name: [category.name, Validators.required], // TODO: check if names are unique
          temporary: [category.temporary]
+      });
+   }
+
+   public static buildActivityFormArray(fb: FormBuilder, activities: Activity[]) {
+      return fb.group({
+         activities: fb.array(activities.map(activity => this.buildActivityForm(fb, activity)))
+      });
+   }
+
+   public static buildActivityForm(fb: FormBuilder, activity: Activity) {
+      return fb.group({
+         name: [activity.name, Validators.required],
+         courseCode: [activity.courseCode],
+         location: [activity.location],
+         people: [activity.people],
+         time: fb.group({
+            day: [activity.time.day, Validators.required],
+            startingHour: [activity.time.startingHour, Validators.required],
+            startingMinute: [activity.time.startingMinute, Validators.required],
+            length: [activity.time.length, Validators.required]
+         }),
+         categoryName: [activity.categoryName]
       });
    }
 }

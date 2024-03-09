@@ -31,7 +31,29 @@
 .settings-tabs {
    margin-bottom: 2rem;
    height: calc(100% - 7.5rem);
+}
 
+.activity-time-container {
+   $field-amount: 4;
+
+   display: flex;
+   justify-content: space-between;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: 1rem;
+   border-radius: 1rem;
+   margin-bottom: 1.5rem;
+
+   mat-form-field {
+      $helper: $field-amount - 1;
+      width: calc((100% - ($field-amount - 1) * 1rem) / $field-amount);
+   }
+
+   p {
+      width: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+   }
 }
 
 mat-form-field, .color-picker-form-field {

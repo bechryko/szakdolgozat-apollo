@@ -118,7 +118,7 @@ export class TimetableComponent implements AfterViewChecked {
          if (!data) {
             return;
          }
-         console.log(data);
+         
          this.timetableAreaSize$.set(undefined);
          this.timetableService.saveTimetableData(data.semesters, data.selectedSemesterId);
       });
