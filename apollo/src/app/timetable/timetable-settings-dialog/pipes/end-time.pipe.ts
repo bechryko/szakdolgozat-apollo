@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { numberize } from '@apollo-shared/functions';
+import { leadingZeros, numberize } from '@apollo-shared/functions';
 import { ActivityTime } from '@apollo-timetable/models';
 
 @Pipe({
@@ -19,8 +19,8 @@ export class EndTimePipe implements PipeTransform {
       }
 
       return {
-         hour,
-         minute
+         hour: leadingZeros(hour, 2),
+         minute: leadingZeros(minute, 2)
       };
    }
 }
