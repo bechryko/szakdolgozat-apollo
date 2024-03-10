@@ -13,7 +13,11 @@ export class TimetableEffects {
          map(semesters => timetableActions.saveTimetableToStore({ newState: {
             semesters,
             selectedSemesterId: semesters.length >= 1 ? semesters[0].id : undefined
-         } }))
+         } })),
+         catchError(errorKey => {
+            // TODO: error handling
+            return [];
+         })
       )
    );
 

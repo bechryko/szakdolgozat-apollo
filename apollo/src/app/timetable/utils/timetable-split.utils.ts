@@ -68,17 +68,18 @@ export class TimetableSplitUtils {
    }
 
    private static getCrossingActivities(activity: Activity, activities: Activity[]): Activity[] {
+      const startingMin = activity.time.startingHour * 60 + activity.time.startingMinute;
+      const endingMin = startingMin + activity.time.length;
+
       return activities.filter(a => {
          if (a === activity) {
             return false;
          }
-         if (a.time.startingHour >= activity.time.startingHour + activity.time.length / 60) {
-            return false;
-         }
-         if (a.time.startingHour + a.time.length / 60 <= activity.time.startingHour) {
-            return false;
-         }
-         return true;
+         
+         const aStartingMin = a.time.startingHour * 60 + a.time.startingMinute;
+         const aEndingMin = aStartingMin + a.time.length;
+         
+         return (aStartingMin <= startingMin && aEndingMin > startingMin) || (aStartingMin < endingMin && aEndingMin >= endingMin);
       });
    }
 
@@ -88,7 +89,7 @@ export class TimetableSplitUtils {
       activities.forEach(a => {
          const startingMin = a.time.startingHour * 60 + a.time.startingMinute;
          const endingMin = startingMin + a.time.length;
-         if (startingMin <= activityStartingMin && endingMin >= activityStartingMin) {
+         if (startingMin <= activityStartingMin && endingMin > activityStartingMin) {
             number++;
          }
       });
