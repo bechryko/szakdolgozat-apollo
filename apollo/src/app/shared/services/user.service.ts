@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { User } from '@apollo-shared/models';
-import { multicast } from '@apollo-shared/operators';
 import { Observable, of } from 'rxjs';
+import { User } from '../models';
+import { multicast } from '../operators';
 
 @Injectable({
    providedIn: 'root'

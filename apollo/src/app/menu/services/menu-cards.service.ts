@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { MenuCard } from '@apollo-menu/models';
-import { menuActions, menuFeature } from '@apollo-menu/store';
-import { multicast } from '@apollo-shared/operators';
+import { multicast } from '@apollo/shared/operators';
 import { Store } from '@ngrx/store';
 import { shuffle } from 'lodash';
 import { Observable, distinctUntilChanged, map, tap } from 'rxjs';
+import { MenuCard } from '../models';
+import { menuActions, menuFeature } from '../store';
 
 @Injectable({
    providedIn: 'root'

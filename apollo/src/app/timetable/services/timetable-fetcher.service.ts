@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CollectionReference, DocumentReference, Firestore, addDoc, collection, collectionData, deleteDoc, doc, query, updateDoc, where } from '@angular/fire/firestore';
-import { UserService } from '@apollo-shared/services';
-import { Semester } from '@apollo-timetable/models';
+import { UserService } from '@apollo/shared/services';
 import { Observable, from, map, switchMap, take } from 'rxjs';
+import { Semester } from '../models';
 
 const COLLECTION = 'timetable-semesters';
 

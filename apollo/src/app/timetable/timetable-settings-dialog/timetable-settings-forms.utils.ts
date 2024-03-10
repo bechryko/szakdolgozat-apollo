@@ -1,5 +1,5 @@
 import { FormBuilder, Validators } from "@angular/forms";
-import { Activity, ActivityCategory, Semester } from "@apollo-timetable/models";
+import { Activity, ActivityCategory, Semester } from "../models";
 
 export class TimetableSettingsFormsUtils {
    public static buildSemesterForm(fb: FormBuilder, semester: Semester) {

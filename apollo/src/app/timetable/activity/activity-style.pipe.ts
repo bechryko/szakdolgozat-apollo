@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { isColorDark } from '@apollo-shared/functions';
-import { Activity, ActivityCategory, TimetableSizeData } from '@apollo-timetable/models';
+import { isColorDark } from '@apollo/shared/functions';
+import { Activity, ActivityCategory, TimetableSizeData } from '../models';
 
 @Pipe({
    name: 'activityStyle',

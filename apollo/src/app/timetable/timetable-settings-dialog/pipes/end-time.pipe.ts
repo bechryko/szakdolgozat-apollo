@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { leadingZeros, numberize } from '@apollo-shared/functions';
-import { ActivityTime } from '@apollo-timetable/models';
+import { leadingZeros, numberize } from '@apollo/shared/functions';
+import { ActivityTime } from '../../models';
 
 @Pipe({
    name: 'endTime',

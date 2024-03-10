@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionReference, Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { MenuCard } from '@apollo-menu/models';
 import { Observable, map, take } from 'rxjs';
+import { MenuCard } from '../models';
 
 const COLLECTION = 'menu-cards';
 

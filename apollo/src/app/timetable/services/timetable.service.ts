@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { multicast } from '@apollo-shared/operators';
-import { timetableActions, timetableFeature } from '@apollo-timetable/store';
+import { multicast } from '@apollo/shared/operators';
 import { Store } from '@ngrx/store';
 import { Observable, distinctUntilChanged, tap } from 'rxjs';
 import { Semester } from '../models';
+import { timetableActions, timetableFeature } from '../store';
 
 @Injectable({
    providedIn: 'root'

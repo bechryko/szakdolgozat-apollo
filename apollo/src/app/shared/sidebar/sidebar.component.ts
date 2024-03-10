@@ -1,7 +1,7 @@
 import { CommonModule, DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TimeFormatService } from '@apollo-shared/services';
 import { Observable, interval, map } from 'rxjs';
+import { TimeFormatService } from '../services';
 
 @Component({
    selector: 'apo-sidebar',

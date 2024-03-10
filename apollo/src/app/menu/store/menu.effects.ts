@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { MenuCardFetcherService } from "@apollo-menu/services";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { map, switchMap } from "rxjs/operators";
+import { MenuCardFetcherService } from "../services";
 import { menuActions } from "./menu.actions";
 
 @Injectable()

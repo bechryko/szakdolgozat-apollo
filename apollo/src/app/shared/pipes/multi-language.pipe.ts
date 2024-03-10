@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { MultiLanguage } from '@apollo-shared/models';
-import { LanguageService } from '@apollo-shared/services';
+import { MultiLanguage } from '../models';
+import { LanguageService } from '../services';
 
 @Pipe({
    name: 'multiLanguage',
