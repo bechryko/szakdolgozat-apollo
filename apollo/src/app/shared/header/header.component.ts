@@ -26,7 +26,7 @@ export class HeaderComponent {
       private readonly router: Router
    ) { }
 
-   public navigateTo(route: typeof this.menuItemKeys[number]): void {
+   public navigateTo(route: typeof this.menuItemKeys[number] | 'MENU'): void {
       this.router.navigateByUrl("/" + RouteUrls[route]);
    }
 }

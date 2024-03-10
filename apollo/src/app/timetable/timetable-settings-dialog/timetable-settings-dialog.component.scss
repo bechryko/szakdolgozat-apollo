@@ -1,0 +1,71 @@
+@use '../../../styles/colors';
+
+.timetable-settings-dialog-container {
+   width: 70vw;
+   height: 70vh;
+   background-color: colors.$primary-background;
+   padding: 2.5rem;
+}
+
+.settings {
+   display: flex;
+   flex-direction: column;
+   padding: 1.5rem;
+}
+
+.settings-tile {
+   border: 1px solid colors.$primary-darker;
+   border-radius: 1rem;
+   padding: 1.5rem;
+   margin-bottom: 2rem;
+
+   .category-count {
+      float: right;
+   }
+}
+
+.mat-mdc-tab-body-content {
+   padding: 1rem;
+}
+
+.settings-tabs {
+   margin-bottom: 2rem;
+   height: calc(100% - 7.5rem);
+}
+
+.activity-time-container {
+   $field-amount: 4;
+
+   display: flex;
+   justify-content: space-between;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: 1rem;
+   border-radius: 1rem;
+   margin-bottom: 1.5rem;
+
+   mat-form-field {
+      $helper: $field-amount - 1;
+      width: calc((100% - ($field-amount - 1) * 1rem) / $field-amount);
+   }
+
+   p {
+      width: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+   }
+}
+
+mat-form-field, .color-picker-form-field {
+   width: 33%;
+   margin-bottom: 1.5rem;
+}
+
+.unit-delete-button {
+   margin-top: 2rem;
+}
+
+.close-button {
+   float: right;
+   height: 3rem;
+}

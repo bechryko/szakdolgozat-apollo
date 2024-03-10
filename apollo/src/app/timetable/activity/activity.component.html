@@ -1,0 +1,13 @@
+<div class="activity-container">
+   <p>{{ icons.name }} {{ activityData.name }}
+      @if(activityData.courseCode) {
+         ({{ activityData.courseCode }})
+      }
+   </p>
+   @if(activityData.location) {
+      <p>{{ icons.location }} {{ activityData.location }}</p>
+   }
+   @if(activityData.people) {
+      <p>{{ icons.people }} {{ activityData.people }}</p>
+   }
+</div>

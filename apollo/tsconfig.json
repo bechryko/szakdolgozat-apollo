@@ -26,6 +26,7 @@
     "paths": {
       "@apollo-shared/*": ["./src/app/shared/*"],
       "@apollo-menu/*": ["./src/app/menu/*"],
+      "@apollo-timetable/*": ["./src/app/timetable/*"],
     }
   },
   "angularCompilerOptions": {
