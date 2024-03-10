@@ -58,3 +58,11 @@ p.error {
    border-radius: 0.5rem;
    width: fit-content;
 }
+
+.actions .mat-mdc-form-field-subscript-wrapper {
+   height: 0;
+}
+
+.invisible {
+   visibility: hidden;
+}

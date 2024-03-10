@@ -1,0 +1,13 @@
+@use '../displayer-style';
+
+.year-averages-container {
+   display: flex;
+
+   > * {
+      flex: 1;
+   }
+}
+
+.alternatives-button {
+   float: right;
+}

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
+import { AveragesComponent } from './averages/averages.component';
 import { MenuComponent } from './menu/menu.component';
 import { MenuEffects, menuFeature } from './menu/store';
 import { TimetableEffects, timetableFeature } from './timetable/store';
@@ -29,6 +30,10 @@ export const routes: Routes = [
          provideState(timetableFeature),
          provideEffects(TimetableEffects)
       ]
+   },
+   {
+      path: RouteUrls.AVERAGES,
+      component: AveragesComponent
    },
    {
       path: '**',

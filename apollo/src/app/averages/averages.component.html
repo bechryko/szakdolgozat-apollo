@@ -1,0 +1,31 @@
+@if(averages()) {
+   <apo-multi-averages-displayer *ngIf="allGrades()"
+      [title]="'AVERAGES.DISPLAY.TITLE.CUMULATED' | transloco"
+      [gradeData]="allGrades()!"></apo-multi-averages-displayer>
+   <div class="actions">
+      <button mat-raised-button
+         color="primary"
+         (click)="toggleViewMode()">{{ "AVERAGES.VIEW_MODE_TOGGLE_BUTTON." + (singleYearViewMode() ? "MULTIPLE" : "SINGLE") + "_LABEL" | transloco }}</button>
+      <mat-form-field [class.invisible]="!singleYearViewMode()">
+         <mat-label>{{ "AVERAGES.YEAR_SELECTION_LABEL" | transloco }}</mat-label>
+         <mat-select [value]="selectedYear()" (valueChange)="selectYear($event)">
+            @for(year of averages(); track $index) {
+               <mat-option [value]="year">{{ year.name }}</mat-option>
+            }
+         </mat-select>
+      </mat-form-field>
+      <button mat-raised-button
+         color="primary"
+         (click)="manageGrades()">{{ "AVERAGES.MANAGE_GRADES_LABEL" | transloco }}</button>
+   </div>
+   <ng-container *ngIf="singleYearViewMode() ? [ selectedYear()! ] : averages() as years">
+      @for(year of years; track -year.name) {
+         <apo-multi-averages-displayer
+            [title]="year.name"
+            [yearDisplay]="true"
+            [gradeData]="[ year.firstSemesterGrades, year.secondSemesterGrades ]"></apo-multi-averages-displayer>
+      }
+   </ng-container>
+} @else {
+   <!-- TODO: loading -->
+}

@@ -1,0 +1,23 @@
+<fieldset>
+   <legend>{{ title }}</legend>
+   @if(yearDisplay) {
+      <button mat-raised-button
+         class="alternatives-button"
+         color="accent"
+         (click)="setAlternatives()">{{ "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL" | transloco }}</button>
+   }
+   <p>{{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() }}</p>
+   <p>{{ "AVERAGES.DISPLAY.CREDIT_SUM" | transloco }}: {{ creditSum() }}</p>
+   <p>{{ "AVERAGES.DISPLAY.CREDIT_INDEX" | transloco }}: {{ creditIndex() }}</p>
+   <p>{{ "AVERAGES.DISPLAY.ADJUSTED_CREDIT_INDEX" | transloco }}: {{ adjustedCreditIndex() }}</p>
+   @if(yearDisplay) {
+      <div class="year-averages-container">
+         <apo-averages-displayer
+            [title]="'AVERAGES.YEAR_AVERAGES.FIRST_SEMESTER.LABEL' | transloco"
+            [gradeData]="grades()[0]"></apo-averages-displayer>
+         <apo-averages-displayer
+            [title]="'AVERAGES.YEAR_AVERAGES.SECOND_SEMESTER.LABEL' | transloco"
+            [gradeData]="grades()[1]"></apo-averages-displayer>
+      </div>
+   }
+</fieldset>
