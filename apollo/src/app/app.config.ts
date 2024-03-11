@@ -7,9 +7,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideRouter } from '@angular/router';
 import { provideTransloco } from '@ngneat/transloco';
 import { provideEffects } from '@ngrx/effects';
-import { provideStore } from '@ngrx/store';
+import { provideState, provideStore } from '@ngrx/store';
 import { routes } from './app.routes';
 import { firebaseConfig } from './firebase.config';
+import { CoreEffects, coreFeature } from './shared/store';
 import { TranslocoHttpLoader } from './transloco-loader';
 
 export const appConfig: ApplicationConfig = {
@@ -20,7 +21,8 @@ export const appConfig: ApplicationConfig = {
       importProvidersFrom(provideAuth(() => getAuth())),
       importProvidersFrom(provideFirestore(() => getFirestore())),
       provideStore(),
-      provideEffects(),
+      provideState(coreFeature),
+      provideEffects(CoreEffects),
       provideHttpClient(),
       provideTransloco({
          config: {

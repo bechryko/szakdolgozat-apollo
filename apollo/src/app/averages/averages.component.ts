@@ -6,8 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslocoPipe } from '@ngneat/transloco';
+import { tap } from 'rxjs';
 import { AveragesDisplayerComponent, MultiAveragesDisplayerComponent } from './displayers';
-import { CompletionYear, Grade } from './models';
+import { Grade, GradesCompletionYear } from './models';
 import { AveragesService } from './services';
 
 @Component({
@@ -28,15 +29,17 @@ import { AveragesService } from './services';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AveragesComponent {
-   public readonly averages: Signal<CompletionYear[] | undefined>;
+   public readonly averages: Signal<GradesCompletionYear[] | undefined>;
    public readonly allGrades: Signal<Grade[][] | undefined>;
-   public readonly selectedYear: WritableSignal<CompletionYear | undefined>;
+   public readonly selectedYear: WritableSignal<GradesCompletionYear | undefined>;
    public readonly singleYearViewMode: WritableSignal<boolean>;
    
    constructor(
       private readonly averagesService: AveragesService
    ) {
-      this.averages = toSignal(this.averagesService.grades$);
+      this.averages = toSignal(this.averagesService.grades$.pipe(
+         tap(grades => this.selectedYear.set(this.getStartingSelectedYear(grades)))
+      ));
       this.allGrades = computed(() => {
          const averages = this.averages();
          if(!averages) {
@@ -45,15 +48,15 @@ export class AveragesComponent {
 
          return averages.map(average => [average.firstSemesterGrades, average.secondSemesterGrades]).flat();
       });
-      this.selectedYear = signal(this.getStartingSelectedYear());
-      this.singleYearViewMode = signal(true);
+      this.selectedYear = signal(undefined);
+      this.singleYearViewMode = signal(false);
    }
 
    public toggleViewMode(): void {
       this.singleYearViewMode.set(!this.singleYearViewMode());
    }
 
-   public selectYear(year: CompletionYear): void {
+   public selectYear(year: GradesCompletionYear): void {
       this.selectedYear.set(year);
    }
 
@@ -61,9 +64,8 @@ export class AveragesComponent {
       // TODO: settings dialog
    }
 
-   private getStartingSelectedYear(): CompletionYear | undefined {
-      const averages = this.averages();
-      if(!averages) {
+   private getStartingSelectedYear(averages?: GradesCompletionYear[]): GradesCompletionYear | undefined {
+      if(!averages?.length) {
          return;
       }
 

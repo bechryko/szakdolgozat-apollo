@@ -1,77 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { CompletionYear } from '../models';
+import { UniversityCompletionYear, UniversitySubjectCompletion } from '@apollo/shared/models';
+import { multicast } from '@apollo/shared/operators';
+import { CompletionsService } from '@apollo/shared/services';
+import { Observable, map } from 'rxjs';
+import { Grade, GradesCompletionYear } from '../models';
 
 @Injectable({
    providedIn: 'root'
 })
 export class AveragesService {
-   public readonly grades$: Observable<CompletionYear[]>;
+   public readonly grades$: Observable<GradesCompletionYear[]>;
 
-   constructor() {
-      this.grades$ = of([
-         {
-            name: '2022-23',
-            firstSemesterGrades: [
-               { rating: 2, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 3, credit: 2 },
-               { rating: 4, credit: 1 },
-               { rating: 5, credit: 1 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 3, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 3, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 1 },
-               { rating: 4, credit: 2 },
-               { rating: 5, credit: 3 },
-            ],
-            secondSemesterGrades: [
-               { rating: 4, credit: 2 },
-               { rating: 5, credit: 3 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 1 },
-               { rating: 4, credit: 2 },
-               { rating: 4, credit: 1 },
-               { rating: 5, credit: 1 },
-               { rating: 5, credit: 0 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 1 },
-               { rating: 5, credit: 3 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 4, credit: 2 },
-               { rating: 5, credit: 2 },
-               { rating: 5, credit: 2 }
-            ]
-         },
-         {
-            name: '2020',
-            firstSemesterGrades: [
-               { rating: 5, credit: 6 },
-               { rating: 4, credit: 6 },
-               { rating: 3, credit: 6 },
-               { rating: 2, credit: 6 }
-            ],
-            secondSemesterGrades: [
-               { rating: 5, credit: 6 },
-               { rating: 4, credit: 6 },
-               { rating: 3, credit: 6 },
-               { rating: 2, credit: 6 }
-            ]
-         }
-      ]);
+   constructor(
+      private readonly completionsService: CompletionsService
+   ) {
+      this.grades$ = this.completionsService.universityCompletions$.pipe(
+         map(completions => completions.map(completion => this.mapUniversityCompletionYearToGradesCompletionYear(completion))),
+         multicast()
+      );
+   }
+
+   private mapUniversityCompletionYearToGradesCompletionYear(completion: UniversityCompletionYear): GradesCompletionYear {
+      return {
+         id: completion.id,
+         name: completion.name,
+         owner: completion.owner,
+         firstSemesterGrades: completion.firstSemester.map(subjectCompletion => this.mapUniversitySubjectCompletionToGrade(subjectCompletion)),
+         secondSemesterGrades: completion.secondSemester.map(subjectCompletion => this.mapUniversitySubjectCompletionToGrade(subjectCompletion))
+      };
+   }
+
+   private mapUniversitySubjectCompletionToGrade(completion: UniversitySubjectCompletion): Grade {
+      return {
+         ...completion
+      };
    }
 }
