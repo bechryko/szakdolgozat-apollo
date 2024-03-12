@@ -3,10 +3,12 @@ import { ChangeDetectionStrategy, Component, Signal, WritableSignal, computed, s
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { tap } from 'rxjs';
+import { GradeManagerDialogComponent, GradeManagerDialogData } from './dialogs';
 import { AveragesDisplayerComponent, MultiAveragesDisplayerComponent } from './displayers';
 import { Grade, GradesCompletionYear } from './models';
 import { AveragesService } from './services';
@@ -31,14 +33,20 @@ import { AveragesService } from './services';
 export class AveragesComponent {
    public readonly averages: Signal<GradesCompletionYear[] | undefined>;
    public readonly allGrades: Signal<Grade[][] | undefined>;
-   public readonly selectedYear: WritableSignal<GradesCompletionYear | undefined>;
+   private readonly selectedYearId: WritableSignal<string | undefined>;
+   public readonly selectedYear: Signal<GradesCompletionYear | undefined>;
    public readonly singleYearViewMode: WritableSignal<boolean>;
    
    constructor(
-      private readonly averagesService: AveragesService
+      private readonly averagesService: AveragesService,
+      private readonly dialog: MatDialog
    ) {
       this.averages = toSignal(this.averagesService.grades$.pipe(
-         tap(grades => this.selectedYear.set(this.getStartingSelectedYear(grades)))
+         tap(grades => {
+            if(!this.selectedYearId()) {
+               this.selectedYearId.set(this.getStartingSelectedYearId(grades));
+            }
+         })
       ));
       this.allGrades = computed(() => {
          const averages = this.averages();
@@ -48,7 +56,15 @@ export class AveragesComponent {
 
          return averages.map(average => [average.firstSemesterGrades, average.secondSemesterGrades]).flat();
       });
-      this.selectedYear = signal(undefined);
+      this.selectedYearId = signal(undefined);
+      this.selectedYear = computed(() => {
+         const averages = this.averages();
+         if(!averages) {
+            return;
+         }
+
+         return averages.find(average => average.id === this.selectedYearId());
+      });
       this.singleYearViewMode = signal(false);
    }
 
@@ -57,18 +73,30 @@ export class AveragesComponent {
    }
 
    public selectYear(year: GradesCompletionYear): void {
-      this.selectedYear.set(year);
+      this.selectedYearId.set(year.id);
    }
 
    public manageGrades(): void {
-      // TODO: settings dialog
+      this.dialog.open<GradeManagerDialogComponent, GradeManagerDialogData, GradeManagerDialogData>(GradeManagerDialogComponent, {
+         data: {
+            years: this.averages()!,
+            selectedYearId: this.selectedYear()?.id
+         }
+      }).afterClosed().subscribe(data => {
+         if(!data) {
+            return;
+         }
+
+         this.selectedYearId.set(data.selectedYearId);
+         this.averagesService.saveAverages(data.years);
+      });
    }
 
-   private getStartingSelectedYear(averages?: GradesCompletionYear[]): GradesCompletionYear | undefined {
+   private getStartingSelectedYearId(averages?: GradesCompletionYear[]): string | undefined {
       if(!averages?.length) {
          return;
       }
 
-      return averages[averages.length - 1];
+      return averages[averages.length - 1].id;
    }
 }

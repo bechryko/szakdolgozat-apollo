@@ -28,4 +28,8 @@ export class CompletionsService {
          distinctUntilChanged(isEqual)
       );
    }
+
+   public saveUniversityCompletions(completions: UniversityCompletionYear[]): void {
+      this.store.dispatch(coreActions.saveCompletions({ completions }));
+   }
 }

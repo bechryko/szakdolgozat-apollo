@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UniversityCompletionYear, UniversitySubjectCompletion } from '@apollo/shared/models';
 import { multicast } from '@apollo/shared/operators';
 import { CompletionsService } from '@apollo/shared/services';
-import { Observable, map } from 'rxjs';
+import { Observable, map, take } from 'rxjs';
 import { Grade, GradesCompletionYear } from '../models';
 
 @Injectable({
@@ -33,6 +33,32 @@ export class AveragesService {
    private mapUniversitySubjectCompletionToGrade(completion: UniversitySubjectCompletion): Grade {
       return {
          ...completion
+      };
+   }
+
+   public saveAverages(averages: GradesCompletionYear[]): void {
+      this.completionsService.universityCompletions$.pipe(
+         take(1),
+         map(completions => completions.map(completion => this.mapGradesCompletionYearToUniversityCompletionYear(completion, averages)))
+      ).subscribe(completions => this.completionsService.saveUniversityCompletions(completions));
+   }
+
+   private mapGradesCompletionYearToUniversityCompletionYear(completion: UniversityCompletionYear, averages: GradesCompletionYear[]): UniversityCompletionYear {
+      const average = averages.find(average => average.id === completion.id);
+      if(!average) {
+         return completion;
+      }
+
+      return {
+         ...completion,
+         firstSemester: average.firstSemesterGrades.map(grade => this.mapGradeToUniversitySubjectCompletion(grade)),
+         secondSemester: average.secondSemesterGrades.map(grade => this.mapGradeToUniversitySubjectCompletion(grade))
+      };
+   }
+
+   private mapGradeToUniversitySubjectCompletion(grade: Grade): UniversitySubjectCompletion {
+      return {
+         ...grade
       };
    }
 }

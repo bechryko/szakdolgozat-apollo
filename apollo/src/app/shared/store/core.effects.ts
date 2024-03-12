@@ -18,6 +18,18 @@ export class CoreEffects {
       )
    );
 
+   saveCompletions$ = createEffect(() =>
+      this.actions$.pipe(
+         ofType(coreActions.saveCompletions),
+         switchMap(({ completions }) => this.completionsFetcherService.saveCompletions(completions)),
+         map(() => coreActions.loadCompletions()),
+         catchError(() => {
+            // TODO: error handling
+            return [];
+         })
+      )
+   );
+
    constructor(
       private readonly actions$: Actions,
       private readonly completionsFetcherService: CompletionsFetcherService
