@@ -82,5 +82,12 @@
    "AVERAGES.YEAR_ADD_DIALOG.INPUT_LABEL": "Year name",
    "GENERAL_DIALOG.ACCEPT": "Accept",
    "GENERAL_DIALOG.CANCEL": "Cancel",
-   "ERROR.USER_NOT_LOGGED_IN": "User is not logged in!"
+   "FILE_UPLOAD_DIALOG.TITLE": "Confirm uploaded data",
+   "FILE_UPLOAD_DIALOG.DESCRIPTION": "Are you sure you want to upload this data?",
+   "FILE_UPLOAD_DIALOG.REJECT": "Reject",
+   "ERROR.USER_NOT_LOGGED_IN": "User is not logged in!",
+   "ERROR.FILE.PREFIX": "File upload error:",
+   "ERROR.FILE.NOT_FOUND": "No file was provided!",
+   "ERROR.FILE.INVALID_TYPE": "Invalid file type! You can upload only plain text (.txt) files!",
+   "ERROR.FILE.INVALID_FORMAT": "Invalid file format! You can upload only .txt files!"
 }

@@ -8,8 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { Grade, GradesCompletionYear } from '@apollo/averages/models';
-import { GeneralInputDialogComponent } from '@apollo/shared/components';
-import { numberize } from '@apollo/shared/functions';
+import { FileUploadDataConfirmationDialogComponent, GeneralInputDialogComponent } from '@apollo/shared/components';
+import { TRASH_ICON } from '@apollo/shared/constants';
+import { numberize, readFile } from '@apollo/shared/functions';
+import { NeptunExportParserUtils } from '@apollo/shared/utils';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { GradeManagerDialogData } from './grade-manager-dialog-data';
@@ -33,6 +35,7 @@ import { GradeManagerDialogData } from './grade-manager-dialog-data';
 })
 export class GradeManagerDialogComponent {
    public readonly displayedColumns = ['name', 'rating', 'credit', 'remove'];
+   public readonly trashIcon = TRASH_ICON;
 
    private readonly data: GradeManagerDialogData;
    public readonly years: WritableSignal<GradesCompletionYear[]>;
@@ -86,6 +89,30 @@ export class GradeManagerDialogComponent {
          credit: 0
       });
       this.updateTables();
+   }
+
+   public fileUpload(event: Event, gradeArray: Grade[]): void {
+      const inputElement = event.target as HTMLInputElement;
+      readFile(inputElement.files![0], s => NeptunExportParserUtils.parseSemesterGrades(s)).then(grades => {
+         this.dialog.open(FileUploadDataConfirmationDialogComponent, {
+            data: {
+               data: grades,
+               columnNameKeys: [
+                  "AVERAGES.GRADE_MANAGER_DIALOG.TABLE_HEADERS.NAME",
+                  "AVERAGES.GRADE_MANAGER_DIALOG.TABLE_HEADERS.RATING",
+                  "AVERAGES.GRADE_MANAGER_DIALOG.TABLE_HEADERS.CREDIT"
+               ]
+            }
+         }).afterClosed().subscribe(confirmed => {
+            if(confirmed) {
+               gradeArray.push(...grades);
+               this.updateTables();
+            }
+            inputElement.value = '';
+         });
+      }).catch((errorKey: string) => {
+         // TODO: error handling
+      });
    }
 
    public removeGrade(gradeArray: Grade[], index: number): void {

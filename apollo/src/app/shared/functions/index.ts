@@ -2,4 +2,5 @@
 export { isColorDark } from './is-color-dark';
 export { leadingZeros } from './leading-zeros';
 export { numberize } from './numberize';
+export { readFile } from './read-file';
 //@endindex
