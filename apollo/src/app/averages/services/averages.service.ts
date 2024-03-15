@@ -2,22 +2,33 @@ import { Injectable } from '@angular/core';
 import { UniversityCompletionYear, UniversitySubjectCompletion } from '@apollo/shared/models';
 import { multicast } from '@apollo/shared/operators';
 import { CompletionsService } from '@apollo/shared/services';
-import { Observable, map, take } from 'rxjs';
-import { Grade, GradesCompletionYear } from '../models';
+import { Store } from '@ngrx/store';
+import { cloneDeep, isEqual } from 'lodash';
+import { Observable, map, switchMap, take, tap } from 'rxjs';
+import { AlternativeSemester, Grade, GradesCompletionYear } from '../models';
+import { averagesActions, averagesFeature } from '../store';
 
 @Injectable({
    providedIn: 'root'
 })
 export class AveragesService {
    public readonly grades$: Observable<GradesCompletionYear[]>;
+   private readonly alternatives$: Observable<AlternativeSemester[]>;
 
    constructor(
-      private readonly completionsService: CompletionsService
+      private readonly completionsService: CompletionsService,
+      private readonly store: Store
    ) {
       this.grades$ = this.completionsService.universityCompletions$.pipe(
          map(completions => completions.map(completion => this.mapUniversityCompletionYearToGradesCompletionYear(completion))),
+         switchMap(grades => this.alternatives$.pipe(
+            tap(alternativeSemesters => this.checkAlternativeYearsChange(grades, alternativeSemesters)),
+            map(alternatives => grades.map(grade => this.mapAlternativeYearToGradesCompletionYear(grade, alternatives)))
+         )),
          multicast()
       );
+
+      this.alternatives$ = this.store.select(averagesFeature.selectAlternativeSemesters);
    }
 
    private mapUniversityCompletionYearToGradesCompletionYear(completion: UniversityCompletionYear): GradesCompletionYear {
@@ -36,6 +47,35 @@ export class AveragesService {
       };
    }
 
+   private checkAlternativeYearsChange(years: GradesCompletionYear[], alternatives: AlternativeSemester[]): void {
+      alternatives.forEach(alternative => {
+         const year = years.find(year => year.id === alternative.id);
+         
+         if (!year || !isEqual(year[alternative.type], alternative.original)) {
+            this.removeAlternativeSemester(alternative);
+         }
+      });
+   }
+
+   private mapAlternativeYearToGradesCompletionYear(year: GradesCompletionYear, alternatives: AlternativeSemester[]): GradesCompletionYear {
+      const alternativesForYear = alternatives.filter(alternative => alternative.id === year.id);
+      const mappedYear = cloneDeep(year);
+
+      if(alternativesForYear.length) {
+         mappedYear.alternativeGrades = {};
+      }
+
+      alternativesForYear.forEach(alternative => {
+         if (alternative.type === 'firstSemesterGrades') {
+            mappedYear.alternativeGrades!.firstSemester = alternative.grades;
+         } else {
+            mappedYear.alternativeGrades!.secondSemester = alternative.grades;
+         }
+      });
+
+      return mappedYear;
+   }
+
    public saveAverages(averages: GradesCompletionYear[]): void {
       this.completionsService.universityCompletions$.pipe(
          take(1),
@@ -45,7 +85,7 @@ export class AveragesService {
 
    private mapGradesCompletionYearToUniversityCompletionYear(completion: UniversityCompletionYear, averages: GradesCompletionYear[]): UniversityCompletionYear {
       const average = averages.find(average => average.id === completion.id);
-      if(!average) {
+      if (!average) {
          return completion;
       }
 
@@ -60,5 +100,16 @@ export class AveragesService {
       return {
          ...grade
       };
+   }
+
+   public saveAlternativeSemester(alternativeSemester: AlternativeSemester): void {
+      this.store.dispatch(averagesActions.saveAlternativeSemester({ alternativeSemester }));
+   }
+
+   private removeAlternativeSemester(semester: AlternativeSemester): void {
+      this.store.dispatch(averagesActions.removeAlternativeSemester({
+         id: semester.id,
+         semesterType: semester.type
+      }));
    }
 }

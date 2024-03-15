@@ -1,4 +1,4 @@
-import { Grade } from "../models";
+import { Grade, GradesCompletionYear } from "../models";
 
 export class AverageCalculatorUtils {
    public static calculateWeightedAverage(grades: Grade[]): number {
@@ -37,5 +37,15 @@ export class AverageCalculatorUtils {
    private static round(number: number, precision = 3): number {
       const factor = Math.pow(10, precision);
       return Math.round(number * factor) / factor;
+   }
+
+   public static calculateCreditIndexForMultipleYears(years: GradesCompletionYear[]): number {
+      const grades = years.flatMap(year => year.firstSemesterGrades.concat(year.secondSemesterGrades));
+      return this.calculateCreditIndex(grades); // TODO: is it the correct calculation method?
+   }
+
+   public static calculateAdjustedCreditIndexForMultipleYears(years: GradesCompletionYear[]): number {
+      const grades = years.flatMap(year => year.firstSemesterGrades.concat(year.secondSemesterGrades));
+      return this.calculateAdjustedCreditIndex(grades); // TODO: is it the correct calculation method?
    }
 }

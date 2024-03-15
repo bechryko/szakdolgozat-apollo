@@ -1,3 +1,4 @@
+import { AlternativeGrade } from "./alternative-grade";
 import { Grade } from "./grade";
 
 export interface GradesCompletionYear {
@@ -6,4 +7,8 @@ export interface GradesCompletionYear {
    owner: string;
    firstSemesterGrades: Grade[];
    secondSemesterGrades: Grade[];
+   alternativeGrades?: {
+      firstSemester?: AlternativeGrade[];
+      secondSemester?: AlternativeGrade[];
+   };
 }

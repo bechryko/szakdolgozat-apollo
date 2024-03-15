@@ -1,0 +1,25 @@
+<div class="alternative-grades-dialog-container">
+   <h2>
+      {{ "AVERAGES.ALTERNATIVE_GRADES_DIALOG.TITLE" | transloco }}
+      <br>
+      {{ data.yearName }}
+   </h2>
+   <div class="semester-tables">
+      <apo-alternatives-editing-table
+         titleKey="AVERAGES.YEAR_AVERAGES.FIRST_SEMESTER.LABEL"
+         [originalGrades]="data.originalFirstSemesterGrades"
+         [alternativeGrades]="alternativeFirstSemesterGrades"></apo-alternatives-editing-table>
+      <apo-alternatives-editing-table
+         titleKey="AVERAGES.YEAR_AVERAGES.SECOND_SEMESTER.LABEL"
+         [originalGrades]="data.originalSecondSemesterGrades"
+         [alternativeGrades]="alternativeSecondSemesterGrades"></apo-alternatives-editing-table>
+   </div>
+   <div class="actions">
+   <button mat-raised-button
+      color="primary"
+      (click)="save()">{{ "AVERAGES.DIALOGS.SAVE_LABEL" | transloco }}</button>
+   <button mat-raised-button
+      color="accent"
+      (click)="reset()">{{ "AVERAGES.ALTERNATIVE_GRADES_DIALOG.RESET_LABEL" | transloco }}</button>
+   </div>
+</div>

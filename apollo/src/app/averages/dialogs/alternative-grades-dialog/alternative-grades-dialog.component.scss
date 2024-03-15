@@ -1,0 +1,33 @@
+@use 'styles/colors';
+
+.alternative-grades-dialog-container {
+   height: 80vh;
+   background-color: colors.$primary-background;
+   padding: 2.5rem;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+
+   h2 {
+      text-align: center;
+   }
+}
+
+.actions {
+   display: flex;
+   gap: 3rem;
+   align-items: center;
+   justify-content: center;
+}
+
+.semester-tables {
+   overflow-y: auto;
+   max-height: 29.75rem;
+   margin: 2rem 0;
+   padding-right: 0.5rem;
+}
+
+apo-alternatives-editing-table + apo-alternatives-editing-table {
+   display: block;
+   margin-top: 2rem;
+}

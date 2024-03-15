@@ -7,8 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslocoPipe } from '@ngneat/transloco';
+import { isEqual } from 'lodash';
 import { tap } from 'rxjs';
-import { GradeManagerDialogComponent, GradeManagerDialogData } from './dialogs';
+import { AlternativeGradesDialogComponent, AlternativeGradesDialogData, AlternativeGradesDialogOutputData, GradeManagerDialogComponent, GradeManagerDialogData } from './dialogs';
 import { AveragesDisplayerComponent, MultiAveragesDisplayerComponent } from './displayers';
 import { Grade, GradesCompletionYear } from './models';
 import { AveragesService } from './services';
@@ -41,6 +42,7 @@ export class AveragesComponent {
       private readonly averagesService: AveragesService,
       private readonly dialog: MatDialog
    ) {
+      this.selectedYearId = signal(undefined);
       this.averages = toSignal(this.averagesService.grades$.pipe(
          tap(grades => {
             if(!this.selectedYearId()) {
@@ -56,7 +58,6 @@ export class AveragesComponent {
 
          return averages.map(average => [average.firstSemesterGrades, average.secondSemesterGrades]).flat();
       });
-      this.selectedYearId = signal(undefined);
       this.selectedYear = computed(() => {
          const averages = this.averages();
          if(!averages) {
@@ -89,6 +90,39 @@ export class AveragesComponent {
 
          this.selectedYearId.set(data.selectedYearId);
          this.averagesService.saveAverages(data.years);
+      });
+   }
+
+   public openAlternativesDialog(year: GradesCompletionYear): void {
+      this.dialog.open<AlternativeGradesDialogComponent, AlternativeGradesDialogData, AlternativeGradesDialogOutputData>(AlternativeGradesDialogComponent, {
+         data: {
+            yearName: year.name,
+            originalFirstSemesterGrades: year.firstSemesterGrades,
+            originalSecondSemesterGrades: year.secondSemesterGrades,
+            alternativeFirstSemesterGrades: year.alternativeGrades?.firstSemester,
+            alternativeSecondSemesterGrades: year.alternativeGrades?.secondSemester
+         }
+      }).afterClosed().subscribe(data => {
+         if(!data) {
+            return;
+         }
+
+         if(!isEqual(year.alternativeGrades?.firstSemester, data.alternativeFirstSemesterGrades)) {
+            this.averagesService.saveAlternativeSemester({
+               id: year.id,
+               type: 'firstSemesterGrades',
+               grades: data.alternativeFirstSemesterGrades,
+               original: year.firstSemesterGrades
+            });
+         }
+         if(!isEqual(year.alternativeGrades?.secondSemester, data.alternativeSecondSemesterGrades)) {
+            this.averagesService.saveAlternativeSemester({
+               id: year.id,
+               type: 'secondSemesterGrades',
+               grades: data.alternativeSecondSemesterGrades,
+               original: year.secondSemesterGrades
+            });
+         }
       });
    }
 

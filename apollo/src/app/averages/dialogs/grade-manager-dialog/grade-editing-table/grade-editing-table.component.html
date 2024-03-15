@@ -4,21 +4,22 @@
    </div>
    <table mat-table [dataSource]="grades">
       <ng-container matColumnDef="name">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.GRADE_MANAGER_DIALOG.TABLE_HEADERS.NAME" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.NAME" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index">
             <input class="table-cell-input wide-column"
+               [placeholder]="'AVERAGES.DIALOGS.NAME_INPUT_PLACEHOLDER' | transloco"
                [(ngModel)]="grades[idx].name">
          </td>
       </ng-container>
       <ng-container matColumnDef="rating">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.GRADE_MANAGER_DIALOG.TABLE_HEADERS.RATING" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.RATING" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index">
             <input class="table-cell-input"
                [(ngModel)]="grades[idx].rating">
          </td>
       </ng-container>
       <ng-container matColumnDef="credit">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.GRADE_MANAGER_DIALOG.TABLE_HEADERS.CREDIT" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.CREDIT" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index">
             <input class="table-cell-input"
                [(ngModel)]="grades[idx].credit">
@@ -29,7 +30,7 @@
          <td mat-cell *matCellDef="let idx = index">
             <button mat-flat-button
                color="warn"
-               (click)="removeGrade(grades, idx)">{{ "AVERAGES.GRADE_MANAGER_DIALOG.GRADE_REMOVE_LABEL" | transloco }}</button>
+               (click)="removeGrade(grades, idx)">{{ "AVERAGES.DIALOGS.GRADE_REMOVE_LABEL" | transloco }}</button>
          </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -39,7 +40,7 @@
       <div class="semester-table-footer">
          <button mat-raised-button
             color="accent"
-            (click)="addGrade(grades)">{{ "AVERAGES.GRADE_MANAGER_DIALOG.GRADE_ADD_LABEL" | transloco }}</button>
+            (click)="addGrade(grades)">{{ "AVERAGES.DIALOGS.GRADE_ADD_LABEL" | transloco }}</button>
          <input type="file"
             accept=".txt"
             (change)="fileUpload($event, grades)">

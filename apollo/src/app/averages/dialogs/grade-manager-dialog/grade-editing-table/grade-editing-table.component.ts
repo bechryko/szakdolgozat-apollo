@@ -59,9 +59,9 @@ export class GradeEditingTableComponent {
             data: {
                data: grades,
                columnNameKeys: [
-                  "AVERAGES.GRADE_MANAGER_DIALOG.TABLE_HEADERS.NAME",
-                  "AVERAGES.GRADE_MANAGER_DIALOG.TABLE_HEADERS.RATING",
-                  "AVERAGES.GRADE_MANAGER_DIALOG.TABLE_HEADERS.CREDIT"
+                  "AVERAGES.DIALOGS.TABLE_HEADERS.NAME",
+                  "AVERAGES.DIALOGS.TABLE_HEADERS.RATING",
+                  "AVERAGES.DIALOGS.TABLE_HEADERS.CREDIT"
                ]
             }
          }).afterClosed().subscribe(confirmed => {

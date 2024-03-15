@@ -1,0 +1,22 @@
+@use 'styles/colors';
+@use 'styles/table-style';
+
+@include table-style.semesterTable;
+
+td {
+   &.changed {
+      background-color: rgb(254, 214, 140);
+   }
+
+   &.disabled {
+      background-color: rgb(213, 213, 213);
+   }
+
+   &.bonus {
+      background-color: rgb(167, 255, 167);
+   }
+}
+
+.table-cell-input {
+   background-color: transparent;
+}

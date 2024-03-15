@@ -1,0 +1,67 @@
+<div class="alternatives-editing-table-container">
+   <div class="mat-mdc-table">
+      <div class="semester-table-header mat-mdc-table-row mat-mdc-header-cell">{{ titleKey | transloco }}</div>
+   </div>
+   <table mat-table [dataSource]="alternativeGrades">
+      <ng-container matColumnDef="name">
+         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.NAME" | transloco }}</th>
+         <td mat-cell *matCellDef="let idx = index" [ngClass]="alternativeGrades[idx] | cellStyle: originalGrades[idx]">
+            @if(alternativeGrades[idx].bonus) {
+               <input class="table-cell-input wide-column"
+                  [placeholder]="'AVERAGES.DIALOGS.NAME_INPUT_PLACEHOLDER' | transloco"
+                  [(ngModel)]="alternativeGrades[idx].name">
+            } @else {
+               <p class="wide-column">{{ alternativeGrades[idx].name }}</p>
+            }
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="rating">
+         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.RATING" | transloco }}</th>
+         <td mat-cell *matCellDef="let idx = index" [ngClass]="alternativeGrades[idx] | cellStyle: originalGrades[idx]">
+            <input class="table-cell-input"
+               [value]="alternativeGrades[idx].rating"
+               (change)="setGradeValue(alternativeGrades, idx, $event)">
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="credit">
+         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.CREDIT" | transloco }}</th>
+         <td mat-cell *matCellDef="let idx = index" [ngClass]="alternativeGrades[idx] | cellStyle: originalGrades[idx]">
+            @if(alternativeGrades[idx].bonus) {
+               <input class="table-cell-input"
+                  [(ngModel)]="alternativeGrades[idx].credit">
+            } @else {
+               <p>{{ alternativeGrades[idx].credit }}</p>
+            }
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="remove">
+         <th mat-header-cell *matHeaderCellDef></th>
+         <td mat-cell *matCellDef="let idx = index" [ngClass]="alternativeGrades[idx] | cellStyle: originalGrades[idx]">
+            @if(alternativeGrades[idx].bonus) {
+               <button mat-flat-button
+                  color="warn"
+                  (click)="removeGrade(alternativeGrades, idx)">{{ "AVERAGES.DIALOGS.GRADE_REMOVE_LABEL" | transloco }}</button>
+            } @else {
+               <button mat-flat-button
+                  [color]="alternativeGrades[idx].disabled ? 'accent' : 'warn'"
+                  (click)="toggleGrade(alternativeGrades, idx)">
+                  @if(alternativeGrades[idx].disabled) {
+                     {{ "AVERAGES.DIALOGS.GRADE_ENABLE_LABEL" | transloco }}
+                  } @else {
+                     {{ "AVERAGES.DIALOGS.GRADE_DISABLE_LABEL" | transloco }}
+                  }
+               </button>
+            }
+         </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+   </table>
+   <div class="mat-mdc-table">
+      <div class="semester-table-footer">
+         <button mat-raised-button
+            color="accent"
+            (click)="addGrade(alternativeGrades)">{{ "AVERAGES.DIALOGS.GRADE_ADD_LABEL" | transloco }}</button>
+      </div>
+   </div>
+</div>

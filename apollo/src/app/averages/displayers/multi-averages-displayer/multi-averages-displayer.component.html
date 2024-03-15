@@ -4,20 +4,54 @@
       <button mat-raised-button
          class="alternatives-button"
          color="accent"
-         (click)="setAlternatives()">{{ "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL" | transloco }}</button>
+         (click)="onSetAlternatives()">{{ "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL" | transloco }}</button>
    }
-   <p>{{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() }}</p>
-   <p>{{ "AVERAGES.DISPLAY.CREDIT_SUM" | transloco }}: {{ creditSum() }}</p>
-   <p>{{ "AVERAGES.DISPLAY.CREDIT_INDEX" | transloco }}: {{ creditIndex() }}</p>
-   <p>{{ "AVERAGES.DISPLAY.ADJUSTED_CREDIT_INDEX" | transloco }}: {{ adjustedCreditIndex() }}</p>
+   <p>
+      {{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() }}
+      @if(alternativeWeightedAverage()) {
+         <span class="alternative-data">
+            <mat-icon>arrow_right_alt</mat-icon>
+            {{ alternativeWeightedAverage() }}
+         </span>
+      }
+   </p>
+   <p>
+      {{ "AVERAGES.DISPLAY.CREDIT_SUM" | transloco }}: {{ creditSum() }}
+      @if(alternativeCreditSum()) {
+         <span class="alternative-data">
+            <mat-icon>arrow_right_alt</mat-icon>
+            {{ alternativeCreditSum() }}
+         </span>
+      }
+   </p>
+   <p>
+      {{ "AVERAGES.DISPLAY.CREDIT_INDEX" | transloco }}: {{ creditIndex() }}
+      @if(alternativeCreditIndex()) {
+         <span class="alternative-data">
+            <mat-icon>arrow_right_alt</mat-icon>
+            {{ alternativeCreditIndex() }}
+         </span>
+      }
+   </p>
+   <p>
+      {{ "AVERAGES.DISPLAY.ADJUSTED_CREDIT_INDEX" | transloco }}: {{ adjustedCreditIndex() }}
+      @if(alternativeAdjustedCreditIndex()) {
+         <span class="alternative-data">
+            <mat-icon>arrow_right_alt</mat-icon>
+            {{ alternativeAdjustedCreditIndex() }}
+         </span>
+      }
+   </p>
    @if(yearDisplay) {
-      <div class="year-averages-container">
+      <div class="year-averages-container" *ngLet="years()[0] as currentYear">
          <apo-averages-displayer
             [title]="'AVERAGES.YEAR_AVERAGES.FIRST_SEMESTER.LABEL' | transloco"
-            [gradeData]="grades()[0]"></apo-averages-displayer>
+            [gradeData]="currentYear.firstSemesterGrades"
+            [alternativesData]="currentYear.alternativeGrades?.firstSemester"></apo-averages-displayer>
          <apo-averages-displayer
             [title]="'AVERAGES.YEAR_AVERAGES.SECOND_SEMESTER.LABEL' | transloco"
-            [gradeData]="grades()[1]"></apo-averages-displayer>
+            [gradeData]="years()[0].secondSemesterGrades"
+            [alternativesData]="currentYear.alternativeGrades?.secondSemester"></apo-averages-displayer>
       </div>
    }
 </fieldset>

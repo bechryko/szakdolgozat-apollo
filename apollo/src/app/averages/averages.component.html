@@ -1,7 +1,7 @@
 @if(averages()) {
    <apo-multi-averages-displayer *ngIf="allGrades()"
       [title]="'AVERAGES.DISPLAY.TITLE.CUMULATED' | transloco"
-      [gradeData]="allGrades()!"></apo-multi-averages-displayer>
+      [yearData]="averages()!"></apo-multi-averages-displayer>
    <div class="actions">
       @if(selectedYear()) {
          <button mat-raised-button
@@ -25,7 +25,8 @@
          <apo-multi-averages-displayer
             [title]="year.name"
             [yearDisplay]="true"
-            [gradeData]="[ year.firstSemesterGrades, year.secondSemesterGrades ]"></apo-multi-averages-displayer>
+            [yearData]="[ year ]"
+            (setAlternatives)="openAlternativesDialog(year)"></apo-multi-averages-displayer>
       }
    </ng-container>
 } @else {
