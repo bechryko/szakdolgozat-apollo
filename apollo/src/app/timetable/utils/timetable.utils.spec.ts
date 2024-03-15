@@ -1,4 +1,4 @@
-import { Activity } from "@apollo-timetable/models";
+import { Activity } from "@apollo/timetable/models";
 import { TimetableUtils } from "./timetable.utils";
 
 describe('TimetableUtils', () => {

@@ -1,4 +1,4 @@
-import { ActivityLocationInterval, ActivityTime, Semester } from "@apollo-timetable/models";
+import { ActivityLocationInterval, ActivityTime, Semester } from "@apollo/timetable/models";
 import { TimetableSplitUtils } from "./timetable-split.utils";
 
 function createSemester(...activityTimes: ActivityTime[]): Semester {
