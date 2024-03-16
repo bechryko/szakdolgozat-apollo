@@ -67,7 +67,7 @@ export class TimetableSettingsDialogComponent {
    ) {
       this.data = cloneDeep(data);
       this.selectedSemesterId = signal(data.selectedSemesterId);
-      this.selectedSemester = computed(() => this.data.semesters.find(semester => semester.id === this.selectedSemesterId()));
+      this.selectedSemester = computed(() => this.data.semesters!.find(semester => semester.id === this.selectedSemesterId()));
 
       this.formUpdater = signal(true);
       this.semesterForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildSemesterForm(this.fb, this.selectedSemester()!)));
@@ -95,7 +95,7 @@ export class TimetableSettingsDialogComponent {
 
    public addSemester(): void {
       const id = `new-${this.newSemesters++}`;
-      this.data.semesters.push({
+      this.data.semesters!.push({
          id,
          name: this.translateService.translate("TIMETABLE.SETTINGS_DIALOG.NEW_SEMESTER_DEFAULT_NAME"),
          owner: "",
@@ -113,7 +113,7 @@ export class TimetableSettingsDialogComponent {
          cancel: "GENERAL_DIALOG.CANCEL"
       }).subscribe(doDelete => {
          if (doDelete) {
-            this.data.semesters = this.data.semesters.filter(semester => semester.id !== this.selectedSemesterId());
+            this.data.semesters = this.data.semesters!.filter(semester => semester.id !== this.selectedSemesterId());
             this.selectedSemesterId.set(undefined);
          }
       });

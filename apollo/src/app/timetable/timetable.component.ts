@@ -120,7 +120,7 @@ export class TimetableComponent implements AfterViewChecked {
          }
          
          this.timetableAreaSize$.set(undefined);
-         this.timetableService.saveTimetableData(data.semesters, data.selectedSemesterId);
+         this.timetableService.saveTimetableData(data.semesters!, data.selectedSemesterId);
       });
    }
 }

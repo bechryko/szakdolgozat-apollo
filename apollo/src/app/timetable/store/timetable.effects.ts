@@ -24,7 +24,7 @@ export class TimetableEffects {
    updateTimetable$ = createEffect(() =>
       this.actions$.pipe(
          ofType(timetableActions.updateTimetable),
-         switchMap(({ newState }) => this.timetableFetcherService.saveSemesters(newState.semesters).pipe(
+         switchMap(({ newState }) => this.timetableFetcherService.saveSemesters(newState.semesters!).pipe(
             map(_ => newState)
          )),
          map(newState => timetableActions.saveTimetableToStore({ newState })),
