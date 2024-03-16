@@ -11,11 +11,12 @@ export class UserEffects {
       this.actions$.pipe(
          ofType(userActions.login),
          switchMap(({ loginData }) => this.authService.signInUser(loginData.email, loginData.password)),
+         map(() => userActions.clearUserData()),
          catchError(error => {
             // TODO: error handling
             return [];
          })
-      ), { dispatch: false }
+      )
    );
 
    public readonly register$ = createEffect(() =>
@@ -24,11 +25,12 @@ export class UserEffects {
          switchMap(({ registerData }) => this.authService.registerUser(registerData.email, registerData.password).pipe(
             switchMap(() => this.userFetcherService.saveNewUserData(registerData))
          )),
+         map(() => userActions.clearUserData()),
          catchError(error => {
             // TODO: error handling
             return [];
          })
-      ), { dispatch: false }
+      )
    );
 
    public readonly updateUserProfile$ = createEffect(() =>
@@ -49,7 +51,7 @@ export class UserEffects {
       this.actions$.pipe(
          ofType(userActions.logout),
          switchMap(() => this.authService.signOutUser()),
-         map(() => userActions.logoutSuccess()),
+         map(() => userActions.clearUserData()),
          catchError(error => {
             // TODO: error handling
             return [];

@@ -9,6 +9,6 @@ export const userActions = createActionGroup({
       "Register": props<{ registerData: RegisterData }>(),
       "Update user profile": props<{ user: ApolloUser }>(),
       "Logout": emptyProps(),
-      "Logout success": emptyProps()
+      "Clear user data": emptyProps()
    }
 });

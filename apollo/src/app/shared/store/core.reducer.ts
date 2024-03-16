@@ -10,5 +10,5 @@ const initialState: CoreState = {
 export const coreReducer = createReducer(
    initialState,
    on(completionsActions.saveCompletionsToStore, (state, { completions }) => ({ ...state, completionYears: completions })),
-   on(userActions.logoutSuccess, () => initialState)
+   on(userActions.clearUserData, () => initialState)
 );

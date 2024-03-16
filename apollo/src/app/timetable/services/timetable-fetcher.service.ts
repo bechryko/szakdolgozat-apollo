@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CoreFetcherService } from '@apollo/shared/services/core-fetcher.service';
+import { GuestStorageUtils } from '@apollo/shared/utils';
 import { Observable } from 'rxjs';
 import { Semester } from '../models';
 
@@ -19,5 +20,9 @@ export class TimetableFetcherService {
 
    public saveSemesters(semesters: Semester[]): Observable<void> {
       return this.coreFetcherService.saveCollectionChanges<Semester>(COLLECTION, semesters);
+   }
+
+   public clearGuestStorage(): void {
+      GuestStorageUtils.clear(COLLECTION);
    }
 }

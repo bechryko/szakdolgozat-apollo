@@ -26,5 +26,5 @@ export const averagesReducer = createReducer(
       ...state,
       alternativeSemesters: state.alternativeSemesters.filter(alternativeSemester => !(alternativeSemester.id === id && alternativeSemester.type === semesterType))
    })),
-   on(userActions.logoutSuccess, () => initialState)
+   on(userActions.clearUserData, () => initialState)
 );

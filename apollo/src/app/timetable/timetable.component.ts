@@ -82,6 +82,10 @@ export class TimetableComponent implements AfterViewChecked {
       };
 
       this.timetableAreaSize$ = signal(undefined);
+      
+      if(this.semesters() && !this.semesters()!.length) {
+         this.openTimetableSettings();
+      }
    }
 
    public ngAfterViewChecked(): void {

@@ -73,6 +73,10 @@ export class TimetableSettingsDialogComponent {
       this.semesterForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildSemesterForm(this.fb, this.selectedSemester()!)));
       this.categoryForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildCategoryFormArray(this.fb, this.selectedSemester()!.categories)));
       this.activityForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildActivityFormArray(this.fb, this.selectedSemester()!.activities)));
+      
+      if(!this.data.semesters!.length) {
+         this.addSemester();
+      }
    }
 
    public selectSemester(semesterId: string): void {
@@ -94,7 +98,7 @@ export class TimetableSettingsDialogComponent {
    }
 
    public addSemester(): void {
-      const id = `new-${this.newSemesters++}`;
+      const id = Date.now() + "-" + this.newSemesters++;
       this.data.semesters!.push({
          id,
          name: this.translateService.translate("TIMETABLE.SETTINGS_DIALOG.NEW_SEMESTER_DEFAULT_NAME"),

@@ -11,5 +11,5 @@ const initialState: TimetableState = {
 export const timetableReducer = createReducer(
    initialState,
    on(timetableActions.saveTimetableToStore, (_, { newState }) => newState),
-   on(userActions.logoutSuccess, () => initialState)
+   on(userActions.clearUserData, () => initialState)
 );
