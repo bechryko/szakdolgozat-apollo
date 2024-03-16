@@ -25,6 +25,7 @@
       }
       <button mat-raised-button
          color="primary"
+         [disabled]="averages()!.length === 0"
          (click)="manageGrades()">{{ "AVERAGES.MANAGE_GRADES_LABEL" | transloco }}</button>
    </div>
    <ng-container *ngLet="singleYearViewMode() ? [ selectedYear()! ] : averages() as years">

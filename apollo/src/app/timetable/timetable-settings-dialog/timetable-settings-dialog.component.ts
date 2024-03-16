@@ -62,7 +62,7 @@ export class TimetableSettingsDialogComponent {
       @Inject(MAT_DIALOG_DATA) data: TimetableState,
       private readonly fb: FormBuilder,
       private readonly dialog: GeneralDialogService,
-      private readonly translateService: TranslocoService,
+      private readonly transloco: TranslocoService,
       private readonly snackbarService: SnackBarService
    ) {
       this.data = cloneDeep(data);
@@ -101,7 +101,7 @@ export class TimetableSettingsDialogComponent {
       const id = Date.now() + "-" + this.newSemesters++;
       this.data.semesters!.push({
          id,
-         name: this.translateService.translate("TIMETABLE.SETTINGS_DIALOG.NEW_SEMESTER_DEFAULT_NAME"),
+         name: this.transloco.translate("TIMETABLE.SETTINGS_DIALOG.NEW_SEMESTER_DEFAULT_NAME"),
          owner: "",
          activities: [],
          categories: []
@@ -157,7 +157,7 @@ export class TimetableSettingsDialogComponent {
    public addCategory(): void {
       this.updateData();
       this.selectedSemester()!.categories.push({
-         name: this.translateService.translate("TIMETABLE.SETTINGS_DIALOG.NEW_CATEGORY_DEFAULT_NAME"),
+         name: this.transloco.translate("TIMETABLE.SETTINGS_DIALOG.NEW_CATEGORY_DEFAULT_NAME"),
          color: "#FFFFFF",
          temporary: false
       });
@@ -187,7 +187,7 @@ export class TimetableSettingsDialogComponent {
 
    public addActivity(): void {
       (this.activityForm().controls["activities"] as FormArray).push(TimetableSettingsFormsUtils.buildActivityForm(this.fb, {
-         name: this.translateService.translate("TIMETABLE.SETTINGS_DIALOG.NEW_ACTIVITY_DEFAULT_NAME"),
+         name: this.transloco.translate("TIMETABLE.SETTINGS_DIALOG.NEW_ACTIVITY_DEFAULT_NAME"),
          time: {
             day: 0,
             startingHour: 0,

@@ -13,11 +13,11 @@ interface ApolloSnackBarConfig {
 export class SnackBarService {
    constructor(
       private readonly snackbar: MatSnackBar,
-      private readonly translateService: TranslocoService
+      private readonly transloco: TranslocoService
    ) { }
 
    public open(messageKey: string, config: ApolloSnackBarConfig = {}, messageParams?: HashMap): void {
-      this.snackbar.open(this.translateService.translate(messageKey, messageParams), config.action, {
+      this.snackbar.open(this.transloco.translate(messageKey, messageParams), config.action, {
          duration: config.duration ?? 3000
       });
    }

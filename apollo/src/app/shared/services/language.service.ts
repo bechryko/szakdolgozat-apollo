@@ -9,7 +9,7 @@ export class LanguageService {
    private activeLanguage!: string;
 
    constructor(
-      private readonly translocoService: TranslocoService
+      private readonly transloco: TranslocoService
    ) { }
 
    public setInitialLanguage(): void {
@@ -17,7 +17,7 @@ export class LanguageService {
    }
 
    public setLanguage(lang: string): void {
-      this.translocoService.setActiveLang(lang);
+      this.transloco.setActiveLang(lang);
       this.activeLanguage = lang;
    }
 

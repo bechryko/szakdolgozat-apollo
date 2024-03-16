@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { isEqual } from 'lodash';
@@ -30,7 +31,8 @@ import { AveragesService } from './services';
       FormsModule,
       TranslocoPipe,
       MatButtonModule,
-      MatIconModule
+      MatIconModule,
+      GeneralInputDialogComponent
    ],
    templateUrl: './averages.component.html',
    styleUrl: './averages.component.scss',
@@ -74,6 +76,28 @@ export class AveragesComponent {
          return averages.find(average => average.id === this.selectedYearId());
       });
       this.singleYearViewMode = signal(false);
+
+      if(this.averages()?.length === 0) {
+         this.dialog.open(GeneralInputDialogComponent, {
+            data: {
+               title: "AVERAGES.NO_DATA_DIALOG.TITLE",
+               description: "AVERAGES.NO_DATA_DIALOG.DESCRIPTION",
+               inputType: 'text',
+               inputLabel: "AVERAGES.YEAR_ADD_DIALOG.INPUT_LABEL",
+               submitLabel: "AVERAGES.NO_DATA_DIALOG.SUBMIT_LABEL"
+            }
+         }).afterClosed().subscribe(yearName => {
+            if(yearName) {
+               this.averagesService.saveAverages([{
+                  id: Date.now().toString(),
+                  name: yearName,
+                  owner: "guest",
+                  firstSemesterGrades: [],
+                  secondSemesterGrades: []
+               }]);
+            }
+         });
+      }
 
       this.isUserLoggedOut$ = this.userService.isUserLoggedIn$.pipe(
          map(isLoggedIn => !isLoggedIn)

@@ -15,7 +15,7 @@ export class CompletionsFetcherService {
    ) { }
 
    public getCompletionsForCurrentUser(): Observable<UniversityCompletionYear[]> {
-      return this.coreFetcherService.getCollectionForCurrentUser<UniversityCompletionYear>(COLLECTION, this.getDefaultCompletionsForGuestUser());
+      return this.coreFetcherService.getCollectionForCurrentUser<UniversityCompletionYear>(COLLECTION);
    }
 
    public saveCompletions(completions: UniversityCompletionYear[]): Observable<void> {
@@ -24,15 +24,5 @@ export class CompletionsFetcherService {
 
    public clearGuestStorage(): void {
       GuestStorageUtils.clear(COLLECTION);
-   }
-
-   private getDefaultCompletionsForGuestUser(): UniversityCompletionYear[] {
-      return [{
-         id: '1',
-         name: 'Guest year',
-         owner: 'guest',
-         firstSemester: [],
-         secondSemester: []
-      }];
    }
 }
