@@ -6,7 +6,7 @@ import { UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { NgLetModule } from 'ng-let';
 import { Observable } from 'rxjs';
-import { LoginComponent, RegisterComponent } from './components';
+import { LoginComponent, RegisterComponent, UserSettingsComponent } from './components';
 import { LoginData, RegisterData } from './models';
 
 @Component({
@@ -16,6 +16,7 @@ import { LoginData, RegisterData } from './models';
       TranslocoPipe,
       NgLetModule,
       AsyncPipe,
+      UserSettingsComponent,
       LoginComponent,
       RegisterComponent,
       MatButtonModule
@@ -31,6 +32,10 @@ export class UserComponent {
       private readonly userService: UserService
    ) {
       this.loggedInUser$ = this.userService.user$;
+   }
+
+   public onSaveUserSettings(user: ApolloUser): void {
+      this.userService.updateUser(user);
    }
 
    public onLogin(loginData: LoginData): void {

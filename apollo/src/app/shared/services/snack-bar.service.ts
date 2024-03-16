@@ -16,7 +16,7 @@ export class SnackBarService {
       private readonly translateService: TranslocoService
    ) { }
 
-   public open(messageKey: string, config: ApolloSnackBarConfig, messageParams?: HashMap): void {
+   public open(messageKey: string, config: ApolloSnackBarConfig = {}, messageParams?: HashMap): void {
       this.snackbar.open(this.translateService.translate(messageKey, messageParams), config.action, {
          duration: config.duration ?? 3000
       });

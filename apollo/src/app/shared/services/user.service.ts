@@ -37,4 +37,8 @@ export class UserService {
    public logout(): void {
       this.store.dispatch(userActions.logout());
    }
+
+   public updateUser(user: ApolloUser): void {
+      this.store.dispatch(userActions.updateUserProfile({ user }));
+   }
 }

@@ -1,4 +1,5 @@
 import { FormBuilder, ValidatorFn, Validators } from "@angular/forms";
+import { ApolloUser } from "@apollo/shared/models";
 
 export class AuthFormsUtils {
    public static buildLoginForm(fb: FormBuilder) {
@@ -24,5 +25,16 @@ export class AuthFormsUtils {
 
          return password && confirmPassword && password.value === confirmPassword.value ? null : { passwordMismatch: true };
       };
+   }
+
+   public static buildUserSettingsForm(fb: FormBuilder, user: ApolloUser) {
+      return fb.group({
+         username: [user.username, [ Validators.required, Validators.minLength(3) ]],
+         university: user.university,
+         faculty: user.faculty,
+         major: user.major,
+         studyMode: user.studyMode,
+         curriculumYear: user.curriculumYear
+      });
    }
 }

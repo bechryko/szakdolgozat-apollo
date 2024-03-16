@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
+import { SnackBarService } from "@apollo/shared/services";
 import { AuthService, UserFetcherService } from "@apollo/user/services";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, switchMap } from "rxjs";
+import { catchError, map, switchMap, tap } from "rxjs";
 import { userActions } from "../actions/user.actions";
 
 @Injectable()
@@ -34,6 +35,9 @@ export class UserEffects {
       this.actions$.pipe(
          ofType(userActions.updateUserProfile),
          switchMap(({ user }) => this.userFetcherService.updateUserData(user)),
+         tap(() => {
+            this.snackbar.open("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
+         }),
          catchError(error => {
             // TODO: error handling
             return [];
@@ -45,16 +49,18 @@ export class UserEffects {
       this.actions$.pipe(
          ofType(userActions.logout),
          switchMap(() => this.authService.signOutUser()),
+         map(() => userActions.logoutSuccess()),
          catchError(error => {
             // TODO: error handling
             return [];
          })
-      ), { dispatch: false }
+      )
    );
    
    constructor(
       private readonly actions$: Actions,
       private readonly authService: AuthService,
-      private readonly userFetcherService: UserFetcherService
+      private readonly userFetcherService: UserFetcherService,
+      private readonly snackbar: SnackBarService
    ) { }
 }
