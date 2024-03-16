@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, map, switchMap } from "rxjs";
+import { catchError, map, switchMap, tap } from "rxjs";
 import { CompletionsFetcherService } from "../../services";
+import { userActions } from "../actions";
 import { completionsActions } from "../actions/completions.actions";
 
 @Injectable()
 export class CompletionsEffects {
-   loadCompletions$ = createEffect(() => 
+   public readonly loadCompletions$ = createEffect(() => 
       this.actions$.pipe(
          ofType(completionsActions.loadCompletions),
          switchMap(() => this.completionsFetcherService.getCompletionsForCurrentUser()),
@@ -18,7 +19,7 @@ export class CompletionsEffects {
       )
    );
 
-   saveCompletions$ = createEffect(() =>
+   public readonly saveCompletions$ = createEffect(() =>
       this.actions$.pipe(
          ofType(completionsActions.saveCompletions),
          switchMap(({ completions }) => this.completionsFetcherService.saveCompletions(completions)),
@@ -27,6 +28,21 @@ export class CompletionsEffects {
             // TODO: error handling
             return [];
          })
+      )
+   );
+
+   public readonly clearUserData$ = createEffect(() =>
+      this.actions$.pipe(
+         ofType(userActions.clearUserData),
+         map(_ => completionsActions.deleteData())
+      )
+   );
+
+   public readonly deleteGuestData$ = createEffect(() =>
+      this.actions$.pipe(
+         ofType(completionsActions.deleteGuestData),
+         tap(_ => this.completionsFetcherService.clearGuestStorage()),
+         map(_ => completionsActions.deleteData())
       )
    );
 

@@ -1,5 +1,12 @@
+@if(isUserLoggedOut$ | async) {
+   <button mat-fab class="floating-button"
+      color="warn"
+      (click)="onDeleteGuestData()">
+      <mat-icon>delete</mat-icon>
+   </button>
+}
 @if(averages()) {
-   <apo-multi-averages-displayer *ngIf="allGrades()"
+   <apo-multi-averages-displayer
       [title]="'AVERAGES.DISPLAY.TITLE.CUMULATED' | transloco"
       [yearData]="averages()!"></apo-multi-averages-displayer>
    <div class="actions">
@@ -20,7 +27,7 @@
          color="primary"
          (click)="manageGrades()">{{ "AVERAGES.MANAGE_GRADES_LABEL" | transloco }}</button>
    </div>
-   <ng-container *ngIf="singleYearViewMode() ? [ selectedYear()! ] : averages() as years">
+   <ng-container *ngLet="singleYearViewMode() ? [ selectedYear()! ] : averages() as years">
       @for(year of years; track -$index) {
          <apo-multi-averages-displayer
             [title]="year.name"

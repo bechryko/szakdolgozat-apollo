@@ -10,6 +10,7 @@
    background-color: colors.$primary-background;
    overflow-y: auto;
    overflow-x: hidden;
+   position: relative;
 }
 
 .semester-name {
@@ -50,4 +51,10 @@
 
 .settings-button {
    margin-top: 1rem;
+}
+
+.floating-button {
+   position: absolute;
+   top: 0;
+   right: 0;
 }

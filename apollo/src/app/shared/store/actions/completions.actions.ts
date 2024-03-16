@@ -6,6 +6,8 @@ export const completionsActions = createActionGroup({
    events: {
       "Load completions": emptyProps(),
       "Save completions to store": props<{ completions: UniversityCompletionYear[] }>(),
-      "Save completions": props<{ completions: UniversityCompletionYear[] }>()
+      "Save completions": props<{ completions: UniversityCompletionYear[] }>(),
+      "Delete data": emptyProps(),
+      "Delete guest data": emptyProps()
    }
 });

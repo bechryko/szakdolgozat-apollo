@@ -35,4 +35,8 @@ export class TimetableService {
    public saveTimetableData(semesters: Semester[], selectedSemesterId?: string): void {
       this.store.dispatch(timetableActions.updateTimetable({ newState: { semesters, selectedSemesterId } }));
    }
+
+   public deleteGuestData(): void {
+      this.store.dispatch(timetableActions.deleteGuestData());
+   }
 }

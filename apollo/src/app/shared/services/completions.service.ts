@@ -31,4 +31,8 @@ export class CompletionsService {
    public saveUniversityCompletions(completions: UniversityCompletionYear[]): void {
       this.store.dispatch(completionsActions.saveCompletions({ completions }));
    }
+
+   public deleteGuestData(): void {
+      this.store.dispatch(completionsActions.deleteGuestData());
+   }
 }

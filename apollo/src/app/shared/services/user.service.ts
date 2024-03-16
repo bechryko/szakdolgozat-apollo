@@ -12,6 +12,8 @@ import { userActions } from '../store/actions/user.actions';
 })
 export class UserService {
    public readonly user$: Observable<ApolloUser | null>;
+   public readonly isUserLoggedIn$: Observable<boolean>;
+   public readonly isUserAdmin$: Observable<boolean>;
 
    constructor(
       private readonly authService: AuthService,
@@ -23,6 +25,18 @@ export class UserService {
          distinctUntilChanged(),
          switchMap(email => email ? this.userFetcherService.getUserDataChanges(email) : of(null)),
          multicast()
+      );
+
+      this.isUserLoggedIn$ = this.user$.pipe(
+         map(Boolean),
+         multicast(),
+         distinctUntilChanged()
+      );
+
+      this.isUserAdmin$ = this.user$.pipe(
+         map(user => Boolean(user?.isAdmin)),
+         multicast(),
+         distinctUntilChanged()
       );
    }
 

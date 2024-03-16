@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
+import { userActions } from "@apollo/shared/store";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, map, switchMap } from "rxjs";
+import { catchError, map, switchMap, tap } from "rxjs";
 import { TimetableFetcherService } from './../services/timetable-fetcher.service';
 import { timetableActions } from "./timetable.actions";
 
 @Injectable()
 export class TimetableEffects {
-   loadTimetable$ = createEffect(() => 
+   public readonly loadTimetable$ = createEffect(() => 
       this.actions$.pipe(
          ofType(timetableActions.loadTimetable),
          switchMap(_ => this.timetableFetcherService.getSemestersForCurrentUser()),
@@ -21,7 +22,7 @@ export class TimetableEffects {
       )
    );
 
-   updateTimetable$ = createEffect(() =>
+   public readonly updateTimetable$ = createEffect(() =>
       this.actions$.pipe(
          ofType(timetableActions.updateTimetable),
          switchMap(({ newState }) => this.timetableFetcherService.saveSemesters(newState.semesters!).pipe(
@@ -32,6 +33,21 @@ export class TimetableEffects {
             // TODO: error handling
             return [];
          })
+      )
+   );
+
+   public readonly clearUserData$ = createEffect(() =>
+      this.actions$.pipe(
+         ofType(userActions.clearUserData),
+         map(_ => timetableActions.deleteData())
+      )
+   );
+
+   public readonly deleteGuestData$ = createEffect(() =>
+      this.actions$.pipe(
+         ofType(timetableActions.deleteGuestData),
+         tap(_ => this.timetableFetcherService.clearGuestStorage()),
+         map(_ => timetableActions.deleteData())
       )
    );
 

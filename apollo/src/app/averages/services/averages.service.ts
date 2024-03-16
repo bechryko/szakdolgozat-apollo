@@ -112,4 +112,8 @@ export class AveragesService {
          semesterType: semester.type
       }));
    }
+
+   public deleteGuestData(): void {
+      this.completionsService.deleteGuestData();
+   }
 }

@@ -3,6 +3,8 @@ import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Signa
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { Observable, fromEvent, map, startWith } from 'rxjs';
 import { ActivityStylePipe } from './activity/activity-style.pipe';
@@ -21,7 +23,8 @@ import { TimetableSplitUtils, TimetableUtils } from './utils';
       TranslocoPipe,
       MatButtonModule,
       ActivityComponent,
-      ActivityStylePipe
+      ActivityStylePipe,
+      MatIconModule
    ],
    templateUrl: './timetable.component.html',
    styleUrl: './timetable.component.scss',
@@ -43,10 +46,12 @@ export class TimetableComponent implements AfterViewChecked {
    };
    @ViewChild('timetable') private readonly timetableContainer!: ElementRef<HTMLDivElement>;
    public readonly timetableAreaSize$: WritableSignal<Observable<TimetableSizeData> | undefined>;
+   public readonly isUserLoggedOut$: Observable<boolean>;
 
    constructor(
       private readonly timetableService: TimetableService,
-      private readonly dialog: MatDialog
+      private readonly dialog: MatDialog,
+      private readonly userService: UserService
    ) {
       this.semesters = toSignal(this.timetableService.semesters$.pipe(
          map(semesters => semesters?.map(sem => TimetableSplitUtils.splitTimetable(sem)))
@@ -86,6 +91,10 @@ export class TimetableComponent implements AfterViewChecked {
       if(this.semesters() && !this.semesters()!.length) {
          this.openTimetableSettings();
       }
+
+      this.isUserLoggedOut$ = this.userService.isUserLoggedIn$.pipe(
+         map(loggedIn => !loggedIn)
+      );
    }
 
    public ngAfterViewChecked(): void {
@@ -126,5 +135,9 @@ export class TimetableComponent implements AfterViewChecked {
          this.timetableAreaSize$.set(undefined);
          this.timetableService.saveTimetableData(data.semesters!, data.selectedSemesterId);
       });
+   }
+
+   public deleteGuestData(): void {
+      this.timetableService.deleteGuestData();
    }
 }
