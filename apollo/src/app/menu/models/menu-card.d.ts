@@ -1,4 +1,4 @@
-import { ButtonDescription, MultiLanguage } from "@apollo-shared/models";
+import { ButtonDescription, MultiLanguage } from "@apollo/shared/models";
 
 export interface MenuCard {
    title: MultiLanguage<string>;

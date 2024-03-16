@@ -1,4 +1,4 @@
-import { Activity, ActivityCategory, TimetableSizeData } from "@apollo-timetable/models";
+import { Activity, ActivityCategory, TimetableSizeData } from "@apollo/timetable/models";
 import { ActivityStylePipe } from "./activity-style.pipe";
 
 describe('ActivityStylePipe', () => {

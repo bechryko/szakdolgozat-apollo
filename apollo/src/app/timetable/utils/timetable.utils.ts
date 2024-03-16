@@ -1,4 +1,4 @@
-import { Interval, Semester } from "@apollo-timetable/models";
+import { Interval, Semester } from "../models";
 
 export class TimetableUtils {
    public static getDisplayableDays(semester?: Semester): Interval {

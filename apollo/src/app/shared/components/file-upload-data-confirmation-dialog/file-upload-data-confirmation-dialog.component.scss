@@ -1,0 +1,21 @@
+.file-upload-data-confirmation-dialog-container {
+   padding: 1rem;
+   height: 90dvh;
+
+   h2, p {
+      text-align: center;
+   }
+}
+
+.content-table {
+   max-height: calc(100% - 11rem);
+   overflow-y: auto;
+}
+
+.actions {
+   display: flex;
+   gap: 3rem;
+   align-items: center;
+   justify-content: center;
+   padding: 1.5rem;
+}

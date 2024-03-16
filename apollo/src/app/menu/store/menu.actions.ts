@@ -1,5 +1,5 @@
-import { MenuCard } from "@apollo-menu/models";
 import { createActionGroup, emptyProps, props } from "@ngrx/store";
+import { MenuCard } from "../models";
 
 export const menuActions = createActionGroup({
    source: "Menu",

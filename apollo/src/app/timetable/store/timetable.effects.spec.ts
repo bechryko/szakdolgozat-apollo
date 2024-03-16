@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { Semester } from "@apollo-timetable/models";
-import { TimetableFetcherService } from "@apollo-timetable/services/timetable-fetcher.service";
+import { Semester } from "@apollo/timetable/models";
+import { TimetableFetcherService } from "@apollo/timetable/services/timetable-fetcher.service";
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold } from 'jasmine-marbles';
 import { TestColdObservable } from 'jasmine-marbles/src/test-observables';

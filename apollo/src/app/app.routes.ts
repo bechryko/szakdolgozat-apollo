@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
-import { MenuComponent } from '@apollo-menu/menu.component';
-import { MenuEffects, menuFeature } from '@apollo-menu/store';
-import { TimetableEffects, timetableFeature } from '@apollo-timetable/store';
-import { TimetableComponent } from '@apollo-timetable/timetable.component';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
+import { AveragesComponent } from './averages/averages.component';
+import { averagesFeature } from './averages/store';
+import { MenuComponent } from './menu/menu.component';
+import { MenuEffects, menuFeature } from './menu/store';
+import { TimetableEffects, timetableFeature } from './timetable/store';
+import { TimetableComponent } from './timetable/timetable.component';
 
 export enum RouteUrls {
    MENU = 'menu',
@@ -28,6 +30,13 @@ export const routes: Routes = [
       providers: [
          provideState(timetableFeature),
          provideEffects(TimetableEffects)
+      ]
+   },
+   {
+      path: RouteUrls.AVERAGES,
+      component: AveragesComponent,
+      providers: [
+         provideState(averagesFeature)
       ]
    },
    {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { LOCATION_ICON, NAME_ICON, PEOPLE_ICON } from '@apollo-shared/constants';
-import { Activity } from '@apollo-timetable/models';
+import { LOCATION_ICON, NAME_ICON, PEOPLE_ICON } from '@apollo/shared/constants';
+import { Activity } from '../models';
 
 @Component({
    selector: 'apo-activity',

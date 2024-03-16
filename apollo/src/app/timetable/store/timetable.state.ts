@@ -1,4 +1,4 @@
-import { Semester } from "@apollo-timetable/models";
+import { Semester } from "../models";
 
 export interface TimetableState {
    semesters: Semester[];

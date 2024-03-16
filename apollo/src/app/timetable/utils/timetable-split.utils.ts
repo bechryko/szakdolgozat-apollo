@@ -1,5 +1,5 @@
-import { Activity, ActivityLocationInterval, Semester } from "@apollo-timetable/models";
 import { cloneDeep } from "lodash";
+import { Activity, ActivityLocationInterval, Semester } from "../models";
 import { TimetableUtils } from "./timetable.utils";
 
 export class TimetableSplitUtils {

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MultiLanguagePipe } from '@apollo-shared/pipes';
+import { MultiLanguagePipe } from '@apollo/shared/pipes';
 import { concat } from 'lodash';
 import { Observable, combineLatest, map } from 'rxjs';
 import { MenuCard } from './models';

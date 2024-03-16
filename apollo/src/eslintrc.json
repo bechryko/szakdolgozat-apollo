@@ -1,0 +1,166 @@
+{
+  "root": true,
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@angular-eslint/ng-cli-compat",
+        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "apo",
+            "style": "camelCase"
+          }
+        ],
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/consistent-type-assertions": "off",
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/dot-notation": "off",
+        "@typescript-eslint/explicit-member-accessibility": [
+          "error",
+          {
+            "accessibility": "explicit",
+            "overrides": { "constructors": "no-public" }
+          }
+        ],
+        "@typescript-eslint/prefer-readonly": "error",
+        "@typescript-eslint/quotes": [
+          "error",
+          "double",
+          {
+            "allowTemplateLiterals": true
+          }
+        ],
+        "arrow-parens": [
+          "off",
+          "always"
+        ],
+        "brace-style": [
+          "error",
+          "1tbs"
+        ],
+        "comma-dangle": "error",
+        "eqeqeq": [
+          "error",
+          "always"
+        ],
+        "id-blacklist": "off",
+        "id-match": "off",
+        "import/no-deprecated": "error",
+        "import/order": "off",
+        "linebreak-style": [
+          "error",
+          "windows"
+        ],
+        "no-duplicate-imports": "error",
+        "no-irregular-whitespace": "error",
+        "no-multiple-empty-lines": [
+          "error",
+          {
+            "max": 1
+          }
+        ],
+        "no-param-reassign": "error",
+        "no-redeclare": "error",
+        "no-undef-init": "off",
+        "no-underscore-dangle": "off",
+        "space-before-function-paren": [
+          "error",
+          {
+            "anonymous": "always",
+            "asyncArrow": "always",
+            "named": "never"
+          }
+        ],
+        "@angular-eslint/component-selector": [
+            "error",
+            { "type": "element", "prefix": ["apo", "app"], "style": "kebab-case" }
+        ],
+        "@typescript-eslint/member-ordering": [
+            "error",
+            {
+                "default": [
+                  "signature",
+                  "private-static-field",
+                  "protected-static-field",
+                  "public-static-field",
+                  "private-instance-field",
+                  "public-instance-field",
+                  "protected-instance-field",
+                  "protected-abstract-field",
+                  "public-abstract-field",
+                  "private-field",
+                  "protected-field",
+                  "public-field",
+                  "static-field",
+                  "instance-field",
+                  "abstract-field",
+                  "field",
+                  "public-constructor",
+                  "protected-constructor",
+                  "private-constructor",
+                  "constructor",
+                  "public-static-method",
+                  "protected-static-method",
+                  "private-static-method",
+                  "public-instance-method",
+                  "protected-instance-method",
+                  "private-instance-method",
+                  "public-abstract-method",
+                  "protected-abstract-method",
+                  "public-method",
+                  "protected-method",
+                  "private-method",
+                  "static-method",
+                  "instance-method",
+                  "abstract-method",
+                  "method"
+                ]
+              }
+        ],
+        "prefer-arrow/prefer-arrow-functions": "off",
+        "arrow-body-style": "off",
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+                "selector": "enumMember",
+                "format": ["camelCase", "StrictPascalCase", "UPPER_CASE"]
+            }
+        ],
+        "no-restricted-syntax": [
+            "warn",
+            {
+                "selector": "CallExpression[callee.object.name='console']",
+                "message": "Unexpected console statement (no-console)"
+            },
+            {
+                "selector": "CallExpression[callee.name=/^(fit|fdescribe)$/] > :first-child",
+                "message": "only use fit() and fdescribe() while fixing tests. Afterwards chande to it() or describe()."
+            }
+        ]
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
+      "rules": {}
+    }
+  ]
+}

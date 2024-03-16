@@ -1,0 +1,27 @@
+<div class="grade-manager-dialog-container">
+   <h2>{{ "AVERAGES.GRADE_MANAGER_DIALOG.TITLE" | transloco }}</h2>
+   <div class="actions">
+      <mat-form-field>
+         <mat-label>{{ "AVERAGES.YEAR_SELECTION_LABEL" | transloco }}</mat-label>
+         <mat-select [value]="selectedYear()" (valueChange)="selectYear($event)">
+            @for(year of years(); track year.name) {
+               <mat-option [value]="year">{{ year.name }}</mat-option>
+            }
+         </mat-select>
+      </mat-form-field>
+      <button mat-raised-button
+         color="primary"
+         (click)="addYear()">{{ "AVERAGES.GRADE_MANAGER_DIALOG.YEAR_ADD_LABEL" | transloco }}</button>
+   </div>
+   <div class="semester-tables">
+      <apo-grade-editing-table
+         titleKey="AVERAGES.YEAR_AVERAGES.FIRST_SEMESTER.LABEL"
+         [grades]="selectedYear()!.firstSemesterGrades"></apo-grade-editing-table>
+      <apo-grade-editing-table
+         titleKey="AVERAGES.YEAR_AVERAGES.SECOND_SEMESTER.LABEL"
+         [grades]="selectedYear()!.secondSemesterGrades"></apo-grade-editing-table>
+   </div>
+   <button mat-raised-button
+      color="primary"
+      (click)="save()">{{ "AVERAGES.DIALOGS.SAVE_LABEL" | transloco }}</button>
+</div>

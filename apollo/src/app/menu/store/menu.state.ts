@@ -1,4 +1,4 @@
-import { MenuCard } from "@apollo-menu/models";
+import { MenuCard } from "../models";
 
 export interface MenuState {
    cards: MenuCard[];
