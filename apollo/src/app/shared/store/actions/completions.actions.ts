@@ -1,8 +1,8 @@
 import { createActionGroup, emptyProps, props } from "@ngrx/store";
-import { UniversityCompletionYear } from "../models";
+import { UniversityCompletionYear } from "../../models";
 
-export const coreActions = createActionGroup({
-   source: "Core",
+export const completionsActions = createActionGroup({
+   source: "Completions",
    events: {
       "Load completions": emptyProps(),
       "Save completions to store": props<{ completions: UniversityCompletionYear[] }>(),

@@ -1,0 +1,22 @@
+.user-container {
+   h1 {
+      text-align: center;
+      margin-bottom: 2.5rem;
+   }
+}
+
+.user-informations {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   gap: 1.5rem;
+}
+
+.auth-tiles-container {
+   display: flex;
+   justify-content: center;
+   align-items: flex-start;
+   flex-wrap: wrap;
+   gap: 3rem;
+}

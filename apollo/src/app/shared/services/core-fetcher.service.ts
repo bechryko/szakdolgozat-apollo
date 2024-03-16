@@ -26,7 +26,7 @@ export class CoreFetcherService {
             if (user === null) {
                return [];
             }
-
+            
             const semesterQuery = query(_collection, where('owner', '==', user.email));
             return collectionData<T>(semesterQuery as any);
          }),

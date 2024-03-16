@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, switchMap } from "rxjs";
-import { CompletionsFetcherService } from "../services";
-import { coreActions } from "./core.actions";
+import { CompletionsFetcherService } from "../../services";
+import { completionsActions } from "../actions/completions.actions";
 
 @Injectable()
-export class CoreEffects {
+export class CompletionsEffects {
    loadCompletions$ = createEffect(() => 
       this.actions$.pipe(
-         ofType(coreActions.loadCompletions),
+         ofType(completionsActions.loadCompletions),
          switchMap(() => this.completionsFetcherService.getCompletionsForCurrentUser()),
-         map(completions => coreActions.saveCompletionsToStore({ completions })),
+         map(completions => completionsActions.saveCompletionsToStore({ completions })),
          catchError(() => {
             // TODO: error handling
             return [];
@@ -20,9 +20,9 @@ export class CoreEffects {
 
    saveCompletions$ = createEffect(() =>
       this.actions$.pipe(
-         ofType(coreActions.saveCompletions),
+         ofType(completionsActions.saveCompletions),
          switchMap(({ completions }) => this.completionsFetcherService.saveCompletions(completions)),
-         map(() => coreActions.loadCompletions()),
+         map(() => completionsActions.loadCompletions()),
          catchError(() => {
             // TODO: error handling
             return [];
@@ -33,5 +33,5 @@ export class CoreEffects {
    constructor(
       private readonly actions$: Actions,
       private readonly completionsFetcherService: CompletionsFetcherService
-   ) {}
+   ) { }
 }

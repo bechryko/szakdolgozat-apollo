@@ -4,8 +4,7 @@ import { isEqual } from 'lodash';
 import { Observable, distinctUntilChanged, filter, map, tap } from 'rxjs';
 import { UniversityCompletionYear } from '../models';
 import { multicast } from '../operators';
-import { coreFeature } from '../store/core.feature';
-import { coreActions } from './../store/core.actions';
+import { completionsActions, coreFeature } from '../store';
 
 @Injectable({
    providedIn: 'root'
@@ -19,7 +18,7 @@ export class CompletionsService {
       this.universityCompletions$ = this.store.select(coreFeature.selectCompletionYears).pipe(
          tap(completions => {
             if(!completions) {
-               this.store.dispatch(coreActions.loadCompletions());
+               this.store.dispatch(completionsActions.loadCompletions());
             }
          }),
          filter(completions => Boolean(completions)),
@@ -30,6 +29,6 @@ export class CompletionsService {
    }
 
    public saveUniversityCompletions(completions: UniversityCompletionYear[]): void {
-      this.store.dispatch(coreActions.saveCompletions({ completions }));
+      this.store.dispatch(completionsActions.saveCompletions({ completions }));
    }
 }

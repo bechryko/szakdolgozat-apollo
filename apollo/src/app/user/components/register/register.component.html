@@ -1,0 +1,32 @@
+<form class="auth-form" [formGroup]="registerForm">
+   <h2>{{ "AUTH.REGISTER_FORM.TITLE" | transloco }}</h2>
+   <mat-form-field>
+      <mat-label>{{ "AUTH.REGISTER_FORM.EMAIL_LABEL" | transloco }}</mat-label>
+      <input matInput
+         type="email"
+         formControlName="email">
+   </mat-form-field>
+   <mat-form-field>
+      <mat-label>{{ "AUTH.REGISTER_FORM.USERNAME_LABEL" | transloco }}</mat-label>
+      <input matInput
+         type="text"
+         formControlName="username"
+         [placeholder]="'AUTH.REGISTER_FORM.DEFAULT_USERNAME' | transloco">
+   </mat-form-field>
+   <mat-form-field>
+      <mat-label>{{ "AUTH.REGISTER_FORM.PASSWORD_LABEL" | transloco }}</mat-label>
+      <input matInput
+         type="password"
+         formControlName="password">
+   </mat-form-field>
+   <mat-form-field>
+      <mat-label>{{ "AUTH.REGISTER_FORM.CONFIRM_PASSWORD_LABEL" | transloco }}</mat-label>
+      <input matInput
+         type="password"
+         formControlName="confirmPassword">
+   </mat-form-field>
+   <button mat-raised-button
+      color="primary"
+      (click)="onRegister()"
+      [disabled]="isFormInvalid$ | async">{{ "AUTH.REGISTER_FORM.SUBMIT_BUTTON_LABEL" | transloco }}</button>
+</form>

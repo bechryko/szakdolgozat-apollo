@@ -1,0 +1,19 @@
+@use 'styles/colors';
+
+:host {
+   border: 2px solid colors.$primary-darker;
+   border-radius: 1rem;
+   min-width: 30rem;
+}
+
+.auth-form {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 1.5rem;
+
+   button {
+      width: 75%;
+      margin-bottom: 2rem;
+   }
+}

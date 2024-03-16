@@ -10,7 +10,7 @@ import { provideEffects } from '@ngrx/effects';
 import { provideState, provideStore } from '@ngrx/store';
 import { routes } from './app.routes';
 import { firebaseConfig } from './firebase.config';
-import { CoreEffects, coreFeature } from './shared/store';
+import { CompletionsEffects, UserEffects, coreFeature } from './shared/store';
 import { TranslocoHttpLoader } from './transloco-loader';
 
 export const appConfig: ApplicationConfig = {
@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
       importProvidersFrom(provideFirestore(() => getFirestore())),
       provideStore(),
       provideState(coreFeature),
-      provideEffects(CoreEffects),
+      provideEffects(CompletionsEffects, UserEffects),
       provideHttpClient(),
       provideTransloco({
          config: {

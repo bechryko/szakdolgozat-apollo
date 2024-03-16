@@ -6,5 +6,15 @@
             (click)="navigateTo(menuItemKey)">{{ ('NAVIGATION.' + menuItemKey) | transloco }}</button>
       }
    </nav>
-   <button mat-fab>user</button>
+   <button mat-fab
+      color="accent"
+      (click)="navigateTo('USER')">
+      <mat-icon class="profile-icon">
+         @if(isUserLoggedIn$ | async) {
+            account_circle
+         } @else {
+            login
+         }
+      </mat-icon>
+   </button>
 </div>

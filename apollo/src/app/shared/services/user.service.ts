@@ -1,19 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { User } from '../models';
+import { LoginData, RegisterData } from '@apollo/user/models';
+import { AuthService, UserFetcherService } from '@apollo/user/services';
+import { Store } from '@ngrx/store';
+import { Observable, distinctUntilChanged, map, of, switchMap } from 'rxjs';
+import { ApolloUser } from '../models';
 import { multicast } from '../operators';
+import { userActions } from '../store/actions/user.actions';
 
 @Injectable({
    providedIn: 'root'
 })
 export class UserService {
-   public readonly user$: Observable<User | null>;
+   public readonly user$: Observable<ApolloUser | null>;
 
-   constructor() {
-      this.user$ = of({
-         email: "bechryko@gmail.com"
-      }).pipe(
+   constructor(
+      private readonly authService: AuthService,
+      private readonly userFetcherService: UserFetcherService,
+      private readonly store: Store
+   ) {
+      this.user$ = this.authService.user$.pipe(
+         map(user => user ? user.email : null),
+         distinctUntilChanged(),
+         switchMap(email => email ? this.userFetcherService.getUserDataChanges(email) : of(null)),
          multicast()
       );
+   }
+
+   public login(loginData: LoginData): void {
+      this.store.dispatch(userActions.login({ loginData }));
+   }
+
+   public register(registerData: RegisterData): void {
+      this.store.dispatch(userActions.register({ registerData }));
+   }
+
+   public logout(): void {
+      this.store.dispatch(userActions.logout());
    }
 }

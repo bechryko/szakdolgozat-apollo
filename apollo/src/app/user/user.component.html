@@ -1,0 +1,17 @@
+<div class="user-container" *ngLet="loggedInUser$ | async as user">
+   @if(user) {
+      <div class="user-informations">
+         <div class="actions">
+            <button mat-raised-button
+               color="accent"
+               (click)="onLogout()">{{ "AUTH.LOGOUT_BUTTON_LABEL" | transloco }}</button>
+         </div>
+      </div>
+   } @else {
+      <h1>{{ "AUTH.TITLE" | transloco }}</h1>
+      <div class="auth-tiles-container">
+         <apo-login (login)="onLogin($event)"></apo-login>
+         <apo-register (register)="onRegister($event)"></apo-register>
+      </div>
+   }
+</div>

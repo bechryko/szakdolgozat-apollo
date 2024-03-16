@@ -1,0 +1,19 @@
+<form class="auth-form" [formGroup]="loginForm">
+   <h2>{{ "AUTH.LOGIN_FORM.TITLE" | transloco }}</h2>
+   <mat-form-field>
+      <mat-label>{{ "AUTH.LOGIN_FORM.EMAIL_LABEL" | transloco }}</mat-label>
+      <input matInput
+         type="email"
+         formControlName="email">
+   </mat-form-field>
+   <mat-form-field>
+      <mat-label>{{ "AUTH.LOGIN_FORM.PASSWORD_LABEL" | transloco }}</mat-label>
+      <input matInput
+         type="password"
+         formControlName="password">
+   </mat-form-field>
+   <button mat-raised-button
+      color="primary"
+      (click)="onLogin()"
+      [disabled]="isFormInvalid$ | async">{{ "AUTH.LOGIN_FORM.SUBMIT_BUTTON_LABEL" | transloco }}</button>
+</form>
