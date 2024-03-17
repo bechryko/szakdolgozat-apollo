@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DocumentReference, Firestore, addDoc, collection, collectionData, deleteDoc, doc, query, updateDoc, where } from '@angular/fire/firestore';
-import { Observable, from, map, switchMap, take } from 'rxjs';
+import { Observable, from, map, of, switchMap, take } from 'rxjs';
 import { GuestStorageUtils } from '../utils';
 import { UserService } from './user.service';
 
@@ -19,14 +19,14 @@ export class CoreFetcherService {
       private readonly userService: UserService
    ) { }
 
-   public getCollectionForCurrentUser<T extends StoredValue>(collectionName: string, defaultValue: T[] = []): Observable<T[]> {
+   public getCollectionForCurrentUser<T extends StoredValue>(collectionName: string): Observable<T[]> {
       const _collection = collection(this.firestore, collectionName);
 
       return this.userService.user$.pipe(
          take(1),
          switchMap(user => {
             if (user === null) {
-               return GuestStorageUtils.load<T>(collectionName, defaultValue);
+               return of(GuestStorageUtils.load<T>(collectionName));
             }
             
             const semesterQuery = query(_collection, where('owner', '==', user.email));
@@ -43,7 +43,7 @@ export class CoreFetcherService {
          take(1),
          switchMap(user => {
             if (!user) {
-               return GuestStorageUtils.save(collectionName, values);
+               return of(GuestStorageUtils.save(collectionName, values));
             }
 
             return this.getCollectionForCurrentUser<T>(collectionName).pipe(

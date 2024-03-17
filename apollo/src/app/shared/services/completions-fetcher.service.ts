@@ -25,4 +25,8 @@ export class CompletionsFetcherService {
    public clearGuestStorage(): void {
       GuestStorageUtils.clear(COLLECTION);
    }
+
+   public getGuestStorageData(): UniversityCompletionYear[] {
+      return GuestStorageUtils.load(COLLECTION);
+   }
 }

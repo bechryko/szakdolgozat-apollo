@@ -25,4 +25,8 @@ export class TimetableFetcherService {
    public clearGuestStorage(): void {
       GuestStorageUtils.clear(COLLECTION);
    }
+
+   public getGuestStorageData(): Semester[] {
+      return GuestStorageUtils.load(COLLECTION);
+   }
 }

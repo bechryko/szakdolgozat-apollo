@@ -1,21 +1,18 @@
-import { Observable, of } from "rxjs";
-
 export class GuestStorageUtils {
    private static readonly KEY_PREFIX = 'apollo-guest-';
    private static readonly storage = localStorage;
 
-   public static save<T>(key: string, value: T[]): Observable<void> {
+   public static save<T>(key: string, value: T[]): void {
       this.storage.setItem(this.getKey(key), JSON.stringify(value));
-      return of(undefined);
    }
 
-   public static load<T>(key: string, defaultValue: T[] = []): Observable<T[]> {
+   public static load<T>(key: string): T[] {
       const item = this.storage.getItem(this.getKey(key));
       if (item === null) {
-         return of(defaultValue);
+         return [];
       }
 
-      return of(JSON.parse(item));
+      return JSON.parse(item);
    }
 
    public static clear(key: string): void {
