@@ -6,7 +6,7 @@ import { UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { NgLetModule } from 'ng-let';
 import { Observable } from 'rxjs';
-import { LoginComponent, RegisterComponent, UserSettingsComponent } from './components';
+import { LanguageSelectionComponent, LoginComponent, RegisterComponent, UserSettingsComponent } from './components';
 import { LoginData, RegisterData } from './models';
 
 @Component({
@@ -19,7 +19,8 @@ import { LoginData, RegisterData } from './models';
       UserSettingsComponent,
       LoginComponent,
       RegisterComponent,
-      MatButtonModule
+      MatButtonModule,
+      LanguageSelectionComponent
    ],
    templateUrl: './user.component.html',
    styleUrl: './user.component.scss',

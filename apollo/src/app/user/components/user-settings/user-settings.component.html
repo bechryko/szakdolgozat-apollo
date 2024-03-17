@@ -4,6 +4,7 @@
       <mat-label>{{ "PROFILE.SETTINGS.USERNAME_LABEL" | transloco }}</mat-label>
       <input matInput formControlName="username">
    </mat-form-field>
+   <apo-language-selection (selectLanguage)="onSelectLanguage($event)"></apo-language-selection>
    <mat-expansion-panel>
       <mat-expansion-panel-header class="expansion-panel-title">
          <mat-panel-title>

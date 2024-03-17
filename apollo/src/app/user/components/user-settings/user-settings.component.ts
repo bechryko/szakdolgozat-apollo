@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { deleteNullish } from '@apollo/shared/functions';
 import { ApolloUser } from '@apollo/shared/models';
 import { TranslocoPipe } from '@ngneat/transloco';
+import { LanguageSelectionComponent } from '..';
 import { AuthFormsUtils } from '../../utils';
 
 @Component({
@@ -21,7 +22,8 @@ import { AuthFormsUtils } from '../../utils';
       MatFormFieldModule,
       MatInputModule,
       MatButtonModule,
-      MatSelectModule
+      MatSelectModule,
+      LanguageSelectionComponent
    ],
    templateUrl: './user-settings.component.html',
    styleUrl: './user-settings.component.scss',
@@ -31,6 +33,7 @@ export class UserSettingsComponent implements OnInit {
    @Input() public user!: ApolloUser;
    @Output() public readonly saveChanges = new EventEmitter<ApolloUser>();
    public userSettingsForm!: FormGroup;
+   public selectedLanguage?: string;
 
    constructor(
       private readonly formBuilder: FormBuilder
@@ -38,14 +41,24 @@ export class UserSettingsComponent implements OnInit {
 
    public ngOnInit(): void {
       this.userSettingsForm = AuthFormsUtils.buildUserSettingsForm(this.formBuilder, this.user);
+      this.selectedLanguage = this.user.selectedLanguage;
+   }
+
+   public onSelectLanguage(language: string): void {
+      this.selectedLanguage = language;
    }
 
    public onSave(): void {
       const newUser: ApolloUser = {
          ...this.userSettingsForm.value,
+         selectedLanguage: this.selectedLanguage,
          email: this.user.email,
          isAdmin: this.user.isAdmin
       };
+
+      if(!this.selectedLanguage) {
+         delete newUser.selectedLanguage;
+      }
 
       this.saveChanges.emit(deleteNullish(newUser));
    }

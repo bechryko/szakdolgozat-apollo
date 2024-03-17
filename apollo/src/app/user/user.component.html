@@ -10,6 +10,9 @@
          </div>
       </div>
    } @else {
+      <div class="language-selection-wrapper">
+         <apo-language-selection></apo-language-selection>
+      </div>
       <h1>{{ "AUTH.TITLE" | transloco }}</h1>
       <div class="auth-tiles-container">
          <apo-login (login)="onLogin($event)"></apo-login>

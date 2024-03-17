@@ -1,0 +1,30 @@
+@use 'styles/colors';
+
+.language-selection-container {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 2rem;
+   padding: 0.5rem 1.5rem;
+   border-radius: 1rem;
+   background-color: colors.$accent-background;
+
+   p {
+      display: inline-block;
+      font-size: 1.25rem;
+      font-weight: 550;
+   }
+
+   .selection {
+      display: inline-block;
+   }
+}
+
+.mat-mdc-standard-chip {
+   box-sizing: border-box;
+   border: 1px solid colors.$accent-highlight;
+
+   &:not(.mdc-evolution-chip--selected) {
+      background-color: transparent;
+   }
+}

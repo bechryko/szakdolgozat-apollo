@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { LoginData, RegisterData } from '@apollo/user/models';
 import { AuthService, UserFetcherService } from '@apollo/user/services';
 import { Store } from '@ngrx/store';
-import { Observable, distinctUntilChanged, map, of, switchMap } from 'rxjs';
+import { Observable, distinctUntilChanged, map, of, switchMap, tap } from 'rxjs';
 import { ApolloUser } from '../models';
 import { multicast } from '../operators';
 import { userActions } from '../store/actions/user.actions';
+import { LanguageService } from './language.service';
 
 @Injectable({
    providedIn: 'root'
@@ -18,12 +19,18 @@ export class UserService {
    constructor(
       private readonly authService: AuthService,
       private readonly userFetcherService: UserFetcherService,
-      private readonly store: Store
+      private readonly store: Store,
+      private readonly languageService: LanguageService
    ) {
       this.user$ = this.authService.user$.pipe(
          map(user => user ? user.email : null),
          distinctUntilChanged(),
          switchMap(email => email ? this.userFetcherService.getUserDataChanges(email) : of(null)),
+         tap(user => {
+            if(user?.selectedLanguage) {
+               this.languageService.setLanguage(user.selectedLanguage);
+            }
+         }),
          multicast()
       );
 
