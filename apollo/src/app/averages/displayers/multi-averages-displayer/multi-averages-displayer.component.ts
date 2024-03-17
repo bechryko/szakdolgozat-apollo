@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { DisplayValuePipe } from '@apollo/shared/pipes';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { NgLetModule } from 'ng-let';
 import { AlternativeGrade, Grade, GradesCompletionYear } from '../../models';
@@ -15,7 +16,8 @@ import { AveragesDisplayerComponent } from '../averages-displayer';
       AveragesDisplayerComponent,
       MatButtonModule,
       NgLetModule,
-      MatIconModule
+      MatIconModule,
+      DisplayValuePipe
    ],
    templateUrl: './multi-averages-displayer.component.html',
    styleUrl: './multi-averages-displayer.component.scss',
