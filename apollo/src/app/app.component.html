@@ -1,6 +1,8 @@
 <apo-header></apo-header>
 <div class="content">
-   <apo-sidebar></apo-sidebar>
+   @if(!isAdminPage()) {
+      <apo-sidebar></apo-sidebar>
+   }
    <main>
       <router-outlet></router-outlet>
    </main>

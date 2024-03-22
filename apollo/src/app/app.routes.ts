@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
+import { AdminPageComponent } from './admin-page/admin-page.component';
 import { AveragesComponent } from './averages/averages.component';
 import { averagesFeature } from './averages/store';
 import { MenuComponent } from './menu/menu.component';
@@ -41,6 +42,10 @@ export const routes: Routes = [
       providers: [
          provideState(averagesFeature)
       ]
+   },
+   {
+      path: RouteUrls.ADMINISTRATION,
+      component: AdminPageComponent
    },
    {
       path: RouteUrls.USER,
