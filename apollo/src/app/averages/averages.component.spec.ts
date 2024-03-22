@@ -1,14 +1,18 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { MatDialog } from "@angular/material/dialog";
-import { hot } from "jasmine-marbles";
-import { of } from "rxjs";
+import { UserService } from "@apollo/shared/services";
+import { provideTransloco } from "@ngneat/transloco";
+import { BehaviorSubject, of } from "rxjs";
 import { AveragesComponent } from "./averages.component";
 import { AlternativeGradesDialogOutputData } from "./dialogs";
+import { GradesCompletionYear } from "./models";
 import { AveragesService } from "./services";
 
 describe('AveragesComponent', () => {
    let component: AveragesComponent;
    let fixture: ComponentFixture<AveragesComponent>;
+
+   let grades$: BehaviorSubject<GradesCompletionYear[]>;
    
    const alternativeGradesDialogOutputData = {
       alternativeFirstSemesterGrades: [
@@ -24,24 +28,34 @@ describe('AveragesComponent', () => {
       alternativeSecondSemesterGrades: []
    } as AlternativeGradesDialogOutputData;
 
-   beforeEach(waitForAsync(() => {
-      function averagesServiceFactory(): AveragesService {
-         return jasmine.createSpyObj('AveragesService', ['saveAlternativeSemester'], {
-            grades$: hot('a', { a: [] })
-         });
-      }
+   function averagesServiceFactory() {
+      return {
+         ...jasmine.createSpyObj<AveragesService>('AveragesService', ['saveAlternativeSemester', 'saveAverages']),
+         grades$
+      };
+   }
 
-      function matDialogFactory(): MatDialog {
-         const dialogSpy = jasmine.createSpyObj('MatDialog', ['open']) as jasmine.SpyObj<MatDialog>;
-         dialogSpy.open.and.returnValue({
-            afterClosed: () => of(alternativeGradesDialogOutputData)
-         } as any);
-         return dialogSpy;
-      }
+   function matDialogFactory() {
+      const dialogSpy = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
+      dialogSpy.open.and.returnValue({
+         afterClosed: () => of(alternativeGradesDialogOutputData)
+      } as any);
+      return dialogSpy;
+   }
+
+   function userServiceFactory() {
+      return {
+         isUserLoggedIn$: new BehaviorSubject(false)
+      };
+   }
+
+   beforeEach(waitForAsync(() => {
+      grades$ = new BehaviorSubject([] as GradesCompletionYear[]);
 
       TestBed.configureTestingModule({
          imports: [AveragesComponent],
          providers: [
+            provideTransloco({ config: {} }),
             {
                provide: AveragesService,
                useFactory: averagesServiceFactory
@@ -49,6 +63,10 @@ describe('AveragesComponent', () => {
             {
                provide: MatDialog,
                useFactory: matDialogFactory
+            },
+            {
+               provide: UserService,
+               useFactory: userServiceFactory
             }
          ]
       }).compileComponents();
@@ -57,6 +75,7 @@ describe('AveragesComponent', () => {
    beforeEach(() => {
       fixture = TestBed.createComponent(AveragesComponent);
       component = fixture.componentInstance;
+
       fixture.detectChanges();
    });
 

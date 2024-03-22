@@ -32,7 +32,7 @@ export class UserEffects {
             const timetableData = this.timetableFetcherService.getGuestStorageData();
 
             if (averagesData.length === 0 && timetableData.length === 0) {
-               return of(undefined);
+               return of(userActions.clearUserData());
             }
 
             let content = "AUTH.GUEST_DATA_TRANSFER_DIALOG.CONTENT.";

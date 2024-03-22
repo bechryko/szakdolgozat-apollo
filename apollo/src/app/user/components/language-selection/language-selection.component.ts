@@ -33,6 +33,7 @@ export class LanguageSelectionComponent {
          return;
       }
 
+      this.selectedLanguage = language;
       this.languageService.setLanguage(language);
       this.selectLanguage.emit(language);
    }
