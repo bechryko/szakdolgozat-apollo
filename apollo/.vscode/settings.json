@@ -1,33 +1,35 @@
 {
-    "editor.formatOnSave": true,
-    "editor.tabSize": 3,
-    "editor.wordWrap": "wordWrapColumn",
-    "editor.wordWrapColumn": 120,
-    "editor.insertSpaces": true,
-    "editor.codeActionsOnSave": {
+   "editor.formatOnSave": true,
+   "editor.tabSize": 3,
+   "editor.rulers": [140],
+   "editor.wordWrap": "wordWrapColumn",
+   "editor.wordWrapColumn": 140,
+   "editor.insertSpaces": true,
+   "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit",
       "source.fixAll": "explicit",
       "source.fixAll.eslint": "never"
-    },
-    "editor.guides.bracketPairs": "active",
-    "editor.guides.bracketPairsHorizontal": "active",
-    "files.eol": "\r\n",
-    "files.insertFinalNewline": true,
-    "eslint.validate": ["typescript"],
-    "html.format.wrapAttributes": "force",
-    "[html]": {
+   },
+   "editor.guides.bracketPairs": "active",
+   "editor.guides.bracketPairsHorizontal": "active",
+   "files.eol": "\r\n",
+   "files.insertFinalNewline": true,
+   "eslint.validate": ["typescript"],
+   "html.format.wrapAttributes": "force",
+   "[html]": {
       "editor.defaultFormatter": "vscode.html-language-features"
-    },
-    "[scss]": {
+   },
+   "[scss]": {
+      "editor.defaultFormatter": "michelemelluso.code-beautifier"
+   },
+   "[typescript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[typescript]": {
+   },
+   "[javascript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascript]": {
+   },
+   "[json]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
-  }
+   },
+   "px-to-rem.px-per-rem": 16
+}
