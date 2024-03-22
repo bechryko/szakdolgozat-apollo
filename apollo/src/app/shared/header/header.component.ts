@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, WritableSignal, effect, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
@@ -26,12 +26,14 @@ type RouteUrl = keyof typeof RouteUrls;
 export class HeaderComponent {
    public readonly isUserLoggedIn$: Observable<boolean>;
    public readonly menuItemKeys$: Observable<RouteUrl[]>;
+   public selectedMenu: WritableSignal<RouteUrl>;
 
    constructor(
       private readonly router: Router,
       private readonly userService: UserService
    ) {
       this.isUserLoggedIn$ = this.userService.isUserLoggedIn$;
+
       this.menuItemKeys$ = this.userService.isUserAdmin$.pipe(
          map(isAdmin => {
             const menuItemKeys: RouteUrl[] = [
@@ -47,9 +49,15 @@ export class HeaderComponent {
             return menuItemKeys;
          })
       );
+
+      this.selectedMenu = signal('MENU');
+
+      effect(() => {
+         this.router.navigateByUrl("/" + RouteUrls[this.selectedMenu()]);
+      });
    }
 
-   public navigateTo(route: RouteUrl): void {
-      this.router.navigateByUrl("/" + RouteUrls[route]);
+   public selectMenuItem(route: RouteUrl): void {
+      this.selectedMenu.set(route);
    }
 }
