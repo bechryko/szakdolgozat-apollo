@@ -14,7 +14,8 @@ export enum RouteUrls {
    AVERAGES = 'averages',
    MAJOR_COMPLETION = 'major-completion',
    TIMETABLE = 'timetable',
-   USER = 'profile'
+   USER = 'profile',
+   ADMINISTRATION = 'administration'
 }
 
 export const routes: Routes = [

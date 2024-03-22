@@ -8,6 +8,8 @@ import { Observable, map } from 'rxjs';
 import { RouteUrls } from '../../app.routes';
 import { UserService } from '../services';
 
+type RouteUrl = keyof typeof RouteUrls;
+
 @Component({
    selector: 'apo-header',
    standalone: true,
@@ -22,23 +24,32 @@ import { UserService } from '../services';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
-   public readonly menuItemKeys = [
-      'AVERAGES',
-      'MAJOR_COMPLETION',
-      'TIMETABLE'
-   ] as const;
    public readonly isUserLoggedIn$: Observable<boolean>;
+   public readonly menuItemKeys$: Observable<RouteUrl[]>;
 
    constructor(
       private readonly router: Router,
       private readonly userService: UserService
    ) {
-      this.isUserLoggedIn$ = this.userService.user$.pipe(
-         map(Boolean)
+      this.isUserLoggedIn$ = this.userService.isUserLoggedIn$;
+      this.menuItemKeys$ = this.userService.isUserAdmin$.pipe(
+         map(isAdmin => {
+            const menuItemKeys: RouteUrl[] = [
+               'AVERAGES',
+               'MAJOR_COMPLETION',
+               'TIMETABLE'
+            ];
+
+            if(isAdmin) {
+               menuItemKeys.push('ADMINISTRATION');
+            }
+
+            return menuItemKeys;
+         })
       );
    }
 
-   public navigateTo(route: typeof this.menuItemKeys[number] | 'MENU' | 'USER'): void {
+   public navigateTo(route: RouteUrl): void {
       this.router.navigateByUrl("/" + RouteUrls[route]);
    }
 }
