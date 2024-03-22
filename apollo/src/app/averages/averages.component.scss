@@ -1,5 +1,6 @@
 :host {
    height: 100%;
+   position: relative;
 }
 
 .actions {
@@ -20,4 +21,10 @@ fieldset {
       font-size: 1.5rem;
       font-weight: bold;
    }
+}
+
+.floating-button {
+   position: absolute;
+   top: -1.5rem;
+   right: -1.5rem;
 }

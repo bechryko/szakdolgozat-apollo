@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UniversityCompletionYear } from '../models';
+import { GuestStorageUtils } from '../utils';
 import { CoreFetcherService } from './core-fetcher.service';
 
 const COLLECTION = 'core-completions';
@@ -19,5 +20,13 @@ export class CompletionsFetcherService {
 
    public saveCompletions(completions: UniversityCompletionYear[]): Observable<void> {
       return this.coreFetcherService.saveCollectionChanges<UniversityCompletionYear>(COLLECTION, completions);
+   }
+
+   public clearGuestStorage(): void {
+      GuestStorageUtils.clear(COLLECTION);
+   }
+
+   public getGuestStorageData(): UniversityCompletionYear[] {
+      return GuestStorageUtils.load(COLLECTION);
    }
 }

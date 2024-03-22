@@ -7,12 +7,14 @@ import { MenuComponent } from './menu/menu.component';
 import { MenuEffects, menuFeature } from './menu/store';
 import { TimetableEffects, timetableFeature } from './timetable/store';
 import { TimetableComponent } from './timetable/timetable.component';
+import { UserComponent } from './user/user.component';
 
 export enum RouteUrls {
    MENU = 'menu',
    AVERAGES = 'averages',
    MAJOR_COMPLETION = 'major-completion',
-   TIMETABLE = 'timetable'
+   TIMETABLE = 'timetable',
+   USER = 'profile'
 }
 
 export const routes: Routes = [
@@ -38,6 +40,10 @@ export const routes: Routes = [
       providers: [
          provideState(averagesFeature)
       ]
+   },
+   {
+      path: RouteUrls.USER,
+      component: UserComponent
    },
    {
       path: '**',

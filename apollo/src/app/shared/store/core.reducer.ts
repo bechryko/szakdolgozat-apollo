@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { coreActions } from "./core.actions";
+import { completionsActions } from "./actions";
 import { CoreState } from "./core.state";
 
 const initialState: CoreState = {
@@ -8,5 +8,6 @@ const initialState: CoreState = {
 
 export const coreReducer = createReducer(
    initialState,
-   on(coreActions.saveCompletionsToStore, (state, { completions }) => ({ ...state, completionYears: completions }))
+   on(completionsActions.saveCompletionsToStore, (state, { completions }) => ({ ...state, completionYears: completions })),
+   on(completionsActions.deleteData, () => initialState)
 );

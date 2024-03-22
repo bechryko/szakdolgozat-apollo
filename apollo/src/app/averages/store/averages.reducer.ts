@@ -1,3 +1,4 @@
+import { userActions } from "@apollo/shared/store";
 import { createReducer, on } from "@ngrx/store";
 import { averagesActions } from "./averages.actions";
 import { AveragesState } from "./averages.state";
@@ -24,5 +25,6 @@ export const averagesReducer = createReducer(
    on(averagesActions.removeAlternativeSemester, (state, { id, semesterType }) => ({
       ...state,
       alternativeSemesters: state.alternativeSemesters.filter(alternativeSemester => !(alternativeSemester.id === id && alternativeSemester.type === semesterType))
-   }))
+   })),
+   on(userActions.clearUserData, () => initialState)
 );

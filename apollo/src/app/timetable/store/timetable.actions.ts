@@ -6,6 +6,8 @@ export const timetableActions = createActionGroup({
    events: {
       "Load timetable": emptyProps(),
       "Save timetable to store": props<{ newState: TimetableState }>(),
-      "Update timetable": props<{ newState: TimetableState }>()
+      "Update timetable": props<{ newState: TimetableState }>(),
+      "Delete data": emptyProps(),
+      "Delete guest data": emptyProps()
    }
 });

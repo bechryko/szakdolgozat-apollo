@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { multicast } from '@apollo/shared/operators';
 import { Store } from '@ngrx/store';
-import { Observable, distinctUntilChanged, tap } from 'rxjs';
+import { Observable, distinctUntilChanged, filter, tap } from 'rxjs';
 import { Semester } from '../models';
 import { timetableActions, timetableFeature } from '../store';
 
@@ -17,10 +17,11 @@ export class TimetableService {
    ) {
       this.semesters$ = this.store.select(timetableFeature.selectSemesters).pipe(
          tap(semesters => {
-            if(!semesters.length) { // TODO: handle if database is empty
+            if(!semesters) { // TODO: handle if database is empty
                this.store.dispatch(timetableActions.loadTimetable());
             }
          }),
+         filter(Boolean),
          multicast(),
          distinctUntilChanged()
       );
@@ -33,5 +34,9 @@ export class TimetableService {
 
    public saveTimetableData(semesters: Semester[], selectedSemesterId?: string): void {
       this.store.dispatch(timetableActions.updateTimetable({ newState: { semesters, selectedSemesterId } }));
+   }
+
+   public deleteGuestData(): void {
+      this.store.dispatch(timetableActions.deleteGuestData());
    }
 }

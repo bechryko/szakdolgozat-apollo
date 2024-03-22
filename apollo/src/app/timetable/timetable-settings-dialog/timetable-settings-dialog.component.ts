@@ -62,17 +62,21 @@ export class TimetableSettingsDialogComponent {
       @Inject(MAT_DIALOG_DATA) data: TimetableState,
       private readonly fb: FormBuilder,
       private readonly dialog: GeneralDialogService,
-      private readonly translateService: TranslocoService,
+      private readonly transloco: TranslocoService,
       private readonly snackbarService: SnackBarService
    ) {
       this.data = cloneDeep(data);
       this.selectedSemesterId = signal(data.selectedSemesterId);
-      this.selectedSemester = computed(() => this.data.semesters.find(semester => semester.id === this.selectedSemesterId()));
+      this.selectedSemester = computed(() => this.data.semesters!.find(semester => semester.id === this.selectedSemesterId()));
 
       this.formUpdater = signal(true);
       this.semesterForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildSemesterForm(this.fb, this.selectedSemester()!)));
       this.categoryForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildCategoryFormArray(this.fb, this.selectedSemester()!.categories)));
       this.activityForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildActivityFormArray(this.fb, this.selectedSemester()!.activities)));
+      
+      if(!this.data.semesters!.length) {
+         this.addSemester();
+      }
    }
 
    public selectSemester(semesterId: string): void {
@@ -94,10 +98,10 @@ export class TimetableSettingsDialogComponent {
    }
 
    public addSemester(): void {
-      const id = `new-${this.newSemesters++}`;
-      this.data.semesters.push({
+      const id = Date.now() + "-" + this.newSemesters++;
+      this.data.semesters!.push({
          id,
-         name: this.translateService.translate("TIMETABLE.SETTINGS_DIALOG.NEW_SEMESTER_DEFAULT_NAME"),
+         name: this.transloco.translate("TIMETABLE.SETTINGS_DIALOG.NEW_SEMESTER_DEFAULT_NAME"),
          owner: "",
          activities: [],
          categories: []
@@ -113,7 +117,7 @@ export class TimetableSettingsDialogComponent {
          cancel: "GENERAL_DIALOG.CANCEL"
       }).subscribe(doDelete => {
          if (doDelete) {
-            this.data.semesters = this.data.semesters.filter(semester => semester.id !== this.selectedSemesterId());
+            this.data.semesters = this.data.semesters!.filter(semester => semester.id !== this.selectedSemesterId());
             this.selectedSemesterId.set(undefined);
          }
       });
@@ -153,7 +157,7 @@ export class TimetableSettingsDialogComponent {
    public addCategory(): void {
       this.updateData();
       this.selectedSemester()!.categories.push({
-         name: this.translateService.translate("TIMETABLE.SETTINGS_DIALOG.NEW_CATEGORY_DEFAULT_NAME"),
+         name: this.transloco.translate("TIMETABLE.SETTINGS_DIALOG.NEW_CATEGORY_DEFAULT_NAME"),
          color: "#FFFFFF",
          temporary: false
       });
@@ -183,7 +187,7 @@ export class TimetableSettingsDialogComponent {
 
    public addActivity(): void {
       (this.activityForm().controls["activities"] as FormArray).push(TimetableSettingsFormsUtils.buildActivityForm(this.fb, {
-         name: this.translateService.translate("TIMETABLE.SETTINGS_DIALOG.NEW_ACTIVITY_DEFAULT_NAME"),
+         name: this.transloco.translate("TIMETABLE.SETTINGS_DIALOG.NEW_ACTIVITY_DEFAULT_NAME"),
          time: {
             day: 0,
             startingHour: 0,

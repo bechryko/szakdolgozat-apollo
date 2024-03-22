@@ -10,7 +10,8 @@ import { provideEffects } from '@ngrx/effects';
 import { provideState, provideStore } from '@ngrx/store';
 import { routes } from './app.routes';
 import { firebaseConfig } from './firebase.config';
-import { CoreEffects, coreFeature } from './shared/store';
+import { defaultLanguage, languages } from './shared/constants';
+import { CompletionsEffects, UserEffects, coreFeature } from './shared/store';
 import { TranslocoHttpLoader } from './transloco-loader';
 
 export const appConfig: ApplicationConfig = {
@@ -22,12 +23,16 @@ export const appConfig: ApplicationConfig = {
       importProvidersFrom(provideFirestore(() => getFirestore())),
       provideStore(),
       provideState(coreFeature),
-      provideEffects(CoreEffects),
+      provideEffects(CompletionsEffects, UserEffects),
       provideHttpClient(),
       provideTransloco({
          config: {
-            availableLangs: ['hu', 'en'],
-            defaultLang: 'hu',
+            availableLangs: languages,
+            defaultLang: defaultLanguage,
+            fallbackLang: defaultLanguage, // TODO: fallbacks doesn't work
+            missingHandler: {
+               useFallbackTranslation: true
+            },
             reRenderOnLangChange: true,
             prodMode: !isDevMode(),
          },

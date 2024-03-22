@@ -59,10 +59,6 @@ describe('TimetableEffects', () => {
          expect(effects.loadTimetable$).toBeObservable(expected);
          expect(timetableFetcherService.getSemestersForCurrentUser).toHaveBeenCalled();
       });
-
-      xit('should handle errors', () => {
-         // TODO
-      });
    });
 
    describe('updateTimetable$', () => {
@@ -78,10 +74,6 @@ describe('TimetableEffects', () => {
 
          expect(effects.updateTimetable$).toBeObservable(expected);
          expect(timetableFetcherService.saveSemesters).toHaveBeenCalledWith(newState.semesters);
-      });
-
-      xit('should handle errors', () => {
-         // TODO
       });
    });
 });

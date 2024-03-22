@@ -1,6 +1,6 @@
 import { Semester } from "../models";
 
 export interface TimetableState {
-   semesters: Semester[];
+   semesters: Semester[] | null;
    selectedSemesterId: string | undefined;
 }

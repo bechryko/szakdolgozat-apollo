@@ -1,14 +1,18 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { GeneralInputDialogComponent } from '@apollo/shared/components';
+import { UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { isEqual } from 'lodash';
-import { tap } from 'rxjs';
+import { NgLetModule } from 'ng-let';
+import { Observable, map, tap } from 'rxjs';
 import { AlternativeGradesDialogComponent, AlternativeGradesDialogData, AlternativeGradesDialogOutputData, GradeManagerDialogComponent, GradeManagerDialogData } from './dialogs';
 import { AveragesDisplayerComponent, MultiAveragesDisplayerComponent } from './displayers';
 import { Grade, GradesCompletionYear } from './models';
@@ -18,14 +22,17 @@ import { AveragesService } from './services';
    selector: 'apo-averages',
    standalone: true,
    imports: [
-      CommonModule,
+      AsyncPipe,
+      NgLetModule,
       AveragesDisplayerComponent,
       MultiAveragesDisplayerComponent,
       MatFormFieldModule,
       MatSelectModule,
       FormsModule,
       TranslocoPipe,
-      MatButtonModule
+      MatButtonModule,
+      MatIconModule,
+      GeneralInputDialogComponent
    ],
    templateUrl: './averages.component.html',
    styleUrl: './averages.component.scss',
@@ -37,10 +44,12 @@ export class AveragesComponent {
    private readonly selectedYearId: WritableSignal<string | undefined>;
    public readonly selectedYear: Signal<GradesCompletionYear | undefined>;
    public readonly singleYearViewMode: WritableSignal<boolean>;
+   public readonly isUserLoggedOut$: Observable<boolean>;
    
    constructor(
       private readonly averagesService: AveragesService,
-      private readonly dialog: MatDialog
+      private readonly dialog: MatDialog,
+      private readonly userService: UserService
    ) {
       this.selectedYearId = signal(undefined);
       this.averages = toSignal(this.averagesService.grades$.pipe(
@@ -67,6 +76,32 @@ export class AveragesComponent {
          return averages.find(average => average.id === this.selectedYearId());
       });
       this.singleYearViewMode = signal(false);
+
+      if(this.averages()?.length === 0) {
+         this.dialog.open(GeneralInputDialogComponent, {
+            data: {
+               title: "AVERAGES.NO_DATA_DIALOG.TITLE",
+               description: "AVERAGES.NO_DATA_DIALOG.DESCRIPTION",
+               inputType: 'text',
+               inputLabel: "AVERAGES.YEAR_ADD_DIALOG.INPUT_LABEL",
+               submitLabel: "AVERAGES.NO_DATA_DIALOG.SUBMIT_LABEL"
+            }
+         }).afterClosed().subscribe(yearName => {
+            if(yearName) {
+               this.averagesService.saveAverages([{
+                  id: Date.now().toString(),
+                  name: yearName,
+                  owner: "guest",
+                  firstSemesterGrades: [],
+                  secondSemesterGrades: []
+               }]);
+            }
+         });
+      }
+
+      this.isUserLoggedOut$ = this.userService.isUserLoggedIn$.pipe(
+         map(isLoggedIn => !isLoggedIn)
+      );
    }
 
    public toggleViewMode(): void {
@@ -124,6 +159,10 @@ export class AveragesComponent {
             });
          }
       });
+   }
+
+   public onDeleteGuestData(): void {
+      this.averagesService.deleteGuestData();
    }
 
    private getStartingSelectedYearId(averages?: GradesCompletionYear[]): string | undefined {

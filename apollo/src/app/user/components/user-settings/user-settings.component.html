@@ -1,0 +1,46 @@
+<form class="user-settings-container settings-container" [formGroup]="userSettingsForm">
+   <h2>{{ "PROFILE.SETTINGS.TITLE" | transloco }}</h2>
+   <mat-form-field>
+      <mat-label>{{ "PROFILE.SETTINGS.USERNAME_LABEL" | transloco }}</mat-label>
+      <input matInput formControlName="username">
+   </mat-form-field>
+   <apo-language-selection (selectLanguage)="onSelectLanguage($event)"></apo-language-selection>
+   <mat-expansion-panel>
+      <mat-expansion-panel-header class="expansion-panel-title">
+         <mat-panel-title>
+            <h3>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.TITLE" | transloco }}</h3>
+         </mat-panel-title>
+         <mat-panel-description>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.DESCRIPTION" | transloco }}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="settings-container row">
+         <mat-form-field>
+            <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.UNIVERSITY_LABEL" | transloco }}</mat-label>
+            <input matInput formControlName="university">
+         </mat-form-field>
+         <mat-form-field>
+            <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.FACULTY_LABEL" | transloco }}</mat-label>
+            <input matInput formControlName="faculty">
+         </mat-form-field>
+         <mat-form-field>
+            <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.MAJOR_LABEL" | transloco }}</mat-label>
+            <input matInput formControlName="major">
+         </mat-form-field>
+         <mat-form-field>
+            <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.STUDY_MODE_LABEL" | transloco }}</mat-label>
+            <mat-select formControlName="studyMode">
+               <mat-option value="full-time">{{ "PROFILE.SETTINGS.STUDY_SETTINGS.STUDY_MODE_OPTIONS.FULL_TIME" | transloco }}</mat-option>
+               <mat-option value="part-time">{{ "PROFILE.SETTINGS.STUDY_SETTINGS.STUDY_MODE_OPTIONS.PART_TIME" | transloco }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+         <mat-form-field>
+            <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.CURRICULUM_YEAR_LABEL" | transloco }}</mat-label>
+            <input matInput type="number" formControlName="curriculumYear">
+         </mat-form-field>
+      </div>
+   </mat-expansion-panel>
+   <div class="actions">
+      <button mat-raised-button
+         color="primary"
+         (click)="onSave()">{{ "PROFILE.SETTINGS.SAVE_BUTTON_LABEL" | transloco }}</button>
+   </div>
+</form>

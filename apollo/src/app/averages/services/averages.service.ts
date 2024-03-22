@@ -79,21 +79,37 @@ export class AveragesService {
    public saveAverages(averages: GradesCompletionYear[]): void {
       this.completionsService.universityCompletions$.pipe(
          take(1),
-         map(completions => completions.map(completion => this.mapGradesCompletionYearToUniversityCompletionYear(completion, averages)))
+         map(completions => this.mapGradesCompletionYearsToUniversityCompletionYear(completions, averages))
       ).subscribe(completions => this.completionsService.saveUniversityCompletions(completions));
    }
 
-   private mapGradesCompletionYearToUniversityCompletionYear(completion: UniversityCompletionYear, averages: GradesCompletionYear[]): UniversityCompletionYear {
-      const average = averages.find(average => average.id === completion.id);
-      if (!average) {
-         return completion;
-      }
+   private mapGradesCompletionYearsToUniversityCompletionYear(completions: UniversityCompletionYear[], averages: GradesCompletionYear[]): UniversityCompletionYear[] {
+      const universityCompletionYears: UniversityCompletionYear[] = [];
 
-      return {
-         ...completion,
-         firstSemester: average.firstSemesterGrades.map(grade => this.mapGradeToUniversitySubjectCompletion(grade)),
-         secondSemester: average.secondSemesterGrades.map(grade => this.mapGradeToUniversitySubjectCompletion(grade))
-      };
+      completions.forEach(completion => {
+         const average = averages.find(average => average.id === completion.id);
+         if (!average) {
+            universityCompletionYears.push(completion);
+         } else {
+            universityCompletionYears.push({
+               ...completion,
+               firstSemester: average.firstSemesterGrades.map(grade => this.mapGradeToUniversitySubjectCompletion(grade)),
+               secondSemester: average.secondSemesterGrades.map(grade => this.mapGradeToUniversitySubjectCompletion(grade))
+            });
+         }
+      });
+
+      averages.filter(average => !completions.find(completion => completion.id === average.id)).forEach(average => {
+         universityCompletionYears.push({
+            id: average.id,
+            name: average.name,
+            owner: average.owner,
+            firstSemester: average.firstSemesterGrades.map(grade => this.mapGradeToUniversitySubjectCompletion(grade)),
+            secondSemester: average.secondSemesterGrades.map(grade => this.mapGradeToUniversitySubjectCompletion(grade))
+         });
+      });
+
+      return universityCompletionYears;
    }
 
    private mapGradeToUniversitySubjectCompletion(grade: Grade): UniversitySubjectCompletion {
@@ -111,5 +127,9 @@ export class AveragesService {
          id: semester.id,
          semesterType: semester.type
       }));
+   }
+
+   public deleteGuestData(): void {
+      this.completionsService.deleteGuestData();
    }
 }

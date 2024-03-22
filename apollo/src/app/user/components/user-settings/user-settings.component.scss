@@ -1,0 +1,39 @@
+@use 'styles/colors';
+
+.settings-container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 2rem;
+   padding: 1rem;
+
+   &.row {
+      flex-direction: row;
+      flex-wrap: wrap;
+   }
+}
+
+.user-settings-container {
+   border: 2px solid colors.$primary-darker;
+   border-radius: 1rem;
+   margin-bottom: 3rem;
+   padding: 2rem;
+}
+
+.expansion-panel-title {
+   height: 6rem !important;
+
+   h3 {
+      font-size: 2rem;
+   }
+}
+
+.mat-expansion-panel {
+   background-color: colors.$primary-background;
+}
+
+.actions {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}

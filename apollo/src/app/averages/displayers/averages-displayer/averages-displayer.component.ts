@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { DisplayValuePipe } from '@apollo/shared/pipes';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { AlternativeGrade, Grade } from '../../models';
 import { AverageCalculatorUtils } from '../../utils';
@@ -11,7 +12,8 @@ import { AverageCalculatorUtils } from '../../utils';
    imports: [
       TranslocoPipe,
       MatButtonModule,
-      MatIconModule
+      MatIconModule,
+      DisplayValuePipe
    ],
    templateUrl: './averages-displayer.component.html',
    styleUrl: './averages-displayer.component.scss',

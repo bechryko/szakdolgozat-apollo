@@ -1,38 +1,38 @@
 <fieldset>
    <legend>{{ title }}</legend>
    <p>
-      {{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() }}
+      {{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() | displayValue }}
       @if(alternativeWeightedAverage()) {
          <span class="alternative-data">
             <mat-icon>arrow_right_alt</mat-icon>
-            {{ alternativeWeightedAverage() }}
+            {{ alternativeWeightedAverage() | displayValue }}
          </span>
       }
    </p>
    <p>
-      {{ "AVERAGES.DISPLAY.CREDIT_SUM" | transloco }}: {{ creditSum() }}
+      {{ "AVERAGES.DISPLAY.CREDIT_SUM" | transloco }}: {{ creditSum() | displayValue }}
       @if(alternativeCreditSum()) {
          <span class="alternative-data">
             <mat-icon>arrow_right_alt</mat-icon>
-            {{ alternativeCreditSum() }}
+            {{ alternativeCreditSum() | displayValue }}
          </span>
       }
    </p>
    <p>
-      {{ "AVERAGES.DISPLAY.CREDIT_INDEX" | transloco }}: {{ creditIndex() }}
+      {{ "AVERAGES.DISPLAY.CREDIT_INDEX" | transloco }}: {{ creditIndex() | displayValue }}
       @if(alternativeCreditIndex()) {
          <span class="alternative-data">
             <mat-icon>arrow_right_alt</mat-icon>
-            {{ alternativeCreditIndex() }}
+            {{ alternativeCreditIndex() | displayValue }}
          </span>
       }
    </p>
    <p>
-      {{ "AVERAGES.DISPLAY.ADJUSTED_CREDIT_INDEX" | transloco }}: {{ adjustedCreditIndex() }}
+      {{ "AVERAGES.DISPLAY.ADJUSTED_CREDIT_INDEX" | transloco }}: {{ adjustedCreditIndex() | displayValue }}
       @if(alternativeAdjustedCreditIndex()) {
          <span class="alternative-data">
             <mat-icon>arrow_right_alt</mat-icon>
-            {{ alternativeAdjustedCreditIndex() }}
+            {{ alternativeAdjustedCreditIndex() | displayValue }}
          </span>
       }
    </p>
