@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { fallbackLanguage } from '../constants';
 import { MultiLanguage } from '../models';
 import { LanguageService } from '../services';
 
@@ -12,6 +13,7 @@ export class MultiLanguagePipe implements PipeTransform {
    ) { }
 
    public transform<T>(value: MultiLanguage<T>): T {
-      return value[this.languageService.getLanguage()];
+      const translation = value[this.languageService.getLanguage()];
+      return translation ?? value[fallbackLanguage]!;
    }
 }

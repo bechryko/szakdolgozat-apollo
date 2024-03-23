@@ -1,15 +1,13 @@
 import { formatDate } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { LanguageService } from './language.service';
+import { LanguageService } from '../languages';
 
 @Injectable({
    providedIn: 'root'
 })
 export class TimeFormatService {
    constructor(
-      private readonly languageService: LanguageService,
-      private readonly sanitizer: DomSanitizer
+      private readonly languageService: LanguageService
    ) { }
 
    public format(value: Date): [string, string] {

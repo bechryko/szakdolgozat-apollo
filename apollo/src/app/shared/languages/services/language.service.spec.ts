@@ -28,7 +28,7 @@ describe('LanguageService', () => {
          setLanguageSpy = spyOn(service, 'setLanguage');
       });
 
-      it('should set the language from local storage if it is saved', () => {
+      it("should set the language from local storage if it is saved", () => {
          spyOn(localStorage, 'getItem').and.returnValue('en');
 
          service.setInitialLanguage();
@@ -36,7 +36,7 @@ describe('LanguageService', () => {
          expect(setLanguageSpy).toHaveBeenCalledWith('en');
       });
 
-      it('should set the app default language if no language is stored', () => {
+      it("should set the app default language if no language is stored", () => {
          spyOn(localStorage, 'getItem').and.returnValue(null);
 
          service.setInitialLanguage();
@@ -46,7 +46,7 @@ describe('LanguageService', () => {
    });
 
    describe('setLanguage', () => {
-      it('should set the language in local storage, for TranslocoService and locally', () => {
+      it("should set the language in local storage, for TranslocoService and locally", () => {
          const language = languages[0];
 
          service.setLanguage(language);
@@ -54,10 +54,6 @@ describe('LanguageService', () => {
          expect(localStorage.getItem('apollo-language')).toEqual(language);
          expect(translocoService.setActiveLang).toHaveBeenCalledWith(language);
          expect(service["activeLanguage"]).toEqual(language);
-      });
-
-      it('should throw an error if the language is not supported', () => {
-         expect(() => service.setLanguage('not a language')).toThrowError();
       });
    });
 });

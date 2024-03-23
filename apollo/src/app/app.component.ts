@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, Signal, ViewChild, WritableSignal, computed, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header';
-import { LanguageService } from './shared/services';
+import { LanguageService } from './shared/languages';
 import { SidebarComponent } from './shared/sidebar';
 
 @Component({

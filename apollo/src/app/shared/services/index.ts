@@ -2,7 +2,6 @@
 export { CompletionsFetcherService } from './completions-fetcher.service';
 export { CompletionsService } from './completions.service';
 export { CoreFetcherService } from './core-fetcher.service';
-export { LanguageService } from './language.service';
 export { SnackBarService } from './snack-bar.service';
 export { TimeFormatService } from './time-format.service';
 export { UniversitiesService } from './universities.service';

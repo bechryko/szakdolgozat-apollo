@@ -6,9 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { deleteNullish } from '@apollo/shared/functions';
+import { LanguageSelectionComponent } from '@apollo/shared/languages';
 import { ApolloUser } from '@apollo/shared/models';
 import { TranslocoPipe } from '@ngneat/transloco';
-import { LanguageSelectionComponent } from '..';
 import { AuthFormsUtils } from '../../utils';
 
 @Component({

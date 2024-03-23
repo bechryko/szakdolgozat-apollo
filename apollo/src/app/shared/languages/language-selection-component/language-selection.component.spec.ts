@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { MatChipListboxChange } from "@angular/material/chips";
-import { LanguageService } from "@apollo/shared/services";
 import { provideTransloco } from "@ngneat/transloco";
+import { LanguageService } from "../services";
 import { LanguageSelectionComponent } from "./language-selection.component";
 
 describe('LanguageSelectionComponent', () => {
@@ -40,7 +40,7 @@ describe('LanguageSelectionComponent', () => {
 
    describe('onSelectLanguage', () => {
       it("should set a new selected language", () => {
-         const newLanguage = 'es';
+         const newLanguage = 'hu';
          const event = {
             value: newLanguage,
             source: {}

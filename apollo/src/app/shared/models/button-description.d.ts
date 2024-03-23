@@ -1,4 +1,4 @@
-import { MultiLanguage } from "./multi-language";
+import { MultiLanguage } from "../languages";
 
 export interface ButtonDescription {
    text: MultiLanguage<string>;

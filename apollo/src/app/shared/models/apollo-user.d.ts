@@ -1,8 +1,10 @@
+import { Language } from "../languages";
+
 export interface ApolloUser {
    email: string;
    username: string;
    isAdmin: boolean;
-   selectedLanguage?: string;
+   selectedLanguage?: Language;
    university?: string;
    faculty?: string;
    major?: string;

@@ -3,10 +3,10 @@ import { LoginData, RegisterData } from '@apollo/user/models';
 import { AuthService, UserFetcherService } from '@apollo/user/services';
 import { Store } from '@ngrx/store';
 import { Observable, distinctUntilChanged, map, of, startWith, switchMap, tap } from 'rxjs';
+import { LanguageService } from '../languages';
 import { ApolloUser } from '../models';
 import { multicast } from '../operators';
 import { userActions } from '../store/actions/user.actions';
-import { LanguageService } from './language.service';
 
 @Injectable({
    providedIn: 'root'

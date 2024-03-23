@@ -5,9 +5,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTable, MatTableModule } from '@angular/material/table';
-import { languages } from '@apollo/shared/constants';
-import { MultiLanguage, University } from '@apollo/shared/models';
-import { LanguageLabelKeyPipe, MultiLanguagePipe } from '@apollo/shared/pipes';
+import { LanguageLabelKeyPipe, MultiLanguage, MultiLanguagePipe, languages } from '@apollo/shared/languages';
+import { University } from '@apollo/shared/models';
 import { UniversitiesService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 

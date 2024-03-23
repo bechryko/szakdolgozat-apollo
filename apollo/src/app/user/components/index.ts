@@ -1,4 +1,3 @@
-export { LanguageSelectionComponent } from "./language-selection/language-selection.component";
 export { LoginComponent } from "./login/login.component";
 export { RegisterComponent } from "./register/register.component";
 export { UserSettingsComponent } from "./user-settings/user-settings.component";
