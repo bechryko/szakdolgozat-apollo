@@ -2,7 +2,7 @@
 <div class="university-list-container">
    @for(university of universities(); track $index) {
       <mat-expansion-panel class="university-panel">
-         <mat-expansion-panel-header>
+         <mat-expansion-panel-header class="panel-header">
             <mat-panel-title>
                <h3>{{ university.name | multiLanguage }}</h3>
             </mat-panel-title>
@@ -62,14 +62,22 @@
                <div class="input-table-footer">
                   <button mat-raised-button
                      color="accent"
-                     (click)="addFaculty(university.faculties)">{{ "INPUT_TABLE.ADD_BUTTON_LABEL" | transloco }}</button>
+                     (click)="addFaculty(university)">{{ "INPUT_TABLE.ADD_BUTTON_LABEL" | transloco }}</button>
                </div>
             </div>
          </div>
-         <button mat-raised-button
-            class="details-button"
-            color="primary"
-            (click)="showUniversityDetails(university)">{{ "ADMINISTRATION.UNIVERSITY.SHOW_DETAILS_LABEL" | transloco }}</button>
+         <div class="actions">
+            <button mat-raised-button
+               color="primary"
+               (click)="showUniversityDetails(university)">{{ "ADMINISTRATION.UNIVERSITY.SHOW_DETAILS_LABEL" | transloco }}</button>
+            <button mat-raised-button
+               color="primary"
+               (click)="saveChanges()">{{ "ADMINISTRATION.UNIVERSITY.SAVE_LABEL" | transloco }}</button>
+         </div>
       </mat-expansion-panel>
    }
+   <button mat-raised-button
+      class="add-university-button"
+      color="accent"
+      (click)="addUniversity()">{{ "ADMINISTRATION.UNIVERSITY_ADD_BUTTON_LABEL" | transloco }}</button>
 </div>

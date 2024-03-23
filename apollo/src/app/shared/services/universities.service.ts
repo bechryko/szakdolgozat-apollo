@@ -57,4 +57,8 @@ export class UniversitiesService {
          multicast()
       );
    }
+
+   public addUniversity(): void {
+      // ...
+   }
 }

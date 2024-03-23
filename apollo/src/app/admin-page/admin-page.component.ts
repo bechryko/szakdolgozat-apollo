@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Signal, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +10,7 @@ import { LanguageLabelKeyPipe, MultiLanguage, MultiLanguagePipe, languages } fro
 import { University } from '@apollo/shared/models';
 import { UniversitiesService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
+import { FacultyCreationDialogComponent } from './dialogs';
 
 @Component({
    selector: 'apo-admin-page',
@@ -36,9 +38,14 @@ export class AdminPageComponent {
    @ViewChild(MatTable) private readonly facultyTable!: MatTable<MultiLanguage<string>>;
 
    constructor(
-      private readonly universitiesService: UniversitiesService
+      private readonly universitiesService: UniversitiesService,
+      private readonly dialog: MatDialog
    ) {
       this.universities = toSignal(this.universitiesService.universities$);
+   }
+
+   public addUniversity(): void {
+      this.universitiesService.addUniversity();
    }
 
    public removeFaculty(faculties: MultiLanguage<string>[], element: MultiLanguage<string>): void {
@@ -49,17 +56,24 @@ export class AdminPageComponent {
       }
    }
 
-   public addFaculty(faculties: MultiLanguage<string>[]): void {
-      faculties.push({
-         en: '',
-         hu: ''
+   public addFaculty(university: University): void {
+      this.dialog.open(FacultyCreationDialogComponent, {
+         data: university.name
+      }).afterClosed().subscribe((faculty: MultiLanguage<string> | undefined) => {
+         if(!faculty) {
+            return;
+         }
+
+         university.faculties.push(faculty);
+         this.updateFacultyTable();
       });
-      this.updateFacultyTable();
    }
 
    public showUniversityDetails(university: University): void {
       console.log(university);
    }
+
+   public saveChanges(): void {}
 
    private updateFacultyTable(): void {
       this.facultyTable.renderRows();

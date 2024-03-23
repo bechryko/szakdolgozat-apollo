@@ -71,3 +71,7 @@ table thead {
    position: sticky;
    top: 0;
 }
+
+.show-scrollbar {
+   overflow-y: scroll !important;
+}

@@ -15,6 +15,10 @@ h2 {
 
    .university-panel {
       background-color: colors.$primary-background;
+
+      .panel-header {
+         background-color: colors.$primary-darker-background;
+      }
    }
 }
 
@@ -24,7 +28,7 @@ h2 {
    @include ms.media-scroller;
    @include ms.snaps-inline;
    gap: $spacing;
-   margin-bottom: $spacing;
+   margin: $spacing 0;
 
    .language-input {
       display: inline-block;
@@ -45,6 +49,15 @@ h2 {
    font-size: 1.25rem;
 }
 
-.details-button {
-   margin: 2rem auto;
+.actions {
+   display: grid;
+   grid-auto-flow: column;
+   grid-auto-columns: max-content;
+   gap: 1rem;
+   margin-top: 2rem;
+}
+
+.add-university-button {
+   width: 100%;
+   margin-top: 1.5rem;
 }

@@ -3,7 +3,7 @@
    @if(!isAdminPage()) {
       <apo-sidebar></apo-sidebar>
    }
-   <main>
+   <main [class.show-scrollbar]="isAdminPage()">
       <router-outlet></router-outlet>
    </main>
 </div>
