@@ -1,0 +1,50 @@
+@use 'styles/colors';
+@use 'styles/table-style';
+@use 'styles/media-scroller' as ms;
+
+@include table-style.inputTable;
+
+h2 {
+   text-align: center;
+   font-size: 2rem;
+   margin: 0 0 3rem;
+}
+
+.university-list-container {
+   font-size: 0.75rem;
+
+   .university-panel {
+      background-color: colors.$primary-background;
+   }
+}
+
+.language-inputs-container {
+   $spacing: 1rem;
+
+   @include ms.media-scroller;
+   @include ms.snaps-inline;
+   gap: $spacing;
+   margin-bottom: $spacing;
+
+   .language-input {
+      display: inline-block;
+      padding: $spacing;
+      background-color: colors.$primary-lighter-background;
+      border-top-left-radius: $spacing;
+      border-top-right-radius: $spacing;
+
+      h4 {
+         text-align: center;
+         font-size: 0.875rem;
+         margin: 0 auto
+      }
+   }
+}
+
+.input-table-header h3 {
+   font-size: 1.25rem;
+}
+
+.details-button {
+   margin: 2rem auto;
+}

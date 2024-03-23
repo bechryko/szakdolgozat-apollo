@@ -1,7 +1,7 @@
 @use 'styles/colors';
 
-@mixin semesterTable {
-   .semester-table-header {
+@mixin inputTable {
+   .input-table-header {
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -9,7 +9,7 @@
       font-size: 2rem;
    }
    
-   .semester-table-footer {
+   .input-table-footer {
       display: flex;
       justify-content: space-around;
       align-items: center;

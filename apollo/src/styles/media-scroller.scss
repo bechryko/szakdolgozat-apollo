@@ -1,0 +1,22 @@
+@mixin media-scroller {
+   width: 100%;
+
+   display: grid;
+   grid-auto-flow: column;
+   grid-auto-columns: max-content;
+
+   overflow-x: auto;
+   overscroll-behavior-inline: contain;
+}
+
+@mixin snaps-inline($padding: 0) {
+   scroll-snap-type: inline mandatory;
+
+   @if $padding != 0 {
+      scroll-padding-inline: $padding;
+   }
+
+   & > * {
+      scroll-snap-align: start;
+   }
+}
