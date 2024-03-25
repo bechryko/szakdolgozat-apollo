@@ -1,4 +1,4 @@
-import { MultiLanguage } from "../languages";
+import { MultiLanguage } from "@apollo/shared/languages";
 
 export interface University {
    id: string;

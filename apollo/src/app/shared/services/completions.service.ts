@@ -15,7 +15,7 @@ export class CompletionsService {
    constructor(
       private readonly store: Store
    ) {
-      this.universityCompletions$ = this.store.select(coreFeature.selectCompletionYears).pipe(
+      this.universityCompletions$ = this.store.select(coreFeature.selectCompletions).pipe(
          tap(completions => {
             if(!completions) {
                this.store.dispatch(completionsActions.loadCompletions());

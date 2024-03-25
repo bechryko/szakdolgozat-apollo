@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Signal, ViewChild } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,20 +10,23 @@ import { LanguageLabelKeyPipe, MultiLanguage, MultiLanguagePipe, languages } fro
 import { University } from '@apollo/shared/models';
 import { UniversitiesService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
-import { FacultyCreationDialogComponent } from './dialogs';
+import { cloneDeep } from 'lodash';
+import { Observable, tap } from 'rxjs';
 
 @Component({
    selector: 'apo-admin-page',
    standalone: true,
    imports: [
       TranslocoPipe,
+      AsyncPipe,
       MultiLanguagePipe,
       MatExpansionModule,
       MatFormFieldModule,
       MatInputModule,
       MatTableModule,
       MatButtonModule,
-      LanguageLabelKeyPipe
+      LanguageLabelKeyPipe,
+      FormsModule
    ],
    templateUrl: './admin-page.component.html',
    styleUrl: './admin-page.component.scss',
@@ -33,15 +36,26 @@ export class AdminPageComponent {
    public readonly availableLanguages = languages;
    public readonly columns = [...this.availableLanguages, 'remove'];
 
-   public readonly universities: Signal<University[] | undefined>;
+   public readonly universities$: Observable<University[]>;
+   public universities: University[];
 
-   @ViewChild(MatTable) private readonly facultyTable!: MatTable<MultiLanguage<string>>;
+   @ViewChildren(MatTable) private readonly facultyTables?: MatTable<MultiLanguage<string>>[];
 
    constructor(
-      private readonly universitiesService: UniversitiesService,
-      private readonly dialog: MatDialog
+      private readonly universitiesService: UniversitiesService
    ) {
-      this.universities = toSignal(this.universitiesService.universities$);
+      this.universities = [];
+
+      this.universities$ = this.universitiesService.universities$.pipe(
+         tap(universities => {
+            if(!universities) {
+               return;
+            }
+            
+            this.universities = cloneDeep(universities);
+            this.updateFacultyTables();
+         })
+      );
    }
 
    public addUniversity(): void {
@@ -52,30 +66,31 @@ export class AdminPageComponent {
       const index = faculties.indexOf(element);
       if(index !== -1) {
          faculties.splice(index, 1);
-         this.updateFacultyTable();
+         this.updateFacultyTables();
       }
    }
 
    public addFaculty(university: University): void {
-      this.dialog.open(FacultyCreationDialogComponent, {
-         data: university.name
-      }).afterClosed().subscribe((faculty: MultiLanguage<string> | undefined) => {
-         if(!faculty) {
-            return;
-         }
-
-         university.faculties.push(faculty);
-         this.updateFacultyTable();
-      });
+      university.faculties.push(
+         Object.fromEntries(
+            this.availableLanguages.map(lang => [lang, ''])
+         )
+      );
+      this.updateFacultyTables();
    }
 
    public showUniversityDetails(university: University): void {
       console.log(university);
    }
 
-   public saveChanges(): void {}
+   public saveChanges(): void {
+      this.universitiesService.saveUniversities(this.universities);
+   }
 
-   private updateFacultyTable(): void {
-      this.facultyTable.renderRows();
+   private updateFacultyTables(): void {
+      if(!this.facultyTables) {
+         return;
+      }
+      this.facultyTables.forEach(table => table.renderRows());
    }
 }

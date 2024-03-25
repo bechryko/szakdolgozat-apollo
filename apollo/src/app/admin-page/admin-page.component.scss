@@ -49,6 +49,24 @@ h2 {
    font-size: 1.25rem;
 }
 
+.header-cell {
+   width: 100%;
+   text-align: center;
+}
+
+.table-cell input {
+   font-size: 1em;
+   width: 100%;
+   border: none;
+   cursor: pointer;
+   padding: 0.5rem;
+   
+   &:focus-visible {
+      outline: 2px solid colors.$primary-main;
+      border-radius: 0.5rem;
+   }
+}
+
 .actions {
    display: grid;
    grid-auto-flow: column;

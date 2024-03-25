@@ -19,7 +19,7 @@ export class TimetableFetcherService {
    }
 
    public saveSemesters(semesters: Semester[]): Observable<void> {
-      return this.coreFetcherService.saveCollectionChanges<Semester>(COLLECTION, semesters);
+      return this.coreFetcherService.saveCollectionChangesForCurrentUser<Semester>(COLLECTION, semesters);
    }
 
    public clearGuestStorage(): void {

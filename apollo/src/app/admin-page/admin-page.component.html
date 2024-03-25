@@ -1,83 +1,85 @@
 <h2>{{ "ADMINISTRATION.UNIVERSITY_LIST_TITLE" | transloco }}</h2>
-<div class="university-list-container">
-   @for(university of universities(); track $index) {
-      <mat-expansion-panel class="university-panel">
-         <mat-expansion-panel-header class="panel-header">
-            <mat-panel-title>
-               <h3>{{ university.name | multiLanguage }}</h3>
-            </mat-panel-title>
-            <mat-panel-description>
-               <p>{{ university.location | multiLanguage }}</p>
-            </mat-panel-description>
-         </mat-expansion-panel-header>
-         <div class="language-inputs-container">
-            @for(lang of availableLanguages; track $index) {
-               <div class="language-input">
-                  <h4>{{ lang | languageLabelKey | transloco }}</h4><br>
-                  <mat-form-field>
-                     <mat-label>{{ "ADMINISTRATION.UNIVERSITY.NAME_LABEL" | transloco }}</mat-label>
-                     <input matInput
-                        [value]="university.name[lang]">
-                  </mat-form-field>
-                  <br>
-                  <mat-form-field>
-                     <mat-label>{{ "ADMINISTRATION.UNIVERSITY.LOCATION_LABEL" | transloco }}</mat-label>
-                     <input matInput
-                        [value]="university.location[lang]">
-                  </mat-form-field>
-               </div>
-            }
-         </div>
-         <div class="input-table-container">
-            <div class="mat-mdc-table">
-               <div class="input-table-header mat-mdc-table-row mat-mdc-header-cell">
-                  <h3>{{ "ADMINISTRATION.UNIVERSITY.FACULTY_LIST_LABEL" | transloco }}</h3>
-               </div>
-            </div>
-            <mat-table [dataSource]="university.faculties" class="faculty-table">
+@if(universities$ | async) {
+   <div class="university-list-container">
+      @for(university of universities; track $index) {
+         <mat-expansion-panel class="university-panel">
+            <mat-expansion-panel-header class="panel-header">
+               <mat-panel-title>
+                  <h3>{{ university.name | multiLanguage }}</h3>
+               </mat-panel-title>
+               <mat-panel-description>
+                  <p>{{ university.location | multiLanguage }}</p>
+               </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="language-inputs-container">
                @for(lang of availableLanguages; track $index) {
-                  <ng-container [matColumnDef]="lang">
-                     <mat-header-cell *matHeaderCellDef>
-                        <h4 class="header-cell">{{ lang | languageLabelKey | transloco }}</h4>
-                     </mat-header-cell>
+                  <div class="language-input">
+                     <h4>{{ lang | languageLabelKey | transloco }}</h4><br>
+                     <mat-form-field>
+                        <mat-label>{{ "ADMINISTRATION.UNIVERSITY.NAME_LABEL" | transloco }}</mat-label>
+                        <input matInput
+                           [(ngModel)]="university.name[lang]">
+                     </mat-form-field>
+                     <br>
+                     <mat-form-field>
+                        <mat-label>{{ "ADMINISTRATION.UNIVERSITY.LOCATION_LABEL" | transloco }}</mat-label>
+                        <input matInput
+                           [(ngModel)]="university.location[lang]">
+                     </mat-form-field>
+                  </div>
+               }
+            </div>
+            <div class="input-table-container">
+               <div class="mat-mdc-table">
+                  <div class="input-table-header mat-mdc-table-row mat-mdc-header-cell">
+                     <h3>{{ "ADMINISTRATION.UNIVERSITY.FACULTY_LIST_LABEL" | transloco }}</h3>
+                  </div>
+               </div>
+               <mat-table [dataSource]="university.faculties" class="faculty-table">
+                  @for(lang of availableLanguages; track $index) {
+                     <ng-container [matColumnDef]="lang">
+                        <mat-header-cell *matHeaderCellDef>
+                           <h4 class="header-cell">{{ lang | languageLabelKey | transloco }}</h4>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="table-cell">
+                           <input [(ngModel)]="element[lang]">
+                        </mat-cell>
+                     </ng-container>
+                  }
+
+                  <ng-container matColumnDef="remove">
+                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
                      <mat-cell *matCellDef="let element" class="table-cell">
-                        {{ element[lang] }}
+                        <button mat-flat-button
+                           color="warn"
+                           (click)="removeFaculty(university.faculties, element)">{{ "INPUT_TABLE.REMOVE_BUTTON_LABEL" | transloco }}</button>
                      </mat-cell>
                   </ng-container>
-               }
 
-               <ng-container matColumnDef="remove">
-                  <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                  <mat-cell *matCellDef="let element" class="table-cell">
-                     <button mat-flat-button
-                        color="warn"
-                        (click)="removeFaculty(university.faculties, element)">{{ "INPUT_TABLE.REMOVE_BUTTON_LABEL" | transloco }}</button>
-                  </mat-cell>
-               </ng-container>
-
-               <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
-               <mat-row *matRowDef="let row; columns: columns" class="table-row"></mat-row>
-            </mat-table>
-            <div class="mat-mdc-table">
-               <div class="input-table-footer">
-                  <button mat-raised-button
-                     color="accent"
-                     (click)="addFaculty(university)">{{ "INPUT_TABLE.ADD_BUTTON_LABEL" | transloco }}</button>
+                  <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: columns" class="table-row"></mat-row>
+               </mat-table>
+               <div class="mat-mdc-table">
+                  <div class="input-table-footer">
+                     <button mat-raised-button
+                        color="accent"
+                        (click)="addFaculty(university)">{{ "INPUT_TABLE.ADD_BUTTON_LABEL" | transloco }}</button>
+                  </div>
                </div>
             </div>
-         </div>
-         <div class="actions">
-            <button mat-raised-button
-               color="primary"
-               (click)="showUniversityDetails(university)">{{ "ADMINISTRATION.UNIVERSITY.SHOW_DETAILS_LABEL" | transloco }}</button>
-            <button mat-raised-button
-               color="primary"
-               (click)="saveChanges()">{{ "ADMINISTRATION.UNIVERSITY.SAVE_LABEL" | transloco }}</button>
-         </div>
-      </mat-expansion-panel>
-   }
-   <button mat-raised-button
-      class="add-university-button"
-      color="accent"
-      (click)="addUniversity()">{{ "ADMINISTRATION.UNIVERSITY_ADD_BUTTON_LABEL" | transloco }}</button>
-</div>
+            <div class="actions">
+               <button mat-raised-button
+                  color="primary"
+                  (click)="showUniversityDetails(university)">{{ "ADMINISTRATION.UNIVERSITY.SHOW_DETAILS_LABEL" | transloco }}</button>
+               <button mat-raised-button
+                  color="primary"
+                  (click)="saveChanges()">{{ "ADMINISTRATION.UNIVERSITY.SAVE_LABEL" | transloco }}</button>
+            </div>
+         </mat-expansion-panel>
+      }
+      <button mat-raised-button
+         class="add-university-button"
+         color="accent"
+         (click)="addUniversity()">{{ "ADMINISTRATION.UNIVERSITY_ADD_BUTTON_LABEL" | transloco }}</button>
+   </div>
+}
