@@ -73,11 +73,13 @@ export class AdminPageComponent {
    }
 
    public addFaculty(university: University): void {
-      university.faculties.push(
-         Object.fromEntries(
+      const highestId = university.faculties.reduce((max, faculty) => Math.max(max, faculty.id), -1);
+      university.faculties.push({
+         id: highestId + 1,
+         ...Object.fromEntries(
             this.availableLanguages.map(lang => [lang, ''])
          )
-      );
+      });
       this.updateFacultyTables();
    }
 

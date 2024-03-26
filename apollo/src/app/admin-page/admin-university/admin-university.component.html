@@ -7,7 +7,11 @@
    <mat-tab-group class="tabs">
       <mat-tab [label]="'ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_LIST_LABEL' | transloco">
          <div class="university-data-container">
-            <div class="list-container"></div>
+            <div class="list-container">
+               <apo-file-upload
+                  [parserFn]="subjectsParserFn"
+                  (fileDataChange)="onDataUpload($event)"></apo-file-upload>
+            </div>
             <div class="details-container">
                <mat-form-field>
                   <mat-label>asd</mat-label>

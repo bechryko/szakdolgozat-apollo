@@ -7,9 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { RouteUrls } from '@apollo/app.routes';
+import { FileUploadComponent } from '@apollo/shared/file-upload';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
-import { University } from '@apollo/shared/models';
+import { RawUniversitySubject, University } from '@apollo/shared/models';
 import { RouterService } from '@apollo/shared/services';
+import { NeptunExportParserUtils } from '@apollo/shared/utils';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 
@@ -24,7 +26,8 @@ import { cloneDeep } from 'lodash';
       MatTabsModule,
       FormsModule,
       MatFormFieldModule,
-      MatInputModule
+      MatInputModule,
+      FileUploadComponent
    ],
    templateUrl: './admin-university.component.html',
    styleUrl: './admin-university.component.scss',
@@ -48,5 +51,13 @@ export class AdminUniversityComponent implements OnInit {
 
    public back(): void {
       this.routerService.navigate(RouteUrls.ADMINISTRATION);
+   }
+
+   public onDataUpload(data: RawUniversitySubject[]): void {
+      console.log(data)
+   }
+
+   public subjectsParserFn(exported: string): RawUniversitySubject[] {
+      return NeptunExportParserUtils.parseUniversitySubjects(exported);
    }
 }
