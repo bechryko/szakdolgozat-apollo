@@ -4,7 +4,9 @@
    <mat-table [dataSource]="data.data" class="content-table">
       @for(key of dataKeys; track $index) {
          <ng-container [matColumnDef]="key">
-            <mat-header-cell *matHeaderCellDef>{{ data.columnNameKeys[$index] | transloco }}</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>
+               {{ data.columnNameKeys ? (data.columnNameKeys[$index] | transloco) : key }}
+            </mat-header-cell>
             <mat-cell *matCellDef="let element">{{ element[key] }}</mat-cell>
          </ng-container>
       }

@@ -41,9 +41,10 @@
          <button mat-raised-button
             color="accent"
             (click)="addGrade(grades)">{{ "AVERAGES.DIALOGS.GRADE_ADD_LABEL" | transloco }}</button>
-         <input type="file"
-            accept=".txt"
-            (change)="fileUpload($event, grades)">
+         <apo-file-upload
+            [parserFn]="fileParserFn"
+            (fileDataChange)="fileUpload($event, grades)"
+            [confirmationDialogTableHeaderKeys]="confirmationDialogTableHeaderKeys"></apo-file-upload>
       </div>
    </div>
 </div>

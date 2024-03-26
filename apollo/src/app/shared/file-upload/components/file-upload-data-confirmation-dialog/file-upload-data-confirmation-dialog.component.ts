@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { TranslocoPipe } from '@ngneat/transloco';
-import { FileUploadDataConfirmationDialogData } from './file-upload-data-confirmation-dialog-data.d';
+import { FileUploadDataConfirmationDialogData } from './file-upload-data-confirmation-dialog-data';
 
 @Component({
    selector: 'apo-file-upload-data-confirmation-dialog',

@@ -145,7 +145,7 @@
    "INPUT_TABLE.ADD_BUTTON_LABEL": "Add",
    "GENERAL_BUTTON_LABELS.BACK": "Back",
    "ERROR.USER_NOT_LOGGED_IN": "User is not logged in!",
-   "ERROR.FILE.PREFIX": "File upload error:",
+   "ERROR.FILE.PREFIX": "File upload error",
    "ERROR.FILE.NOT_FOUND": "No file was provided!",
    "ERROR.FILE.INVALID_TYPE": "Invalid file type! You can upload only plain text (.txt) files!",
    "ERROR.FILE.INVALID_FORMAT": "Invalid file format! You can upload only .txt files!"

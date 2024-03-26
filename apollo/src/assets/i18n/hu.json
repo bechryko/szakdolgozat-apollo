@@ -145,7 +145,7 @@
    "INPUT_TABLE.ADD_BUTTON_LABEL": "Hozzáadás",
    "GENERAL_BUTTON_LABELS.BACK": "Vissza",
    "ERROR.USER_NOT_LOGGED_IN": "A felhasználó nincs bejelentkezve!",
-   "ERROR.FILE.PREFIX": "Fájlfeltöltési hiba:",
+   "ERROR.FILE.PREFIX": "Fájlfeltöltési hiba",
    "ERROR.FILE.NOT_FOUND": "Hiányzó fájl!",
    "ERROR.FILE.INVALID_TYPE": "Hibás fájltípus! Csak egyszerű szöveges (.txt) fájlokat tölthetsz fel!",
    "ERROR.FILE.INVALID_FORMAT": "Hibás fájlformátum! Csak .txt fájlokat tölthetsz fel!"
