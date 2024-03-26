@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, Signal, ViewChild, WritableSignal, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header';
 import { LanguageService } from './shared/languages';
+import { RouterService } from './shared/services';
 import { SidebarComponent } from './shared/sidebar';
 
 @Component({
@@ -18,28 +20,15 @@ import { SidebarComponent } from './shared/sidebar';
    styleUrls: ['./app.component.scss'],
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements AfterViewInit {
-   @ViewChild(HeaderComponent) private header?: HeaderComponent;
-   public readonly isAdminPage: Signal<boolean>;
-   private readonly isHeaderLoaded: WritableSignal<boolean>;
+export class AppComponent {
+   public readonly isAdminPage: Signal<boolean | undefined>;
 
    constructor(
-      private readonly languageService: LanguageService
+      private readonly languageService: LanguageService,
+      private readonly routerService: RouterService
    ) {
       this.languageService.setInitialLanguage();
 
-      this.isHeaderLoaded = signal(false);
-
-      this.isAdminPage = computed(() => {
-         if(!this.isHeaderLoaded()) {
-            return false;
-         }
-
-         return this.header!.selectedMenu() === "ADMINISTRATION";
-      });
-   }
-
-   public ngAfterViewInit(): void {
-      this.isHeaderLoaded.set(true);
+      this.isAdminPage = toSignal(this.routerService.isAdminPage$);
    }
 }

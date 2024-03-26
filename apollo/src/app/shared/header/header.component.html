@@ -1,16 +1,20 @@
-<div class="header-container">
-   <h1 class="title-button" (click)="selectMenuItem('MENU')">Apollo</h1>
+<div class="header-container" *ngLet="selectedMenu$ | async as selecteMenu">
+   <div class="title-button"
+      [class.selected]="selecteMenu === routeUrls.MENU"
+      (click)="selectMenuItem(routeUrls.MENU)">
+      <h1>Apollo</h1>
+   </div>
    <nav>
       @for(menuItemKey of menuItemKeys$ | async; track $index) {
          <button mat-button
             disableRipple
-            [class.selected]="menuItemKey === selectedMenu()"
-            (click)="selectMenuItem(menuItemKey)">{{ ('NAVIGATION.' + menuItemKey) | transloco }}</button>
+            [class.selected]="menuItemKey === selecteMenu"
+            (click)="selectMenuItem(menuItemKey)">{{ routeUrlToTranslationKeyMap[menuItemKey] | transloco }}</button>
       }
    </nav>
    <button mat-fab
       color="accent"
-      (click)="selectMenuItem('USER')">
+      (click)="selectMenuItem(routeUrls.USER)">
       <mat-icon class="profile-icon">
          @if(isUserLoggedIn$ | async) {
             account_circle
