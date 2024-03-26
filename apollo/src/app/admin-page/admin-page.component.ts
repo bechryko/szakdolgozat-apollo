@@ -6,9 +6,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTable, MatTableModule } from '@angular/material/table';
+import { RouteUrls } from '@apollo/app.routes';
 import { LanguageLabelKeyPipe, MultiLanguage, MultiLanguagePipe, languages } from '@apollo/shared/languages';
 import { University } from '@apollo/shared/models';
-import { UniversitiesService } from '@apollo/shared/services';
+import { RouterService, UniversitiesService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { Observable, tap } from 'rxjs';
@@ -42,7 +43,8 @@ export class AdminPageComponent {
    @ViewChildren(MatTable) private readonly facultyTables?: MatTable<MultiLanguage<string>>[];
 
    constructor(
-      private readonly universitiesService: UniversitiesService
+      private readonly universitiesService: UniversitiesService,
+      private readonly routerService: RouterService
    ) {
       this.universities = [];
 
@@ -80,7 +82,7 @@ export class AdminPageComponent {
    }
 
    public showUniversityDetails(university: University): void {
-      console.log(university);
+      this.routerService.navigate(RouteUrls.ADMIN_UNIVERSITY, { id: university.id });
    }
 
    public saveChanges(): void {

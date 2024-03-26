@@ -1,0 +1,20 @@
+<div class="admin-university-container" *ngIf="university() as university">
+   <h2>{{ university.name | multiLanguage }}</h2>
+   <button mat-raised-button
+      class="back-button"
+      color="accent"
+      (click)="back()">{{ "GENERAL_BUTTON_LABELS.BACK" | transloco }}</button>
+   <mat-tab-group class="tabs">
+      <mat-tab [label]="'ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_LIST_LABEL' | transloco">
+         <div class="university-data-container">
+            <div class="list-container"></div>
+            <div class="details-container">
+               <mat-form-field>
+                  <mat-label>asd</mat-label>
+                  <input matInput>
+               </mat-form-field>
+            </div>
+         </div>
+      </mat-tab>
+   </mat-tab-group>
+</div>

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
 import { AdminPageComponent } from './admin-page/admin-page.component';
+import { AdminUniversityComponent, universityResolver } from './admin-page/admin-university';
 import { AveragesComponent } from './averages/averages.component';
 import { averagesFeature } from './averages/store';
 import { MenuComponent } from './menu/menu.component';
@@ -16,7 +17,8 @@ export enum RouteUrls {
    MAJOR_COMPLETION = 'major-completion',
    TIMETABLE = 'timetable',
    USER = 'profile',
-   ADMINISTRATION = 'administration'
+   ADMINISTRATION = 'administration',
+   ADMIN_UNIVERSITY = 'administration/university'
 }
 
 export const routes: Routes = [
@@ -46,6 +48,13 @@ export const routes: Routes = [
    {
       path: RouteUrls.ADMINISTRATION,
       component: AdminPageComponent
+   },
+   {
+      path: RouteUrls.ADMIN_UNIVERSITY,
+      component: AdminUniversityComponent,
+      resolve: {
+         university: universityResolver
+      }
    },
    {
       path: RouteUrls.USER,

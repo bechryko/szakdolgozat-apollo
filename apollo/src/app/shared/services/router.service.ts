@@ -18,7 +18,7 @@ export class RouterService {
    ) {
       this.currentPage$ = this.router.events.pipe(
          filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-         map(event => event.urlAfterRedirects.substring(1) as RouteUrls),
+         map(event => event.urlAfterRedirects.split('/')[1] as RouteUrls),
          multicast(),
          distinctUntilChanged()
       );
@@ -35,8 +35,8 @@ export class RouterService {
       );
    }
 
-   public navigate(page: RouteUrls): void {
-      this.router.navigateByUrl("/" + page);
+   public navigate(page: RouteUrls, queryParams?: { [key: string]: string }): void {
+      this.router.navigate(["/" + page], { queryParams });
    }
 
    public getRouteParam(paramKey: string): Observable<string | null> {
