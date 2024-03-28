@@ -11,7 +11,7 @@ import { provideState, provideStore } from '@ngrx/store';
 import { routes } from './app.routes';
 import { firebaseConfig } from './firebase.config';
 import { defaultLanguage, fallbackLanguage, languages } from './shared/languages';
-import { CompletionsEffects, UniversityEffects, UserEffects, coreFeature } from './shared/store';
+import { CompletionsEffects, UniversityEffects, UniversitySubjectEffects, UserEffects, coreFeature } from './shared/store';
 import { TranslocoHttpLoader } from './transloco-loader';
 
 export const appConfig: ApplicationConfig = {
@@ -23,7 +23,12 @@ export const appConfig: ApplicationConfig = {
       importProvidersFrom(provideFirestore(() => getFirestore())),
       provideStore(),
       provideState(coreFeature),
-      provideEffects(CompletionsEffects, UserEffects, UniversityEffects),
+      provideEffects(
+         CompletionsEffects,
+         UserEffects,
+         UniversityEffects,
+         UniversitySubjectEffects
+      ),
       provideHttpClient(),
       provideTransloco({
          config: {

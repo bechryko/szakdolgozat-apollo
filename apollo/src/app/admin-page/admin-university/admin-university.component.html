@@ -1,22 +1,67 @@
 <div class="admin-university-container" *ngIf="university() as university">
    <h2>{{ university.name | multiLanguage }}</h2>
-   <button mat-raised-button
-      class="back-button"
-      color="accent"
-      (click)="back()">{{ "GENERAL_BUTTON_LABELS.BACK" | transloco }}</button>
+   <div class="actions">
+      <button mat-raised-button
+         class="back-button"
+         color="accent"
+         (click)="back()">{{ "GENERAL_BUTTON_LABELS.BACK" | transloco }}</button>
+      <button mat-raised-button
+         color="primary"
+         (click)="saveAll()">{{ "ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_ALL_LABEL" | transloco }}</button>
+   </div>
    <mat-tab-group class="tabs">
       <mat-tab [label]="'ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_LIST_LABEL' | transloco">
          <div class="university-data-container">
             <div class="list-container">
-               <apo-file-upload
-                  [parserFn]="subjectsParserFn"
-                  (fileDataChange)="onDataUpload($event)"></apo-file-upload>
+               @if(universitySubjects()) {
+                  @for(subject of universitySubjects(); track subject.name) {
+                     <div class="list-item"
+                        [class.selected]="selectedUniversitySubject() === subject"
+                        (click)="selectSubject(subject)">{{ subject.name }} ({{ subject.code }})</div>
+                  }
+                  <apo-file-upload
+                     class="file-upload"
+                     [parserFn]="getSubjectsParserFn()"
+                     (fileDataChange)="onDataUpload($event)"></apo-file-upload>
+               }
             </div>
-            <div class="details-container">
-               <mat-form-field>
-                  <mat-label>asd</mat-label>
-                  <input matInput>
-               </mat-form-field>
+            <div class="details-container"
+               *ngLet="selectedUniversitySubject() as selectedSubject"
+               [class.no-data]="!selectedSubject">
+               @if(selectedSubject) {
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_DETAILS.NAME_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedSubject.name">
+                  </mat-form-field>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_DETAILS.CODE_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedSubject.code">
+                  </mat-form-field>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_DETAILS.CREDIT_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        type="number"
+                        [(ngModel)]="selectedSubject.credit">
+                  </mat-form-field>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_DETAILS.LANGUAGE_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedSubject.language">
+                  </mat-form-field>
+                  <div class="actions">
+                     <button mat-raised-button
+                        color="warn"
+                        (click)="deleteSubject(selectedSubject)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</button>
+                     <button mat-raised-button
+                        class="save-button"
+                        color="primary"
+                        (click)="saveSubject(selectedSubject)">{{ "GENERAL_BUTTON_LABELS.SAVE" | transloco }}</button>
+                  </div>
+               } @else {
+                  <p>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_DETAILS.NO_DATA" | transloco }}</p>
+               }
             </div>
          </div>
       </mat-tab>

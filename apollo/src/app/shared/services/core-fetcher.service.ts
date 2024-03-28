@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, DocumentReference, Firestore, QueryFieldFilterConstraint, addDoc, collection, collectionData, deleteDoc, doc, query, updateDoc, where } from '@angular/fire/firestore';
+import { CollectionReference, DocumentReference, Firestore, QueryFieldFilterConstraint, addDoc, collection, collectionData, deleteDoc, doc, docData, query, updateDoc, where } from '@angular/fire/firestore';
 import { isEqual } from 'lodash';
 import { Observable, from, map, of, switchMap, take } from 'rxjs';
 import { ApolloUser } from '../models';
@@ -18,7 +18,6 @@ interface UserStoredValue extends StoredValue {
    providedIn: 'root'
 })
 export class CoreFetcherService {
-
    constructor(
       private readonly firestore: Firestore,
       private readonly userService: UserService
@@ -33,7 +32,7 @@ export class CoreFetcherService {
             if (user === null) {
                return of(GuestStorageUtils.load<T>(collectionName));
             }
-            
+
             const semesterQuery = query(_collection, where('owner', '==', user.email));
             return collectionData<T>(semesterQuery as any);
          }),
@@ -45,7 +44,7 @@ export class CoreFetcherService {
       const _collection = collection(this.firestore, collectionName);
 
       let collectionData$: Observable<T[]>;
-      if(constraint) {
+      if (constraint) {
          collectionData$ = collectionData<T>(query(_collection, constraint) as any);
       } else {
          collectionData$ = collectionData<T>(query(_collection) as any);
@@ -78,13 +77,46 @@ export class CoreFetcherService {
       );
    }
 
+   public saveDocChanges<T extends StoredValue>(collectionName: string, value: T): Observable<void> {
+      const _collection = collection(this.firestore, collectionName);
+
+      const ref = doc(_collection, value.id);
+      return docData(ref).pipe(
+         switchMap(existing => {
+            if (existing) {
+               if (!isEqual(existing, value)) {
+                  return updateDoc(ref, value as any);
+               }
+               return of(undefined);
+            }
+            return addDoc(_collection, value);
+         }),
+         switchMap(reference => {
+            if (!reference) {
+               return of(undefined);
+            }
+
+            return updateDoc(reference, { id: reference.id });
+         }),
+         map(() => undefined)
+      );
+   }
+
+   public deleteDoc(collectionName: string, id: string): Observable<void> {
+      const _collection = collection(this.firestore, collectionName);
+
+      return from(deleteDoc(doc(_collection, id))).pipe(
+         map(() => undefined)
+      );
+   }
+
    private processSaving<T extends StoredValue>(collection: CollectionReference, values: T[], valuesOnBackend: T[], user?: ApolloUser): Observable<void> {
       const resolvables: Promise<void | DocumentReference>[] = [];
 
       values.forEach(value => {
          const existing = valuesOnBackend.find(existing => existing.id === value.id);
          if (existing) {
-            if(!isEqual(existing, value)) {
+            if (!isEqual(existing, value)) {
                resolvables.push(updateDoc(doc(collection, value.id), value as any));
             }
          } else {
@@ -97,19 +129,17 @@ export class CoreFetcherService {
       });
 
       return from(Promise.all(resolvables)).pipe(
-         switchMap(references =>
-            from(Promise.all(references.map(ref => {
-               if (!ref) {
-                  return;
-               }
+         switchMap(references => Promise.all(references.map(ref => {
+            if (!ref) {
+               return;
+            }
 
-               const updatableFields: any = { id: ref.id };
-               if(user) {
-                  updatableFields.owner = user.email;
-               }
-               return updateDoc(ref, updatableFields);
-            })))
-         ),
+            const updatableFields: any = { id: ref.id };
+            if (user) {
+               updatableFields.owner = user.email;
+            }
+            return updateDoc(ref, updatableFields);
+         }))),
          map(() => undefined)
       );
    }

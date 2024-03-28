@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { coreFeature } from '@apollo/shared/store';
+import { coreFeature, universitySubjectActions } from '@apollo/shared/store';
 import { Store } from '@ngrx/store';
 import { cloneDeep, isEqual } from 'lodash';
-import { Observable, distinctUntilChanged, filter, take, tap } from 'rxjs';
-import { University } from '../models';
+import { Observable, distinctUntilChanged, filter, map, take, tap } from 'rxjs';
+import { University, UniversitySubject } from '../models';
 import { multicast } from '../operators';
 import { universityActions } from '../store';
 
@@ -40,6 +40,39 @@ export class UniversitiesService {
          universities.push(this.getDefaultUniversity());
          this.saveUniversities(universities);
       });
+   }
+
+   public getSubjectsForUniversity(universityId: string): Observable<UniversitySubject[]> {
+      let retried = false;
+      const retry = () => {
+         this.store.dispatch(universitySubjectActions.loadUniversitySubjects({ universityId }));
+         retried = true;
+      };
+
+      return this.store.select(coreFeature.selectUniversitySubjects).pipe(
+         tap(subjects => {
+            if(!subjects) {
+               retry();
+            }
+         }),
+         filter(Boolean),
+         map(subjects => subjects.filter(subject => subject.universityId === universityId)),
+         tap(subjects => {
+            if(!retried && subjects.length === 0) {
+               retry();
+            }
+         }),
+         multicast(),
+         distinctUntilChanged(isEqual)
+      );
+   }
+
+   public saveUniversitySubjects(universitySubjects: UniversitySubject[], universityId: string): void {
+      this.store.dispatch(universitySubjectActions.saveUniversitySubjects({ universitySubjects, universityId }));
+   }
+
+   public saveSingleUniversitySubject(universitySubject: UniversitySubject): void {
+      this.store.dispatch(universitySubjectActions.saveSingleUniversitySubject({ universitySubject }));
    }
 
    private getDefaultUniversity(): University {

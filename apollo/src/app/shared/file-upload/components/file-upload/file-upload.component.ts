@@ -41,6 +41,11 @@ export class FileUploadComponent<T> {
    }
 
    private onFileUploadSuccess(data: T[]): void {
+      if(!data.length) {
+         this.snackBarService.open("FILE_UPLOAD.NO_NEW_DATA", { duration: 4000 });
+         return;
+      }
+
       if(this.confirmationRequired) {
          this.dialog.open(FileUploadDataConfirmationDialogComponent, {
             data: {

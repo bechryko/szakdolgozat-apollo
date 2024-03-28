@@ -1,5 +1,5 @@
 import { Grade } from "@apollo/averages/models";
-import { RawUniversitySubject } from "../models";
+import { RawUniversitySubject } from "../../models";
 
 interface TableSplitConfig {
    doNotFilterEmptyCells?: boolean;
@@ -36,7 +36,7 @@ export class NeptunExportParserUtils {
       return grades;
    }
 
-   public static parseUniversitySubjects(exported: string): RawUniversitySubject[] {
+   public static parseUniversitySubjects(exported: string, existingSubjects?: RawUniversitySubject[], forced = false): RawUniversitySubject[] {
       const table = this.splitIntoTable(exported, {
          doNotFilterEmptyCells: true,
          maxColumnNumber: 52,
@@ -58,20 +58,26 @@ export class NeptunExportParserUtils {
          const name = row[nameCellIndex];
          const code = row[nameCellIndex - 1];
          const credit = Number(row[nameCellIndex + 1]);
-         const suggestedSemester = Number(row[nameCellIndex + 2]);
 
          if(!code || isNaN(credit)) {
             return;
          }
 
-         const newSubject: RawUniversitySubject = { name, code, credit, suggestedSemester };
-         if(!suggestedSemester) {
-            delete newSubject.suggestedSemester;
+         if(subjects.some(subject => subject.code === code)) {
+            return;
          }
-         subjects.push(newSubject);
+         const existingSubject = existingSubjects?.find(subject => subject.code === code);
+         if(existingSubject) {
+            if(!forced) {
+               return;
+            }
+            existingSubjects = existingSubjects!.filter(subject => subject.code !== code);
+         }
+
+         subjects.push({ name, code, credit });
       });
 
-      return subjects;
+      return subjects.sort((a, b) => a.name.localeCompare(b.name));
    }
 
    private static splitIntoTable(exported: string, config?: TableSplitConfig): string[][] {

@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/c
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTable, MatTableModule } from '@angular/material/table';
-import { FileUploadComponent } from '@apollo/shared/file-upload';
-import { NeptunExportParserUtils } from '@apollo/shared/utils';
+import { FileUploadComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { Grade } from '../../../models';
 
