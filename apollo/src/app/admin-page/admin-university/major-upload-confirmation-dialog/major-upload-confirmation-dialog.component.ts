@@ -5,7 +5,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { UniversityMajorSubjectGroup, UniversitySubject } from '@apollo/shared/models';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { NgLetModule } from 'ng-let';
-import { GetSubjectsPipe } from '../pipes';
+import { GetSubjectsPipe } from '../../pipes';
 
 interface MajorUploadConfirmationDialogComponentData {
    majorGroups: UniversityMajorSubjectGroup[];

@@ -22,8 +22,8 @@ import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { NgLetModule } from 'ng-let';
 import { map, tap } from 'rxjs';
+import { CreditSumPipe, GetSubjectsPipe } from '../pipes';
 import { MajorUploadConfirmationDialogComponent } from './major-upload-confirmation-dialog';
-import { CreditSumPipe, GetSubjectsPipe } from './pipes';
 
 @Component({
    selector: 'apo-admin-university',

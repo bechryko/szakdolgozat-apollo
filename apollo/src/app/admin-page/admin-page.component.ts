@@ -84,7 +84,7 @@ export class AdminPageComponent {
    }
 
    public showUniversityDetails(university: University): void {
-      this.routerService.navigate(RouteUrls.ADMIN_UNIVERSITY, { id: university.id });
+      this.routerService.navigate(RouteUrls.ADMIN_UNIVERSITY, university.id);
    }
 
    public saveChanges(): void {

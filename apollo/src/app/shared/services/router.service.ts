@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, ParamMap, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { RouteUrls } from '@apollo/app.routes';
 import { Observable, distinctUntilChanged, filter, map } from 'rxjs';
 import { multicast } from '../operators';
@@ -10,11 +10,9 @@ import { multicast } from '../operators';
 export class RouterService {
    public readonly currentPage$: Observable<RouteUrls>;
    public readonly isAdminPage$: Observable<boolean>;
-   public readonly routeParams$: Observable<ParamMap>;
 
    constructor(
-      private readonly router: Router,
-      private readonly activatedRoute: ActivatedRoute
+      private readonly router: Router
    ) {
       this.currentPage$ = this.router.events.pipe(
          filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -28,21 +26,9 @@ export class RouterService {
          multicast(),
          distinctUntilChanged()
       );
-
-      this.routeParams$ = this.activatedRoute.queryParamMap.pipe(
-         multicast(),
-         distinctUntilChanged()
-      );
    }
 
-   public navigate(page: RouteUrls, queryParams?: { [key: string]: string }): void {
-      this.router.navigate(["/" + page], { queryParams });
-   }
-
-   public getRouteParam(paramKey: string): Observable<string | null> {
-      return this.routeParams$.pipe(
-         map(params => params.get(paramKey)),
-         distinctUntilChanged()
-      );
+   public navigate(page: RouteUrls, ...params: string[]): void {
+      this.router.navigateByUrl([page, ...params].join('/'));
    }
 }

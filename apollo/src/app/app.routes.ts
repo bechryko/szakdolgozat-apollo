@@ -2,11 +2,14 @@ import { Routes } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
 import { AdminPageComponent } from './admin-page/admin-page.component';
-import { AdminUniversityComponent, universityResolver } from './admin-page/admin-university';
+import { AdminUniversityComponent } from './admin-page/admin-university';
+import { universityRouteParam } from './admin-page/constants';
+import { universityResolver } from './admin-page/resolvers';
 import { AveragesComponent } from './averages/averages.component';
 import { averagesFeature } from './averages/store';
 import { MenuComponent } from './menu/menu.component';
 import { MenuEffects, menuFeature } from './menu/store';
+import { parameterizedRoute } from './shared/functions';
 import { TimetableEffects, timetableFeature } from './timetable/store';
 import { TimetableComponent } from './timetable/timetable.component';
 import { UserComponent } from './user/user.component';
@@ -50,7 +53,7 @@ export const routes: Routes = [
       component: AdminPageComponent
    },
    {
-      path: RouteUrls.ADMIN_UNIVERSITY,
+      path: parameterizedRoute(RouteUrls.ADMIN_UNIVERSITY, universityRouteParam),
       component: AdminUniversityComponent,
       resolve: {
          university: universityResolver
