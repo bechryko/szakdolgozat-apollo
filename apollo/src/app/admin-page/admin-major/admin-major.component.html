@@ -58,11 +58,12 @@
                            type="number"
                            [(ngModel)]="selectedGroup.creditRequirement">
                      </mat-form-field>
-                     <p *ngIf="universitySubjects()">
-                        {{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP.CREDIT_SUM" | transloco: { 
-                           creditSum: (selectedGroup.subjects | getSubjects: universitySubjects()!) | creditSum
-                        } }}
-                     </p>
+                     @if(universitySubjects()) {
+                        <ng-container *ngLet="(selectedGroup.subjects | getSubjects: universitySubjects()!) | creditSum as creditSums">
+                           <p>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP.CREDIT_SUM" | transloco: { creditSum: creditSums[0] } }}</p>
+                           <p>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP.TALENT_MANAGER_CREDIT_SUM" | transloco: { creditSum: creditSums[1] } }}</p>
+                        </ng-container>
+                     }
                   </ng-container>
                   <mat-divider class="divider"></mat-divider>
                   <h3>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP_SUBJECT.TITLE" | transloco }}</h3>

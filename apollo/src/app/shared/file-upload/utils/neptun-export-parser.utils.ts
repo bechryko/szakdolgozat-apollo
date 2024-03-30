@@ -1,5 +1,5 @@
 import { Grade } from "@apollo/averages/models";
-import { RawUniversitySubject, UniversityMajorSubjectGroup, UniversitySubject } from "../../models";
+import { RawUniversitySubject, UniversityMajorSubjectGroup } from "../../models";
 
 interface TableSplitConfig {
    doNotFilterEmptyCells?: boolean;
@@ -36,7 +36,7 @@ export class NeptunExportParserUtils {
       return grades;
    }
 
-   public static parseUniversitySubjects(exported: string, existingSubjects?: RawUniversitySubject[], forced = false): RawUniversitySubject[] {
+   public static parseUniversitySubjects(exported: string, existingSubjects?: RawUniversitySubject[]): RawUniversitySubject[] {
       const table = this.splitIntoTable(exported, {
          doNotFilterEmptyCells: true,
          maxColumnNumber: 52,
@@ -53,6 +53,7 @@ export class NeptunExportParserUtils {
          const name = row[nameCellIndex];
          const code = row[nameCellIndex - 1];
          const credit = Number(row[nameCellIndex + 1]);
+         const isTalentManager = name.includes('tehetséggondozó program') || name.includes('Tehetséggondozás:');
 
          if(!code || isNaN(credit)) {
             return;
@@ -61,21 +62,22 @@ export class NeptunExportParserUtils {
          if(subjects.some(subject => subject.code === code)) {
             return;
          }
+         
          const existingSubject = existingSubjects?.find(subject => subject.code === code);
          if(existingSubject) {
-            if(!forced) {
+            if(name === existingSubject.name && credit === existingSubject.credit && isTalentManager === existingSubject.isTalentManager) {
                return;
             }
-            existingSubjects = existingSubjects!.filter(subject => subject.code !== code);
+            existingSubjects?.splice(existingSubjects.indexOf(existingSubject), 1);
          }
 
-         subjects.push({ name, code, credit });
+         subjects.push({ name, code, credit, isTalentManager });
       });
 
       return subjects.sort((a, b) => a.name.localeCompare(b.name));
    }
 
-   public static parseUniversityMajor(exported: string, subjects: UniversitySubject[]): UniversityMajorSubjectGroup[] {
+   public static parseUniversityMajor(exported: string): UniversityMajorSubjectGroup[] {
       const table = this.splitIntoTable(exported, {
          doNotFilterEmptyCells: true,
          maxColumnNumber: 52,

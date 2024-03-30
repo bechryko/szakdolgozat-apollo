@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Signal, WritableSignal, signal } fr
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -35,7 +36,8 @@ import { filter, map } from 'rxjs';
       MatFormFieldModule,
       MatInputModule,
       FileUploadComponent,
-      MatSelectModule
+      MatSelectModule,
+      MatCheckboxModule
    ],
    templateUrl: './admin-university.component.html',
    styleUrl: './admin-university.component.scss',

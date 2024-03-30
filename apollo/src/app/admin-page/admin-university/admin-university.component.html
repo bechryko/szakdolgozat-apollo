@@ -50,6 +50,11 @@
                      <input matInput
                         [(ngModel)]="selectedSubject.language">
                   </mat-form-field>
+                  <div class="checkbox-container">
+                     <mat-checkbox [(ngModel)]="selectedSubject.isTalentManager">
+                        {{ "ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_DETAILS.TALENT_MANAGER_LABEL" | transloco }}
+                     </mat-checkbox>
+                  </div>
                   <div class="actions">
                      <button mat-raised-button
                         color="warn"

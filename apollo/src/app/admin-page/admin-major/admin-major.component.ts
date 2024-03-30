@@ -172,7 +172,7 @@ export class AdminMajorComponent {
    }
 
    private onMajorSubjectGroupsUpload(data: string): void {
-      const subjectGroups = NeptunExportParserUtils.parseUniversityMajor(data, this.universitySubjects()!);
+      const subjectGroups = NeptunExportParserUtils.parseUniversityMajor(data);
       this.dialog.open(MajorUploadConfirmationDialogComponent, {
          data: {
             majorGroups: subjectGroups,
