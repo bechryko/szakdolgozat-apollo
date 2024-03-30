@@ -1,6 +1,6 @@
 <div class="major-upload-confirmation-dialog-container">
-   <h2>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_UPLOAD_DIALOG.TITLE" | transloco }}</h2>
-   <p>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_UPLOAD_DIALOG.DESCRIPTION" | transloco }}</p>
+   <h2>{{ "ADMINISTRATION.MAJOR_UPLOAD_DIALOG.TITLE" | transloco }}</h2>
+   <p>{{ "ADMINISTRATION.MAJOR_UPLOAD_DIALOG.DESCRIPTION" | transloco }}</p>
    @for(group of data.majorGroups; track $index) {
       <mat-expansion-panel class="mat-expansion-panel"
          *ngLet="group.subjects | getSubjects: data.subjects as wholeSubjects">
@@ -10,7 +10,7 @@
             </mat-panel-title>
             <mat-panel-description>
                <p>
-                  {{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.CREDIT_REQUIREMENT_DESCRIPTION" | transloco: { credit: group.creditRequirement} }}
+                  {{ "ADMINISTRATION.MAJOR_DETAILS.CREDIT_REQUIREMENT_DESCRIPTION" | transloco: { credit: group.creditRequirement} }}
                </p>
             </mat-panel-description>
          </mat-expansion-panel-header>

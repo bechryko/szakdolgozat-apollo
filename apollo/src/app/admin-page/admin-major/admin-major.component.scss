@@ -1,0 +1,164 @@
+@use 'styles/colors';
+
+.admin-major-container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 1rem;
+
+   .title {
+      text-align: center;
+      margin: 0;
+   }
+
+   h2 {
+      font-size: 2rem;
+   }
+
+   h3 {
+      font-size: 1.25rem;
+   }
+
+   .actions {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+
+      button {
+         width: 20%;
+
+         &.save-button {
+            width: 60%;
+         }
+
+         &.add-button {
+            width: 70%;
+            margin-top: 1.5rem;
+         }
+      }
+   }
+}
+
+.tabs {
+   width: 100%;
+}
+
+.major-data-container {
+   $data-container-height: 36rem;
+
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+
+   &.three-column {
+      grid-template-columns: 1fr 1fr 1fr;
+
+      .list-container:first-child .list-item {
+         border-right: 1px solid colors.$primary-darker;
+      }
+   }
+
+   .list-container {
+      height: $data-container-height;
+      overflow: auto;
+      background-color: colors.$primary-background;
+
+      .list-item {
+         padding: 0.5rem;
+         border-bottom: 1px solid colors.$primary-darker;
+         cursor: pointer;
+         user-select: none;
+
+         &:hover {
+            background-color: colors.$primary-darker-background;
+         }
+
+         &.selected {
+            background-color: colors.$primary-darker;
+            color: white;
+         }
+      }
+
+      .file-upload {
+         margin: 1rem;
+      }
+
+      .add-button {
+         margin: auto;
+      }
+
+      .mat-expansion-panel {
+         background-color: transparent;
+
+         .mat-expansion-panel-header {
+            $expansion-panel-header-height: 4rem;
+
+            background-color: colors.$primary-lighter-background;
+            height: $expansion-panel-header-height;
+            
+            h3 {
+               $title-height: $expansion-panel-header-height - 1rem;
+
+               height: $title-height;
+               font-size: 1rem;
+               line-height: calc($title-height / 2);
+               overflow: hidden;
+               text-overflow: ellipsis;
+               display: -webkit-box;
+               -webkit-box-orient: vertical;
+               -webkit-line-clamp: 2;
+            }
+
+            mat-panel-title {
+               height: $expansion-panel-header-height;
+            }
+
+            mat-panel-description {
+               height: $expansion-panel-header-height;
+               flex-grow: 0.6;
+            }
+
+            .major-group-description {
+               font-size: 0.9rem;
+               color: colors.$primary-darker;
+            
+            }
+         }
+
+         ::ng-deep .mat-expansion-panel-body {
+            padding: 0;
+         }
+      }
+   }
+
+   .details-container {
+      height: $data-container-height;
+      overflow: auto;
+      padding: 1.5rem;
+      background-color: colors.$primary-background;
+      border: 2px solid colors.$primary-darker;
+      border-top: none;
+      box-sizing: border-box;
+
+      h3 {
+         margin: 0 auto 1.5rem;
+      }
+
+      mat-form-field {
+         width: 100%;
+      }
+   }
+}
+
+.no-data {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   p {
+      font-size: 1.5rem;
+   }
+}
+
+.divider {
+   margin: 1.5rem 0;
+}

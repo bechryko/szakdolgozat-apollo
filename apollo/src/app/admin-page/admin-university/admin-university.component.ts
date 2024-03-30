@@ -4,8 +4,6 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,16 +12,14 @@ import { ActivatedRoute } from '@angular/router';
 import { RouteUrls } from '@apollo/app.routes';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { bypassFirebaseFreePlan } from '@apollo/shared/constants';
-import { FileUploadComponent, FileUploadDataConfirmationDialogComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
+import { FileUploadComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
-import { RawUniversitySubject, University, UniversityMajor, UniversityMajorSubjectGroup, UniversityMajorSubjectGroupSubject, UniversitySubject } from '@apollo/shared/models';
+import { RawUniversitySubject, University, UniversityMajor, UniversitySubject } from '@apollo/shared/models';
 import { RouterService, UniversitiesService } from '@apollo/shared/services';
 import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { NgLetModule } from 'ng-let';
-import { map, tap } from 'rxjs';
-import { CreditSumPipe, GetSubjectsPipe } from '../pipes';
-import { MajorUploadConfirmationDialogComponent } from './major-upload-confirmation-dialog';
+import { filter, map } from 'rxjs';
 
 @Component({
    selector: 'apo-admin-university',
@@ -39,11 +35,7 @@ import { MajorUploadConfirmationDialogComponent } from './major-upload-confirmat
       MatFormFieldModule,
       MatInputModule,
       FileUploadComponent,
-      MatExpansionModule,
-      GetSubjectsPipe,
-      MatSelectModule,
-      MatDividerModule,
-      CreditSumPipe
+      MatSelectModule
    ],
    templateUrl: './admin-university.component.html',
    styleUrl: './admin-university.component.scss',
@@ -57,8 +49,6 @@ export class AdminUniversityComponent {
 
    public readonly universityMajors: WritableSignal<UniversityMajor[] | undefined>;
    public readonly selectedUniversityMajor: WritableSignal<UniversityMajor | undefined>;
-   public readonly selectedUniversityMajorSubjectGroup: WritableSignal<UniversityMajorSubjectGroup | undefined>;
-   public readonly selectedUniversityMajorSubject: WritableSignal<UniversityMajorSubjectGroupSubject | undefined>;
 
    constructor(
       private readonly activatedRoute: ActivatedRoute,
@@ -72,12 +62,9 @@ export class AdminUniversityComponent {
 
       this.universityMajors = signal(undefined);
       this.selectedUniversityMajor = signal(undefined);
-      this.selectedUniversityMajorSubjectGroup = signal(undefined);
-      this.selectedUniversityMajorSubject = signal(undefined);
 
       this.university = toSignal(this.activatedRoute.data.pipe(
-         map(({ university }) => university),
-         tap(university => {
+         map(({ university }) => {
             if (university) {
                this.universitiesService.getSubjectsForUniversity(university.id).pipe(
                   takeUntilDestroyed()
@@ -91,11 +78,12 @@ export class AdminUniversityComponent {
                ).subscribe(subjects => {
                   this.universityMajors.set(cloneDeep(subjects));
                   this.selectedUniversityMajor.set(this.universityMajors()!.find(s => s.id === this.selectedUniversityMajor()?.id));
-                  this.selectedUniversityMajorSubjectGroup.set(undefined);
-                  this.selectedUniversityMajorSubject.set(undefined);
                });
             }
-         })
+
+            return university;
+         }),
+         filter(Boolean)
       ));
    }
 
@@ -133,7 +121,7 @@ export class AdminUniversityComponent {
    public addMajor(): void {
       const newMajor = {
          id: this.universityMajors()!.length.toString(),
-         name: this.transloco.translate("ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.NEW_MAJOR_NAME"),
+         name: this.transloco.translate("ADMINISTRATION.UNIVERSITY_DETAILS.NEW_MAJOR_NAME"),
          universityId: this.university()!.id,
          facultyId: -1,
          subjectGroups: []
@@ -142,30 +130,20 @@ export class AdminUniversityComponent {
       this.selectedUniversityMajor.set(newMajor);
    }
 
-   public selectMajorSubject(group: UniversityMajorSubjectGroup, subjectCode: string): void {
-      const subject = group.subjects.find(s => s.code === subjectCode);
-      const cancelSelection = !subject || this.selectedUniversityMajorSubject() === subject;
-      this.selectedUniversityMajorSubject.set(cancelSelection ? undefined : subject);
-      this.selectedUniversityMajorSubjectGroup.set(cancelSelection ? undefined : group);
-   }
-
    public deleteMajor(major: UniversityMajor): void {
       this.universityMajors.set(this.universityMajors()!.filter(m => m !== major));
       this.selectedUniversityMajor.set(undefined);
-      this.selectedUniversityMajorSubjectGroup.set(undefined);
-      this.selectedUniversityMajorSubject.set(undefined);
    }
 
    public saveMajor(major: UniversityMajor): void {
       this.universitiesService.saveSingleUniversityMajor(major);
    }
 
-   public deleteGroupSubject(subject: UniversityMajorSubjectGroupSubject, group: UniversityMajorSubjectGroup): void {
-      group.subjects = group.subjects.filter(s => s !== subject);
-      this.selectedUniversityMajorSubject.set(undefined);
+   public openMajorDetails(major: UniversityMajor): void {
+      this.routerService.navigate(RouteUrls.ADMIN_MAJOR, this.university()!.id, major.id);
    }
 
-   public onSubjectsUpload(data: RawUniversitySubject[], postCallback?: () => void): void { // TODO: forced upload dialog (file upload component input field)
+   public onSubjectsUpload(data: RawUniversitySubject[]): void { // TODO: forced upload dialog (file upload component input field)
       this.dialog.open(GeneralInputDialogComponent, {
          data: {
             title: "ADMINISTRATION.UNIVERSITY_DETAILS.UPLOAD_SUBJECTS_LANGUAGE_DIALOG.TITLE",
@@ -188,66 +166,10 @@ export class AdminUniversityComponent {
                language
             }))
          ]);
-
-         if (postCallback) {
-            postCallback();
-         }
-      });
-   }
-
-   public onMajorDataUpload(data: string, major: UniversityMajor): void {
-      const newSubjects = NeptunExportParserUtils.parseUniversitySubjects(data, this.universitySubjects());
-      if(newSubjects.length === 0) {
-         this.onMajorSubjectGroupsUpload(data, major);
-         return;
-      }
-
-      this.dialog.open(FileUploadDataConfirmationDialogComponent, {
-         data: {
-            data: newSubjects
-         }
-      }).afterClosed().subscribe((confirmed: boolean) => {
-         if (confirmed) {
-            this.onSubjectsUpload(newSubjects, () => {
-               this.onMajorSubjectGroupsUpload(data, major);
-            });
-         }
       });
    }
 
    public getSubjectsParserFn() {
       return (exported: string) => NeptunExportParserUtils.parseUniversitySubjects(exported, this.universitySubjects());
-   }
-
-   public getMajorParserFn() {
-      return (exported: string) => exported;
-   }
-
-   public trackByName(value: any): any {
-      return value.name;
-   }
-
-   private onMajorSubjectGroupsUpload(data: string, major: UniversityMajor): void {
-      const subjectGroups = NeptunExportParserUtils.parseUniversityMajor(data, this.universitySubjects()!);
-      this.dialog.open(MajorUploadConfirmationDialogComponent, {
-         data: {
-            majorGroups: subjectGroups,
-            subjects: this.universitySubjects()!
-         }
-      }).afterClosed().subscribe((confirmed: boolean) => {
-         if(!confirmed) {
-            return;
-         }
-
-         const newMajor = {
-            ...major,
-            subjectGroups
-         };
-         this.universityMajors.set([
-            ...this.universityMajors()!.filter(m => m !== major),
-            newMajor
-         ]);
-         this.selectedUniversityMajor.set(newMajor);
-      });
    }
 }

@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
+import { AdminMajorComponent } from './admin-page/admin-major';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { AdminUniversityComponent } from './admin-page/admin-university';
-import { universityRouteParam } from './admin-page/constants';
-import { universityResolver } from './admin-page/resolvers';
+import { majorRouteParam, universityRouteParam } from './admin-page/constants';
+import { majorResolver, universityResolver } from './admin-page/resolvers';
 import { AveragesComponent } from './averages/averages.component';
 import { averagesFeature } from './averages/store';
 import { MenuComponent } from './menu/menu.component';
@@ -21,7 +22,8 @@ export enum RouteUrls {
    TIMETABLE = 'timetable',
    USER = 'profile',
    ADMINISTRATION = 'administration',
-   ADMIN_UNIVERSITY = 'administration/university'
+   ADMIN_UNIVERSITY = 'administration/university',
+   ADMIN_MAJOR = 'administration/major',
 }
 
 export const routes: Routes = [
@@ -57,6 +59,14 @@ export const routes: Routes = [
       component: AdminUniversityComponent,
       resolve: {
          university: universityResolver
+      }
+   },
+   {
+      path: parameterizedRoute(RouteUrls.ADMIN_MAJOR, universityRouteParam, majorRouteParam),
+      component: AdminMajorComponent,
+      resolve: {
+         university: universityResolver,
+         major: majorResolver
       }
    },
    {

@@ -14,7 +14,7 @@
          <div class="university-data-container">
             <div class="list-container">
                @if(universitySubjects()) {
-                  @for(subject of universitySubjects(); track trackByName) {
+                  @for(subject of universitySubjects(); track $index) {
                      <div class="list-item"
                         [class.selected]="selectedUniversitySubject() === subject"
                         (click)="selectSubject(subject)">{{ subject.name }} ({{ subject.code }})</div>
@@ -66,11 +66,11 @@
          </div>
       </mat-tab>
       <mat-tab [label]="'ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_LIST_LABEL' | transloco">
-         <div class="university-data-container three-column"
+         <div class="university-data-container"
             *ngLet="selectedUniversityMajor() as selectedMajor">
             <div class="list-container">
                @if(universityMajors()) {
-                  @for(major of universityMajors(); track trackByName) {
+                  @for(major of universityMajors(); track $index) {
                      <div class="list-item"
                         [class.selected]="selectedUniversityMajor() === major"
                         (click)="selectMajor(major)">{{ major.name }}</div>
@@ -83,39 +83,7 @@
                   </div>
                }
             </div>
-            <div class="list-container"
-               [class.no-data]="!selectedMajor">
-               @if(selectedMajor) {
-                  @for(group of selectedMajor.subjectGroups; track $index) {
-                     <mat-expansion-panel class="mat-expansion-panel"
-                        *ngLet="group.subjects | getSubjects: universitySubjects()! as wholeSubjects">
-                        <mat-expansion-panel-header class="mat-expansion-panel-header">
-                           <mat-panel-title>
-                              <h3>{{ group.name }}</h3>
-                           </mat-panel-title>
-                           <mat-panel-description>
-                              <p class="major-group-description">
-                                 {{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.CREDIT_REQUIREMENT_DESCRIPTION" | transloco: { credit: group.creditRequirement} }}
-                              </p>
-                           </mat-panel-description>
-                        </mat-expansion-panel-header>
-                        @for(subject of wholeSubjects; track trackByName) {
-                           <div class="list-item"
-                              [class.selected]="selectedUniversityMajorSubject()?.code === subject.code"
-                              (click)="selectMajorSubject(group, subject.code)">{{ subject.name }} ({{ subject.code }})</div>
-                        }
-                     </mat-expansion-panel>
-                  }
-                  <apo-file-upload
-                     class="file-upload"
-                     [parserFn]="getMajorParserFn()"
-                     (fileDataChange)="onMajorDataUpload($event, selectedMajor)"></apo-file-upload>
-               } @else {
-                  <p>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.NO_DATA" | transloco }}</p>
-               }
-            </div>
             <div class="details-container"
-               *ngLet="selectedUniversityMajorSubjectGroup() as selectedGroup"
                [class.no-data]="!selectedMajor">
                @if(selectedMajor) {
                   <mat-form-field>
@@ -141,48 +109,12 @@
                         color="primary"
                         (click)="saveMajor(selectedMajor)">{{ "GENERAL_BUTTON_LABELS.SAVE" | transloco }}</button>
                   </div>
-                  <mat-divider class="divider"></mat-divider>
-                  @if(selectedGroup) {
-                     <mat-form-field>
-                        <mat-label>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.SUBJECT_GROUP_NAME_LABEL" | transloco }}</mat-label>
-                        <input matInput
-                           [(ngModel)]="selectedGroup.name">
-                     </mat-form-field>
-                     <mat-form-field>
-                        <mat-label>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.SUBJECT_GROUP_CREDIT_REQUIREMENT_LABEL" | transloco }}</mat-label>
-                        <input matInput
-                           type="number"
-                           [(ngModel)]="selectedGroup.creditRequirement">
-                     </mat-form-field>
-                     <p>
-                        {{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.SUBJECT_GROUP_CREDIT_SUM" | transloco: { 
-                           creditSum: (selectedGroup.subjects | getSubjects: universitySubjects()!) | creditSum
-                        } }}
-                     </p>
-                     <mat-divider class="divider"></mat-divider>
-                     <ng-container *ngLet="selectedUniversityMajorSubject() as selectedGroupSubject">
-                        @if(selectedGroupSubject) {
-                           <mat-form-field>
-                              <mat-label>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.SUBJECT_GROUP_SUBJECT_SUGGESTED_SEMESTER_LABEL" | transloco }}</mat-label>
-                              <input matInput
-                                 [(ngModel)]="selectedGroupSubject.suggestedSemester">
-                           </mat-form-field>
-                           <div class="actions">
-                              <button mat-raised-button
-                                 color="warn"
-                                 (click)="deleteGroupSubject(selectedGroupSubject, selectedGroup)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</button>
-                           </div>
-                        } @else {
-                           <div class="no-data">
-                              <p>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.NO_SUBJECT_DATA" | transloco }}</p>
-                           </div>
-                        }
-                     </ng-container>
-                  } @else {
-                     <div class="no-data">
-                        <p>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.NO_SUBJECT_GROUP_DATA" | transloco }}</p>
-                     </div>
-                  }
+                  <div class="actions">
+                     <button mat-raised-button
+                        class="add-button"
+                        color="accent"
+                        (click)="openMajorDetails(selectedMajor)">{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.DETAILS_BUTTON_LABEL" | transloco }}</button>
+                  </div>
                } @else {
                   <p>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.NO_DATA" | transloco }}</p>
                }
