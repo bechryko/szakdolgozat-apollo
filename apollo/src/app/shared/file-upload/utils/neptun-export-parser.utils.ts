@@ -1,5 +1,5 @@
 import { Grade } from "@apollo/averages/models";
-import { RawUniversitySubject } from "../../models";
+import { RawUniversitySubject, UniversityMajorSubjectGroup, UniversitySubject } from "../../models";
 
 interface TableSplitConfig {
    doNotFilterEmptyCells?: boolean;
@@ -45,12 +45,7 @@ export class NeptunExportParserUtils {
 
       const subjects: RawUniversitySubject[] = [];
       table.forEach(row => {
-         let nameCellIndex = -1;
-         for(let i = 6; i < row.length; i += 10) {
-            if(row[i]) {
-               nameCellIndex = i - 5;
-            }
-         }
+         let nameCellIndex = this.findNameCellIndexInCurriculumRow(row);
          if(nameCellIndex === -1 || !row[nameCellIndex]) {
             return;
          }
@@ -80,6 +75,47 @@ export class NeptunExportParserUtils {
       return subjects.sort((a, b) => a.name.localeCompare(b.name));
    }
 
+   public static parseUniversityMajor(exported: string, subjects: UniversitySubject[]): UniversityMajorSubjectGroup[] {
+      const table = this.splitIntoTable(exported, {
+         doNotFilterEmptyCells: true,
+         maxColumnNumber: 52,
+         headerRows: 2
+      });
+
+      const groups: UniversityMajorSubjectGroup[] = [];
+      table.forEach(row => {
+         const name = row[6];
+         if(!name) {
+            return;
+         }
+
+         const existingGroup = groups.find(group => group.name === name);
+         if(existingGroup) {
+            let nameCellIndex = this.findNameCellIndexInCurriculumRow(row);
+            if(nameCellIndex === -1 || !row[nameCellIndex]) {
+               return;
+            }
+   
+            const code = row[nameCellIndex - 1];
+            const suggestedSemester = Number(row[nameCellIndex + 2]);
+            
+            existingGroup.subjects.push({ code, suggestedSemester });
+         } else {
+            const creditRequirement = Number(row[2]);
+
+            const group: UniversityMajorSubjectGroup = {
+               name,
+               creditRequirement,
+               subjects: []
+            };
+
+            groups.push(group);
+         }
+      });
+
+      return groups;
+   }
+
    private static splitIntoTable(exported: string, config?: TableSplitConfig): string[][] {
       const lines = exported.split('\n').slice(config?.headerRows ?? 0);
       const table = lines.map(line => line.split('\t'));
@@ -103,5 +139,15 @@ export class NeptunExportParserUtils {
          str = str.slice(0, -1);
       }
       return str;
+   }
+
+   private static findNameCellIndexInCurriculumRow(row: string[]): number {
+      let idx = -1;
+      for(let i = 6; i < row.length; i += 10) {
+         if(row[i]) {
+            idx = i - 5;
+         }
+      }
+      return idx;
    }
 }

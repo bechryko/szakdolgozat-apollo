@@ -1,11 +1,12 @@
 import { createReducer, on } from "@ngrx/store";
-import { completionsActions, universityActions, universitySubjectActions } from "./actions";
+import { completionsActions, universityActions, universityMajorActions, universitySubjectActions } from "./actions";
 import { CoreState } from "./core.state";
 
 const initialState: CoreState = {
    completions: null,
    universities: null,
-   universitySubjects: null
+   universitySubjects: null,
+   universityMajors: null
 };
 
 export const coreReducer = createReducer(
@@ -26,5 +27,19 @@ export const coreReducer = createReducer(
       });
       
       return { ...state, universitySubjects: subjects };
+   }),
+   on(universityMajorActions.saveUniversityMajorsToStore, (state, { universityMajors }) => {
+      const majors = [...state.universityMajors ?? []];
+
+      universityMajors.forEach(major => {
+         const idx = majors.findIndex(m => m.id === major.id);
+         if(idx !== -1) {
+            majors[idx] = major;
+         } else {
+            majors.push(major);
+         }
+      });
+      
+      return { ...state, universityMajors: majors };
    })
 );

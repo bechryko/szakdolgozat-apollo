@@ -13,13 +13,13 @@ import { FileUploadDataConfirmationDialogComponent } from '../file-upload-data-c
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadComponent<T> {
-   @Input() public parserFn!: (exported: string) => T[];
+   @Input() public parserFn!: (exported: string) => T;
    @Input() public accept = '.txt';
    @Input() public resetOnUpload = true;
    @Input() public confirmationRequired = true;
    @Input() public confirmationDialogTableHeaderKeys?: string[];
 
-   @Output() fileDataChange: EventEmitter<T[]> = new EventEmitter<T[]>();
+   @Output() fileDataChange: EventEmitter<T> = new EventEmitter<T>();
 
    constructor(
       private readonly dialog: MatDialog,
@@ -40,13 +40,13 @@ export class FileUploadComponent<T> {
       });
    }
 
-   private onFileUploadSuccess(data: T[]): void {
-      if(!data.length) {
+   private onFileUploadSuccess(data: T): void {
+      if(Array.isArray(data) && !data.length) {
          this.snackBarService.open("FILE_UPLOAD.NO_NEW_DATA", { duration: 4000 });
          return;
       }
 
-      if(this.confirmationRequired) {
+      if(Array.isArray(data) && this.confirmationRequired) {
          this.dialog.open(FileUploadDataConfirmationDialogComponent, {
             data: {
                data,

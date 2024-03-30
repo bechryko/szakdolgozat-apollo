@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { coreFeature, universitySubjectActions } from '@apollo/shared/store';
+import { coreFeature, universityMajorActions, universitySubjectActions } from '@apollo/shared/store';
 import { Store } from '@ngrx/store';
 import { cloneDeep, isEqual } from 'lodash';
 import { Observable, distinctUntilChanged, filter, map, take, tap } from 'rxjs';
-import { University, UniversitySubject } from '../models';
+import { University, UniversityMajor, UniversitySubject } from '../models';
 import { multicast } from '../operators';
 import { universityActions } from '../store';
 
@@ -67,12 +67,42 @@ export class UniversitiesService {
       );
    }
 
-   public saveUniversitySubjects(universitySubjects: UniversitySubject[], universityId: string): void {
+   public getMajorsForUniversity(universityId: string): Observable<UniversityMajor[]> {
+      let retried = false;
+      const retry = () => {
+         this.store.dispatch(universityMajorActions.loadUniversityMajors({ universityId }));
+         retried = true;
+      };
+
+      return this.store.select(coreFeature.selectUniversityMajors).pipe(
+         tap(majors => {
+            if(!majors) {
+               retry();
+            }
+         }),
+         filter(Boolean),
+         map(majors => majors.filter(major => major.universityId === universityId)),
+         tap(majors => {
+            if(!retried && majors.length === 0) {
+               retry();
+            }
+         }),
+         multicast(),
+         distinctUntilChanged(isEqual)
+      );
+   }
+
+   public saveAll(universitySubjects: UniversitySubject[], universityMajors: UniversityMajor[], universityId: string): void {
       this.store.dispatch(universitySubjectActions.saveUniversitySubjects({ universitySubjects, universityId }));
+      this.store.dispatch(universityMajorActions.saveUniversityMajors({ universityMajors, universityId }));
    }
 
    public saveSingleUniversitySubject(universitySubject: UniversitySubject): void {
       this.store.dispatch(universitySubjectActions.saveSingleUniversitySubject({ universitySubject }));
+   }
+
+   public saveSingleUniversityMajor(universityMajor: UniversityMajor): void {
+      this.store.dispatch(universityMajorActions.saveSingleUniversityMajor({ universityMajor }));
    }
 
    private getDefaultUniversity(): University {

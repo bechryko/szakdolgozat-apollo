@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { where } from '@angular/fire/firestore';
 import { CoreFetcherService } from '@apollo/shared/services';
 import { Observable } from 'rxjs';
-import { University, UniversitySubject } from '../models';
+import { bypassFirebaseFreePlan } from '../constants';
+import { University, UniversityMajor, UniversitySubject } from '../models';
 
 const UNIVERSITY_COLLECTION = 'core-universities';
-const SUBJECT_COLLECTION = 'core-subjects';
+const SUBJECT_COLLECTION = bypassFirebaseFreePlan ? 'core-subjects-v2' : 'core-subjects';
+const MAJOR_COLLECTION = 'core-majors';
 
 @Injectable({
    providedIn: 'root'
@@ -37,5 +39,21 @@ export class UniversitiesFetcherService {
 
    public saveSingleUniversitySubject(subject: UniversitySubject): Observable<void> {
       return this.coreFetcherService.saveDocChanges<UniversitySubject>(SUBJECT_COLLECTION, subject);
+   }
+
+   public getMajorsForUniversity(universityId: string): Observable<UniversityMajor[]> {
+      return this.coreFetcherService.getCollection<UniversityMajor>(MAJOR_COLLECTION, where('universityId', '==', universityId));
+   }
+
+   public saveUniversityMajors(majors: UniversityMajor[], universityId: string): Observable<void> {
+      return this.coreFetcherService.saveCollectionChanges<UniversityMajor>(
+         MAJOR_COLLECTION,
+         majors,
+         where('universityId', '==', universityId)
+      );
+   }
+
+   public saveSingleUniversityMajor(major: UniversityMajor): Observable<void> {
+      return this.coreFetcherService.saveDocChanges<UniversityMajor>(MAJOR_COLLECTION, major);
    }
 }

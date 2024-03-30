@@ -25,7 +25,7 @@ export class UniversitySubjectEffects {
             map(() => universitySubjectActions.saveUniversitySubjectsToStore({ universitySubjects }))
          )),
          tap(() => {
-            this.snackBarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_ALL_SUBJECTS_SUCCESS");
+            this.snackBarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_ALL_SUCCESS");
          }),
          catchError(error => {
             // TODO: error handling
