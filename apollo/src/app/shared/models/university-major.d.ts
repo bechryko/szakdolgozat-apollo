@@ -1,4 +1,5 @@
 import { UniversityMajorSubjectGroup } from "./university-major-subject-group";
+import { UniversityScholarshipYear } from "./university-scholarship-year";
 
 export interface UniversityMajor {
    id: string;
@@ -6,4 +7,5 @@ export interface UniversityMajor {
    universityId: string;
    facultyId: number;
    subjectGroups: UniversityMajorSubjectGroup[];
+   scholarships?: UniversityScholarshipYear[];
 }

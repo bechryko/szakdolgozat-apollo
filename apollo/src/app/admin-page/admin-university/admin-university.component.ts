@@ -121,7 +121,7 @@ export class AdminUniversityComponent {
    }
 
    public addMajor(): void {
-      const newMajor = {
+      const newMajor: UniversityMajor = {
          id: this.universityMajors()!.length.toString(),
          name: this.transloco.translate("ADMINISTRATION.UNIVERSITY_DETAILS.NEW_MAJOR_NAME"),
          universityId: this.university()!.id,

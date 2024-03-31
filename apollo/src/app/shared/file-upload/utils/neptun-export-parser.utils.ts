@@ -1,5 +1,5 @@
 import { Grade } from "@apollo/averages/models";
-import { RawUniversitySubject, UniversityMajorSubjectGroup } from "../../models";
+import { RawUniversitySubject, UniversityMajorSubjectGroup, UniversityScholarshipData } from "../../models";
 
 interface TableSplitConfig {
    doNotFilterEmptyCells?: boolean;
@@ -116,6 +116,27 @@ export class NeptunExportParserUtils {
       });
 
       return groups;
+   }
+
+   public static parseScholarshipData(exported: string): UniversityScholarshipData[] {
+      const table = this.splitIntoTable(exported, {
+         headerRows: 1
+      });
+
+      const scholarships: UniversityScholarshipData[] = [];
+      table.forEach(row => {
+         const adjustedCreditIndex = Number(row[1]);
+         const scholarshipAmount = Number(row[3]);
+         const peopleEligible = Number(row[4].match(/(\d+)/)?.[0]);
+
+         if(!adjustedCreditIndex || !scholarshipAmount || !peopleEligible) {
+            return;
+         }
+
+         scholarships.push({ adjustedCreditIndex, scholarshipAmount, peopleEligible });
+      });
+
+      return scholarships;
    }
 
    private static splitIntoTable(exported: string, config?: TableSplitConfig): string[][] {

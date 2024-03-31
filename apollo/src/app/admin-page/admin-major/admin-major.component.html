@@ -86,5 +86,97 @@
             </div>
          </div>
       </mat-tab>
+      <mat-tab [label]="'ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS_LABEL' | transloco">
+         <div class="major-data-container">
+            <div class="list-container">
+               @for(scholarshipYear of major.scholarships; track $index) {
+                  <div class="list-item"
+                     [class.selected]="selectedScholarshipYear() === scholarshipYear"
+                     (click)="selectScholarshipYear(scholarshipYear)">{{ scholarshipYear.name }}</div>
+               }
+               <div class="actions">
+                  <button mat-raised-button
+                     class="add-button"
+                     color="accent"
+                     (click)="addScholarshipYear()">{{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.ADD_BUTTON_LABEL" | transloco }}</button>
+               </div>
+            </div>
+            <div class="details-container"
+               *ngLet="selectedScholarshipYear()! as selectedYear"
+               [class.no-data]="!selectedYear">
+               @if(selectedYear) {
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.NAME_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedYear.name">
+                  </mat-form-field>
+                  <div class="actions">
+                     <button mat-raised-button
+                        color="warn"
+                        (click)="deleteScholarshipYear(selectedYear)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</button>
+                  </div>
+                  <mat-divider class="divider"></mat-divider>
+                  <div class="scholarship-data-container">
+                     <div>
+                        <h3>{{ "GENERAL_PHRASE.FIRST_SEMESTER" | transloco }}</h3>
+                        <apo-file-upload
+                           class="file-upload"
+                           [parserFn]="getScholarshipParserFn()"
+                           (fileDataChange)="onScholarshipUpload($event, selectedYear.firstSemester)"></apo-file-upload>
+                        @if(selectedYear.firstSemester.length) {
+                           <table class="scholarship-table">
+                              <tr>
+                                 <th>
+                                    {{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.AVERAGE" | transloco }} 
+                                 </th>
+                                 <th>
+                                    {{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.AMOUNT" | transloco }}
+                                    <br>
+                                    ({{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.PEOPLE" | transloco }})
+                                 </th>
+                              </tr>
+                              @for(scholarshipEntry of selectedYear.firstSemester; track $index) {
+                                 <tr>
+                                    <td>{{ scholarshipEntry.adjustedCreditIndex }}</td>
+                                    <td>{{ scholarshipEntry.scholarshipAmount | apoCurrency }} ({{ scholarshipEntry.peopleEligible }})</td>
+                                 </tr>
+                              }
+                           </table>
+                        }
+                     </div>
+                     <div>
+                        <h3>{{ "GENERAL_PHRASE.SECOND_SEMESTER" | transloco }}</h3>
+                        <apo-file-upload
+                           class="file-upload"
+                           [parserFn]="getScholarshipParserFn()"
+                           (fileDataChange)="onScholarshipUpload($event, selectedYear.secondSemester)"></apo-file-upload>
+                        @if(selectedYear.secondSemester.length) {
+                           <table class="scholarship-table">
+                              <tr>
+                                 <th>
+                                    {{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.AVERAGE" | transloco }}
+                                 </th>
+                                 <th>
+                                    {{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.AMOUNT" | transloco }}
+                                    <br>
+                                    ({{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.PEOPLE" | transloco }})
+                                 </th>
+                              </tr>
+                              @for(scholarshipEntry of selectedYear.secondSemester; track $index) {
+                                 <tr>
+                                    <td>{{ scholarshipEntry.adjustedCreditIndex }}</td>
+                                    <td>{{ scholarshipEntry.scholarshipAmount | apoCurrency }} ({{ scholarshipEntry.peopleEligible }})</td>
+                                 </tr>
+                              }
+                           </table>
+                        }
+                     </div>
+                  </div>
+               } @else {
+                  <p>{{ "ADMINISTRATION.MAJOR_DETAILS.NO_SCHOLARSHIP_DATA" | transloco }}</p>
+               }
+            </div>
+         </div>
+      </mat-tab>
    </mat-tab-group>
 </div>

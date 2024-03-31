@@ -13,13 +13,15 @@ import { ActivatedRoute } from '@angular/router';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { FileUploadComponent, FileUploadDataConfirmationDialogComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
-import { RawUniversitySubject, University, UniversityMajor, UniversityMajorSubjectGroup, UniversityMajorSubjectGroupSubject, UniversitySubject } from '@apollo/shared/models';
+import { RawUniversitySubject, University, UniversityMajor, UniversityMajorSubjectGroup, UniversityMajorSubjectGroupSubject, UniversityScholarshipYear, UniversitySubject } from '@apollo/shared/models';
+import { CurrencyPipe } from '@apollo/shared/pipes';
 import { UniversitiesService } from '@apollo/shared/services';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { NgLetModule } from 'ng-let';
 import { filter, map } from 'rxjs';
 import { CreditSumPipe, GetSubjectsPipe } from '../pipes';
+import { UniversityScholarshipData } from './../../shared/models/university-scholarship-year.d';
 import { MajorUploadConfirmationDialogComponent } from './major-upload-confirmation-dialog';
 
 @Component({
@@ -39,7 +41,8 @@ import { MajorUploadConfirmationDialogComponent } from './major-upload-confirmat
       FormsModule,
       CreditSumPipe,
       MatDividerModule,
-      MultiLanguagePipe
+      MultiLanguagePipe,
+      CurrencyPipe
    ],
    templateUrl: './admin-major.component.html',
    styleUrl: './admin-major.component.scss',
@@ -52,18 +55,21 @@ export class AdminMajorComponent {
    public readonly major: WritableSignal<UniversityMajor | undefined>;
    public readonly selectedUniversityMajorSubjectGroup: WritableSignal<UniversityMajorSubjectGroup | undefined>;
    public readonly selectedUniversityMajorSubject: WritableSignal<UniversityMajorSubjectGroupSubject | undefined>;
+   public readonly selectedScholarshipYear: WritableSignal<UniversityScholarshipYear | undefined>;
 
    constructor(
       private readonly activatedRoute: ActivatedRoute,
       private readonly universitiesService: UniversitiesService,
       private readonly location: Location,
-      private readonly dialog: MatDialog
+      private readonly dialog: MatDialog,
+      private readonly transloco: TranslocoService
    ) {
       this.universitySubjects = signal(undefined);
 
       this.major = signal(undefined);
       this.selectedUniversityMajorSubjectGroup = signal(undefined);
       this.selectedUniversityMajorSubject = signal(undefined);
+      this.selectedScholarshipYear = signal(undefined);
 
       this.university = toSignal(this.activatedRoute.data.pipe(
          map(({ university, major }) => {
@@ -76,7 +82,9 @@ export class AdminMajorComponent {
             }
 
             if (major) {
-               this.major.set(cloneDeep(major));
+               const majorFromBackend: UniversityMajor = cloneDeep(major);
+               majorFromBackend.scholarships ??= [];
+               this.major.set(majorFromBackend);
             }
 
             return university;
@@ -118,6 +126,35 @@ export class AdminMajorComponent {
       this.major.set({
          ...major,
          subjectGroups: newSubjectGroups
+      });
+   }
+
+   public addScholarshipYear(): void {
+      const major = this.major()!;
+      const newScholarshipYear: UniversityScholarshipYear = {
+         name: this.transloco.translate('ADMINISTRATION.MAJOR_DETAILS.NEW_SCHOLARSHIP_YEAR'),
+         firstSemester: [],
+         secondSemester: []
+      };
+      this.major.set({
+         ...major,
+         scholarships: [
+            ...cloneDeep(major.scholarships!),
+            newScholarshipYear
+         ]
+      });
+      this.selectedScholarshipYear.set(newScholarshipYear);
+   }
+
+   public selectScholarshipYear(year: UniversityScholarshipYear): void {
+      this.selectedScholarshipYear.set(year === this.selectedScholarshipYear() ? undefined : year);
+   }
+
+   public deleteScholarshipYear(year: UniversityScholarshipYear): void {
+      this.selectedScholarshipYear.set(undefined);
+      this.major.set({
+         ...this.major()!,
+         scholarships: this.major()!.scholarships!.filter(y => y !== year)
       });
    }
 
@@ -191,7 +228,15 @@ export class AdminMajorComponent {
       });
    }
 
+   public onScholarshipUpload(data: UniversityScholarshipData[], array: UniversityScholarshipData[]): void {
+      array.splice(0, array.length, ...data);
+   }
+
    public getMajorParserFn() {
       return (exported: string) => exported;
+   }
+
+   public getScholarshipParserFn() {
+      return (exported: string) => NeptunExportParserUtils.parseScholarshipData(exported);
    }
 }

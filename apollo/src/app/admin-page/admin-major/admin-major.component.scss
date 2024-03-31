@@ -146,6 +146,40 @@
       mat-form-field {
          width: 100%;
       }
+
+      .scholarship-data-container {
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+
+         h3 {
+            text-align: center;
+         }
+
+         .file-upload {
+            margin-bottom: 1.5rem;
+            display: block;
+         }
+      }
+
+      .scholarship-table {
+         $borderStyle: 1px solid colors.$primary-darker;
+
+         border-collapse: collapse;
+
+         th {
+            border-bottom: $borderStyle;
+         }
+
+         td, th {
+            padding: 0.5rem;
+            text-align: left;
+
+            &:first-child {
+               text-align: right;
+               border-right: $borderStyle;
+            }
+         }
+      }
    }
 }
 
