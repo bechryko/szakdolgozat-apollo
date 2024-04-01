@@ -8,18 +8,19 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { FileUploadComponent, FileUploadDataConfirmationDialogComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
-import { RawUniversitySubject, University, UniversityMajor, UniversityMajorSubjectGroup, UniversityMajorSubjectGroupSubject, UniversityScholarshipYear, UniversitySubject } from '@apollo/shared/models';
+import { RawUniversitySubject, University, UniversityMajor, UniversityMajorSubjectGroup, UniversityMajorSubjectGroupSubject, UniversityScholarshipYear, UniversitySpecialization, UniversitySpecializationSubjectGroup, UniversitySubject } from '@apollo/shared/models';
 import { CurrencyPipe } from '@apollo/shared/pipes';
 import { UniversitiesService } from '@apollo/shared/services';
 import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { NgLetModule } from 'ng-let';
-import { filter, map } from 'rxjs';
+import { filter, map, take } from 'rxjs';
 import { CreditSumPipe, GetSubjectsPipe } from '../pipes';
 import { UniversityScholarshipData } from './../../shared/models/university-scholarship-year.d';
 import { MajorUploadConfirmationDialogComponent } from './major-upload-confirmation-dialog';
@@ -42,7 +43,8 @@ import { MajorUploadConfirmationDialogComponent } from './major-upload-confirmat
       CreditSumPipe,
       MatDividerModule,
       MultiLanguagePipe,
-      CurrencyPipe
+      CurrencyPipe,
+      MatSelectModule
    ],
    templateUrl: './admin-major.component.html',
    styleUrl: './admin-major.component.scss',
@@ -55,7 +57,12 @@ export class AdminMajorComponent {
    public readonly major: WritableSignal<UniversityMajor | undefined>;
    public readonly selectedUniversityMajorSubjectGroup: WritableSignal<UniversityMajorSubjectGroup | undefined>;
    public readonly selectedUniversityMajorSubject: WritableSignal<UniversityMajorSubjectGroupSubject | undefined>;
+   public readonly selectedSpecialization: WritableSignal<UniversitySpecialization | undefined>;
+   public readonly selectedSpecializationSubjectGroup: WritableSignal<UniversitySpecializationSubjectGroup | undefined>;
+   public readonly selectedSpecializationSubjectSubGroup: WritableSignal<UniversityMajorSubjectGroup | undefined>;
    public readonly selectedScholarshipYear: WritableSignal<UniversityScholarshipYear | undefined>;
+
+   public readonly selectedSubject: WritableSignal<UniversitySubject | undefined>;
 
    constructor(
       private readonly activatedRoute: ActivatedRoute,
@@ -69,9 +76,15 @@ export class AdminMajorComponent {
       this.major = signal(undefined);
       this.selectedUniversityMajorSubjectGroup = signal(undefined);
       this.selectedUniversityMajorSubject = signal(undefined);
+      this.selectedSpecialization = signal(undefined);
+      this.selectedSpecializationSubjectGroup = signal(undefined);
+      this.selectedSpecializationSubjectSubGroup = signal(undefined);
       this.selectedScholarshipYear = signal(undefined);
 
+      this.selectedSubject = signal(undefined);
+
       this.university = toSignal(this.activatedRoute.data.pipe(
+         take(1),
          map(({ university, major }) => {
             if (university) {
                this.universitiesService.getSubjectsForUniversity(university.id).pipe(
@@ -84,6 +97,7 @@ export class AdminMajorComponent {
             if (major) {
                const majorFromBackend: UniversityMajor = cloneDeep(major);
                majorFromBackend.scholarships ??= [];
+               majorFromBackend.specializations ??= [];
                this.major.set(majorFromBackend);
             }
 
@@ -98,7 +112,7 @@ export class AdminMajorComponent {
    }
 
    public saveMajor(): void {
-      this.universitiesService.saveSingleUniversityMajor(this.major()!);
+      this.universitiesService.saveSingleUniversityMajor(cloneDeep(this.major()!));
    }
 
    public selectSubject(subjectCode?: string, group?: UniversityMajorSubjectGroup): void {
@@ -127,6 +141,26 @@ export class AdminMajorComponent {
          ...major,
          subjectGroups: newSubjectGroups
       });
+   }
+
+   public selectSpecialization(specialization: UniversitySpecialization): void {
+      this.selectedSpecializationSubjectSubGroup.set(undefined);
+      this.selectedSpecialization.set(specialization === this.selectedSpecialization() ? undefined : specialization);
+   }
+
+   public selectSpecializationSubjectSubGroup(subGroup: UniversityMajorSubjectGroup, group: UniversitySpecializationSubjectGroup): void {
+      const cancelSelection = subGroup === this.selectedSpecializationSubjectSubGroup();
+      this.selectedSpecializationSubjectSubGroup.set(cancelSelection ? undefined : subGroup);
+      this.selectedSpecializationSubjectGroup.set(cancelSelection ? undefined : group);
+   }
+
+   public deleteSubjectFromSpecialization(subjectCode: string, group: UniversityMajorSubjectGroup): void {
+      group.subjects = group.subjects.filter(s => s.code !== subjectCode);
+   }
+
+   public addSubjectToGroup(group: UniversityMajorSubjectGroup): void {
+      group.subjects = [ ...group.subjects, this.selectedSubject()! ];
+      this.selectedSubject.set(undefined);
    }
 
    public addScholarshipYear(): void {
@@ -228,12 +262,34 @@ export class AdminMajorComponent {
       });
    }
 
+   public onSpecializationsUpload(data: UniversitySpecialization[]): void {
+      data.forEach(specialization => {
+         const major = this.major()!;
+         const existingSpecialization = major.specializations!.find(s => s.name === specialization.name);
+         if (existingSpecialization) {
+            major.specializations!.splice(major.specializations!.indexOf(existingSpecialization), 1, specialization);
+         } else {
+            this.major.set({
+               ...major,
+               specializations: [
+                  ...major.specializations!,
+                  specialization
+               ]
+            });
+         }
+      });
+   }
+
    public onScholarshipUpload(data: UniversityScholarshipData[], array: UniversityScholarshipData[]): void {
       array.splice(0, array.length, ...data);
    }
 
    public getMajorParserFn() {
       return (exported: string) => exported;
+   }
+
+   public getSpecializationsParserFn() {
+      return (exported: string) => NeptunExportParserUtils.parseSpecializationsData(exported, this.universitySubjects()!);
    }
 
    public getScholarshipParserFn() {

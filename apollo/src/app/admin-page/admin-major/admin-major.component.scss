@@ -161,13 +161,11 @@
          }
       }
 
+      $tableBorderStyle: 1px solid colors.$primary-darker;
+
       .scholarship-table {
-         $borderStyle: 1px solid colors.$primary-darker;
-
-         border-collapse: collapse;
-
          th {
-            border-bottom: $borderStyle;
+            border-bottom: $tableBorderStyle;
          }
 
          td, th {
@@ -176,9 +174,33 @@
 
             &:first-child {
                text-align: right;
-               border-right: $borderStyle;
+               border-right: $tableBorderStyle;
             }
          }
+      }
+
+      .specialization-table {
+         margin-top: 1.5rem;
+
+         td, th {
+            border-bottom: $tableBorderStyle;
+            padding: 0.5rem;
+            text-align: center;
+
+            &.delete-button {
+               background-color: colors.$error;
+               color: white;
+               user-select: none;
+               cursor: pointer;
+            }
+         }
+      }
+
+      .add-subject-container {
+         background-color: colors.$primary-lighter-background;
+         border-radius: 1.5rem;
+         margin-top: 0.5rem;
+         padding: 1rem;
       }
    }
 }

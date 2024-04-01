@@ -86,6 +86,114 @@
             </div>
          </div>
       </mat-tab>
+      <mat-tab [label]="'ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS_LABEL' | transloco">
+         <div class="major-data-container three-column">
+            <div class="list-container">
+               @for(specialization of major.specializations; track $index) {
+                  <div class="list-item"
+                     [class.selected]="selectedSpecialization() === specialization"
+                     (click)="selectSpecialization(specialization)">{{ specialization.name }}</div>
+               }
+               <apo-file-upload
+                  class="file-upload"
+                  [parserFn]="getSpecializationsParserFn()"
+                  (fileDataChange)="onSpecializationsUpload($event)"></apo-file-upload>
+            </div>
+            <div class="list-container"
+               *ngLet="selectedSpecialization()! as selectedSpec"
+               [class.no-data]="!selectedSpec">
+               @if(selectedSpec) {
+                  @for(group of selectedSpec.groups; track $index) {
+                     <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                           <mat-panel-title>
+                              <h3>{{ group.name }}</h3>
+                           </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        @for(subGroup of group.subGroups; track $index) {
+                           <div class="list-item"
+                              [class.selected]="selectedSpecializationSubjectSubGroup() === subGroup"
+                              (click)="selectSpecializationSubjectSubGroup(subGroup, group)">{{ subGroup.name }}</div>
+                        }
+                     </mat-expansion-panel>
+                  }
+               }
+            </div>
+            <div class="details-container"
+               *ngLet="selectedSpecializationSubjectSubGroup()! as selectedSubGroup"
+               [class.no-data]="!selectedSubGroup">
+               @if(selectedSubGroup) {
+                  <h3>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.TITLE" | transloco }}</h3>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.NAME_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedSpecialization()!.name">
+                  </mat-form-field>
+                  <mat-divider class="divider"></mat-divider>
+                  <h3>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.GROUP_TITLE" | transloco }}</h3>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.GROUP_NAME_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedSpecializationSubjectGroup()!.name">
+                  </mat-form-field>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.CREDIT_REQUIREMENT_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        type="number"
+                        [(ngModel)]="selectedSpecializationSubjectGroup()!.creditRequirement">
+                  </mat-form-field>
+                  <mat-divider class="divider"></mat-divider>
+                  <h3>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUB_GROUP_TITLE" | transloco }}</h3>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUB_GROUP_NAME_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedSubGroup.name">
+                  </mat-form-field>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.CREDIT_REQUIREMENT_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        type="number"
+                        [(ngModel)]="selectedSubGroup.creditRequirement">
+                  </mat-form-field>
+                  <ng-container *ngLet="selectedSubGroup.subjects | getSubjects: universitySubjects()! as wholeSubjects">
+                     <p *ngLet="wholeSubjects | creditSum as credits">
+                        {{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.CREDIT_SUM" | transloco: { creditSum: credits[0] + credits[1] } }}
+                     </p>
+                     <table class="specialization-table">
+                        <tr>
+                           <th>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.TABLE_HEADERS.SUBJECT" | transloco }}</th>
+                           <th></th>
+                        </tr>
+                        @for(subject of wholeSubjects; track $index) {
+                           <tr>
+                              <td>{{ subject.name }} ({{ subject.code }})</td>
+                              <td class="delete-button"
+                                 (click)="deleteSubjectFromSpecialization(subject.code, selectedSubGroup)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</td>
+                           </tr>
+                        }
+                     </table>
+                  </ng-container>
+                  <div class="add-subject-container">
+                     <mat-form-field>
+                        <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUBJECT_SELECT_LABEL" | transloco }}</mat-label>
+                        <mat-select [value]="selectedSubject()"
+                           (valueChange)="selectedSubject.set($event)">
+                           @for(subject of universitySubjects(); track $index) {
+                              <mat-option [value]="subject">{{ subject.name }} ({{ subject.code }})</mat-option>
+                           }
+                        </mat-select>
+                     </mat-form-field>
+                     <button mat-raised-button
+                        color="accent"
+                        [disabled]="!selectedSubject()"
+                        (click)="addSubjectToGroup(selectedSubGroup)">{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUBJECT_ADD_LABEL" | transloco }}</button>
+                  </div>
+               } @else {
+                  <p>{{ "ADMINISTRATION.MAJOR_DETAILS.NO_SPECIALIZATION_DATA" | transloco }}</p>
+               }
+            </div>
+         </div>
+      </mat-tab>
       <mat-tab [label]="'ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS_LABEL' | transloco">
          <div class="major-data-container">
             <div class="list-container">

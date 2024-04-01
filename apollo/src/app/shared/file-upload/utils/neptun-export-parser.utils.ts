@@ -1,5 +1,5 @@
 import { Grade } from "@apollo/averages/models";
-import { RawUniversitySubject, UniversityMajorSubjectGroup, UniversityScholarshipData } from "../../models";
+import { RawUniversitySubject, UniversityMajorSubjectGroup, UniversityScholarshipData, UniversitySpecialization, UniversitySubject } from "../../models";
 
 interface TableSplitConfig {
    doNotFilterEmptyCells?: boolean;
@@ -93,7 +93,7 @@ export class NeptunExportParserUtils {
 
          const existingGroup = groups.find(group => group.name === name);
          if(existingGroup) {
-            let nameCellIndex = this.findNameCellIndexInCurriculumRow(row);
+            const nameCellIndex = this.findNameCellIndexInCurriculumRow(row);
             if(nameCellIndex === -1 || !row[nameCellIndex]) {
                return;
             }
@@ -116,6 +116,81 @@ export class NeptunExportParserUtils {
       });
 
       return groups;
+   }
+
+   public static parseSpecializationsData(exported: string, subjects: UniversitySubject[]): UniversitySpecialization[] {
+      const table = this.splitIntoTable(exported, {
+         doNotFilterEmptyCells: true,
+         maxColumnNumber: 52,
+         headerRows: 2
+      });
+
+      const specializations: UniversitySpecialization[] = [];
+      table.forEach(row => {
+         const specializationName = row[16];
+         if(!specializationName || !specializationName.includes('specializáció')) {
+            return;
+         }
+
+         const groupName = row[26];
+         const subGroupName = row[36];
+         const subjectNameCellIndex = this.findNameCellIndexInCurriculumRow(row, 5);
+         const code = row[subjectNameCellIndex - 1];
+
+         if(!groupName || !subGroupName || !code || !subjects.find(subject => subject.code === code)) {
+            return;
+         }
+
+         const existingSpecialization = specializations.find(specialization => specialization.name === specializationName);
+         if(existingSpecialization) {
+            const existingGroup = existingSpecialization.groups.find(group => group.name === groupName);
+            if(existingGroup) {
+               const existingSubGroup = existingGroup.subGroups.find(subGroup => subGroup.name === subGroupName);
+               if(existingSubGroup) {
+                  existingSubGroup.subjects.push({ code });
+               } else {
+                  existingGroup.subGroups.push({
+                     name: subGroupName,
+                     creditRequirement: 0,
+                     subjects: [{ code }]
+                  });
+               }
+            } else {
+               existingSpecialization.groups.push({
+                  name: groupName,
+                  creditRequirement: 0,
+                  subGroups: [ {
+                     name: subGroupName,
+                     creditRequirement: 0,
+                     subjects: [{ code }]
+                  } ]
+               });
+            }
+         } else {
+            specializations.push({
+               name: specializationName,
+               groups: [ {
+                  name: groupName,
+                  creditRequirement: 0,
+                  subGroups: [ {
+                     name: subGroupName,
+                     creditRequirement: 0,
+                     subjects: [{ code }]
+                  } ]
+               } ]
+            });
+         }
+      });
+
+      specializations.forEach(specialization => {
+         specialization.groups.sort((a, b) => a.name.localeCompare(b.name));
+
+         specialization.groups.forEach(group => {
+            group.subGroups.sort((a, b) => a.name.localeCompare(b.name));
+         });
+      });
+
+      return specializations;
    }
 
    public static parseScholarshipData(exported: string): UniversityScholarshipData[] {
@@ -164,11 +239,11 @@ export class NeptunExportParserUtils {
       return str;
    }
 
-   private static findNameCellIndexInCurriculumRow(row: string[]): number {
+   private static findNameCellIndexInCurriculumRow(row: string[], stepSize = 10): number {
       let idx = -1;
-      for(let i = 6; i < row.length; i += 10) {
+      for(let i = 6; i < row.length; i += stepSize) {
          if(row[i]) {
-            idx = i - 5;
+            idx = i - (stepSize - 5);
          }
       }
       return idx;

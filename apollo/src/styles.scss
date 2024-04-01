@@ -75,3 +75,7 @@ table thead {
 .show-scrollbar {
    overflow-y: scroll !important;
 }
+
+table {
+   border-collapse: collapse;
+}

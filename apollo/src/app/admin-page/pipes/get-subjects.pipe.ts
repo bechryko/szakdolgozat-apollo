@@ -11,10 +11,11 @@ export class GetSubjectsPipe implements PipeTransform {
       private readonly transloco: TranslocoService
    ) { }
 
-   public transform(values: UniversityMajorSubjectGroupSubject[], subjects: UniversitySubject[]): UniversitySubject[] {
+   public transform(values: UniversityMajorSubjectGroupSubject[] | string[], subjects: UniversitySubject[]): UniversitySubject[] {
       return values.map(value => {
-         const subject = subjects.find(subject => subject.code === value.code);
-         return subject ?? this.getDefaultSubject(value.code);
+         const code = typeof value === 'string' ? value : value.code;
+         const subject = subjects.find(subject => subject.code === code);
+         return subject ?? this.getDefaultSubject(code);
       }).sort((a, b) => a.name.localeCompare(b.name));
    }
 
