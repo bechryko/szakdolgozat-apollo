@@ -6,8 +6,6 @@ export interface ApolloUser {
    isAdmin: boolean;
    selectedLanguage?: Language;
    university?: string;
-   faculty?: string;
+   faculty?: number;
    major?: string;
-   studyMode: 'full-time' | 'part-time';
-   curriculumYear?: number;
 }

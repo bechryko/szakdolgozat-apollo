@@ -32,9 +32,7 @@ export class AuthFormsUtils {
          username: [user.username, [ Validators.required, Validators.minLength(3) ]],
          university: user.university,
          faculty: user.faculty,
-         major: user.major,
-         studyMode: user.studyMode,
-         curriculumYear: user.curriculumYear
+         major: user.major
       });
    }
 }

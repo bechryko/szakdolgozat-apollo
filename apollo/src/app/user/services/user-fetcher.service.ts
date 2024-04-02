@@ -30,8 +30,7 @@ export class UserFetcherService {
       const user: ApolloUser = {
          email: userData.email,
          username: userData.username,
-         isAdmin: false,
-         studyMode: 'full-time'
+         isAdmin: false
       };
       return from(setDoc(doc(this.collection, user.email), user)).pipe(
          map(() => user)
