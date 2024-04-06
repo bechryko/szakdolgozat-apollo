@@ -1,17 +1,16 @@
 import { UniversityScholarshipData } from "@apollo/shared/models";
-import { mean } from "lodash";
-import { ScholarshipCalculationResult, ScholarshipDataInterval } from "./models";
+import { cloneDeep, mean } from "lodash";
+import { ScholarshipCalculationResult, ScholarshipDataInterval } from "../models";
 
 export class ScholarshipCalculationUtils {
    public static calculateAverageScholarship(average: number, scholarshipDatas: UniversityScholarshipData[][]): ScholarshipCalculationResult {
-      const scholarshipInEachYear: (number | null)[] = [];
+      const scholarshipInEachYear: number[] = [];
       let didNotRecieveScholarship = false;
       let didBetterThanTheBest = false;
 
       scholarshipDatas.forEach(scholarshipData => {
          const [ lowerLimit, upperLimit ] = this.getClosestScholarshipData(average, scholarshipData);
          if(!lowerLimit) {
-            scholarshipInEachYear.push(null);
             didNotRecieveScholarship = true;
             return;
          }
@@ -28,8 +27,8 @@ export class ScholarshipCalculationUtils {
 
          const lowerLimitClosenessRatio = (average - lowerLimit?.adjustedCreditIndex) / (upperLimit?.adjustedCreditIndex - lowerLimit?.adjustedCreditIndex);
          scholarshipInEachYear.push(
-            lowerLimit.scholarshipAmount * lowerLimitClosenessRatio +
-            upperLimit.scholarshipAmount * (1 - lowerLimitClosenessRatio)
+            lowerLimit.scholarshipAmount * (1 - lowerLimitClosenessRatio) +
+            upperLimit.scholarshipAmount * (lowerLimitClosenessRatio)
          );
       });
 
@@ -41,7 +40,7 @@ export class ScholarshipCalculationUtils {
    }
 
    public static calculateProbabilisticScholarship(average: number, scholarshipDatas: UniversityScholarshipData[][]): ScholarshipCalculationResult {
-      const scholarshipInEachYear: (number | null)[] = [];
+      const scholarshipInEachYear: number[] = [];
       let didNotRecieveScholarship = false;
       let didBetterThanTheBest = false;
 
@@ -55,7 +54,6 @@ export class ScholarshipCalculationUtils {
             }
          }
 
-         scholarshipInEachYear.push(null);
          const belowLowestInterval = average < intervalData[0].lowerBoundAdjustedCreditIndex;
          didNotRecieveScholarship ||= belowLowestInterval;
          didBetterThanTheBest ||= !belowLowestInterval;
@@ -85,18 +83,24 @@ export class ScholarshipCalculationUtils {
    }
 
    private static getIntervalScholarshipData(scholarshipData: UniversityScholarshipData[]): ScholarshipDataInterval[] {
+      scholarshipData = cloneDeep(scholarshipData).sort((a, b) => a.adjustedCreditIndex - b.adjustedCreditIndex);
+
       const intervalScholarshipData: ScholarshipDataInterval[] = [];
 
       scholarshipData.forEach((data, index) => {
          const previousData = scholarshipData[index - 1];
          const nextData = scholarshipData[index + 1];
 
-         let lowerBoundAdjustedCreditIndex = previousData
-            ? (data.adjustedCreditIndex * data.peopleEligible + previousData.adjustedCreditIndex * previousData.peopleEligible) / (data.peopleEligible + previousData.peopleEligible)
-            : undefined;
-         let upperBoundAdjustedCreditIndex = nextData
-            ? (data.adjustedCreditIndex * data.peopleEligible + nextData.adjustedCreditIndex * nextData.peopleEligible) / (data.peopleEligible + nextData.peopleEligible)
-            : undefined;
+         let lowerBoundAdjustedCreditIndex;
+         if(previousData) {
+            const lowerWeight = data.peopleEligible / (data.peopleEligible + previousData.peopleEligible);
+            lowerBoundAdjustedCreditIndex = data.adjustedCreditIndex * (1 - lowerWeight) + previousData.adjustedCreditIndex * lowerWeight;
+         }
+         let upperBoundAdjustedCreditIndex;
+         if(nextData) {
+            const upperWeight = data.peopleEligible / (data.peopleEligible + nextData.peopleEligible);
+            upperBoundAdjustedCreditIndex = data.adjustedCreditIndex * (1 - upperWeight) + nextData.adjustedCreditIndex * upperWeight;
+         }
          lowerBoundAdjustedCreditIndex ??= data.adjustedCreditIndex * 2 - upperBoundAdjustedCreditIndex!;
          upperBoundAdjustedCreditIndex ??= data.adjustedCreditIndex * 2 - lowerBoundAdjustedCreditIndex!;
 

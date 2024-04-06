@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { MatDialog } from "@angular/material/dialog";
+import { ActivatedRoute } from "@angular/router";
 import { UserService } from "@apollo/shared/services";
 import { provideTransloco } from "@ngneat/transloco";
 import { BehaviorSubject, of } from "rxjs";
@@ -49,6 +50,12 @@ describe('AveragesComponent', () => {
       };
    }
 
+   function activatedRouteFactory() {
+      return {
+         data: new BehaviorSubject(null)
+      };
+   }
+
    beforeEach(waitForAsync(() => {
       grades$ = new BehaviorSubject([] as GradesCompletionYear[]);
 
@@ -67,6 +74,10 @@ describe('AveragesComponent', () => {
             {
                provide: UserService,
                useFactory: userServiceFactory
+            },
+            {
+               provide: ActivatedRoute,
+               useFactory: activatedRouteFactory
             }
          ]
       }).compileComponents();

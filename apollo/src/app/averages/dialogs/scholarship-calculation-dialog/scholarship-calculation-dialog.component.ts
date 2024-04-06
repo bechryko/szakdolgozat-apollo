@@ -7,7 +7,7 @@ import { CurrencyPipe } from '@apollo/shared/pipes';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { NgLetModule } from 'ng-let';
 import { ScholarshipCalculationResult } from './models';
-import { ScholarshipCalculationUtils } from './scholarship-calculation.utils';
+import { ScholarshipCalculationUtils } from './utils';
 
 interface ScholarshipCalculationDialogData {
    adjustedCreditIndex: number;
