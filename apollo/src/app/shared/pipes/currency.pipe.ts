@@ -1,4 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { round } from 'lodash';
+import { separateDigits } from '../functions';
 import { LanguageService } from '../languages';
 
 @Pipe({
@@ -17,9 +19,9 @@ export class CurrencyPipe implements PipeTransform {
 
       switch (language) {
          case 'hu':
-            return `${ valueInHuf } Ft`;
+            return `${ separateDigits(round(valueInHuf)) } Ft`;
          default:
-            return `€${ valueInHuf * this.hufToEur }`;
+            return `€${ round(valueInHuf * this.hufToEur, 3) }`;
       }
    }
 }

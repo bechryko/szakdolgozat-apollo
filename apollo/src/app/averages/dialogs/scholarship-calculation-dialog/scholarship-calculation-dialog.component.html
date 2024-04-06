@@ -1,0 +1,72 @@
+<div class="scholarship-calculation-dialog-container">
+   <h2>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.TITLE" | transloco }}</h2>
+   <div class="scholarship-data-container"
+      *ngLet="averageScholarship() as scholarship">
+      <h3>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.AVERAGE_METHOD.TITLE" | transloco }}</h3>
+      @if(scholarship) {
+         @if(scholarship.normal.scholarshipAmount || scholarship.alternative?.scholarshipAmount) {
+            <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.DESCRIPTION" | transloco }}</p>
+            <p>
+               @if(scholarship.normal.scholarshipAmount) {
+                  {{ scholarship.normal.scholarshipAmount | apoCurrency }}
+               }
+               @if(scholarship.alternative?.scholarshipAmount) {
+                  <span class="alternative-data">
+                     <mat-icon>arrow_right_alt</mat-icon>
+                     {{ scholarship.alternative!.scholarshipAmount! | apoCurrency }}
+                  </span>
+               }
+            </p>
+         }
+         @if(scholarship.normal.didNotRecieveScholarship) {
+            <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.NO_SCHOLARSHIP" | transloco }}</p>
+         } @else if(scholarship.normal.didBetterThanTheBest) {
+            <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.BETTER_THAN_BEST" | transloco }}</p>
+         }
+         @if(scholarship.alternative?.didNotRecieveScholarship) {
+            <p class="alternative-data">{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.NO_SCHOLARSHIP" | transloco }}</p>
+         } @else if(scholarship.alternative?.didBetterThanTheBest) {
+            <p class="alternative-data">{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.BETTER_THAN_BEST" | transloco }}</p>
+         }
+      } @else {
+         <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.AVERAGE_METHOD.NO_DATA" | transloco }}</p>
+      }
+   </div>
+   <div class="scholarship-data-container"
+      *ngLet="probabilisticScholarship() as scholarship">
+      <h3>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.PROBABILISTIC_METHOD.TITLE" | transloco }}</h3>
+      @if(scholarship) {
+         @if(scholarship.normal.scholarshipAmount || scholarship.alternative?.scholarshipAmount) {
+            <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.DESCRIPTION" | transloco }}</p>
+            <p>
+               @if(scholarship.normal.scholarshipAmount) {
+                  {{ scholarship.normal.scholarshipAmount | apoCurrency }}
+               }
+               @if(scholarship.alternative?.scholarshipAmount) {
+                  <span class="alternative-data">
+                     <mat-icon>arrow_right_alt</mat-icon>
+                     {{ scholarship.alternative!.scholarshipAmount! | apoCurrency }}
+                  </span>
+               }
+            </p>
+         }
+         @if(scholarship.normal.didNotRecieveScholarship) {
+            <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.NO_SCHOLARSHIP" | transloco }}</p>
+         } @else if(scholarship.normal.didBetterThanTheBest) {
+            <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.BETTER_THAN_BEST" | transloco }}</p>
+         }
+         @if(scholarship.alternative?.didNotRecieveScholarship) {
+            <p class="alternative-data">{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.NO_SCHOLARSHIP" | transloco }}</p>
+         } @else if(scholarship.alternative?.didBetterThanTheBest) {
+            <p class="alternative-data">{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.BETTER_THAN_BEST" | transloco }}</p>
+         }
+      } @else {
+         <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.PROBABILISTIC_METHOD.NO_DATA" | transloco }}</p>
+      }
+   </div>
+   <div class="actions">
+      <button mat-raised-button
+         color="accent"
+         (click)="close()">{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.CLOSE_LABEL" | transloco }}</button>
+   </div>
+</div>

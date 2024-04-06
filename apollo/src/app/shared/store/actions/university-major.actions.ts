@@ -7,6 +7,7 @@ export const universityMajorActions = createActionGroup({
       "Load university majors": props<{ universityId: string }>(),
       "Save university majors to store": props<{ universityMajors: UniversityMajor[] }>(),
       "Save university majors": props<{ universityMajors: UniversityMajor[], universityId: string }>(),
-      "Save single university major": props<{ universityMajor: UniversityMajor }>()
+      "Save single university major": props<{ universityMajor: UniversityMajor }>(),
+      "Load single university major": props<{ majorId: string }>()
    }
 });

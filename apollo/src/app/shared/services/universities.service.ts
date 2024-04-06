@@ -92,6 +92,34 @@ export class UniversitiesService {
       );
    }
 
+   public getMajor(majorId: string): Observable<UniversityMajor | undefined> {
+      let retried = false;
+      const retry = () => {
+         this.store.dispatch(universityMajorActions.loadSingleUniversityMajor({ majorId }));
+         retried = true;
+      };
+
+      return this.store.select(coreFeature.selectUniversityMajors).pipe(
+         tap(majors => {
+            if(!majors) {
+               retry();
+            }
+         }),
+         filter(Boolean),
+         map(majors => {
+            const major = majors.find(major => major.id === majorId);
+
+            if(!retried && !major) {
+               retry();
+               return [];
+            }
+            return major;
+         }),
+         multicast(),
+         distinctUntilChanged(isEqual)
+      );
+   }
+
    public saveAll(universitySubjects: UniversitySubject[], universityMajors: UniversityMajor[], universityId: string): void {
       this.store.dispatch(universitySubjectActions.saveUniversitySubjects({ universitySubjects, universityId }));
       this.store.dispatch(universityMajorActions.saveUniversityMajors({ universityMajors, universityId }));

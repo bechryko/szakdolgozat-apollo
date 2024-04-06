@@ -47,11 +47,13 @@
          <apo-averages-displayer
             [title]="'AVERAGES.YEAR_AVERAGES.FIRST_SEMESTER.LABEL' | transloco"
             [gradeData]="currentYear.firstSemesterGrades"
-            [alternativesData]="currentYear.alternativeGrades?.firstSemester"></apo-averages-displayer>
+            [alternativesData]="currentYear.alternativeGrades?.firstSemester"
+            [isFirstSemester]="true"></apo-averages-displayer>
          <apo-averages-displayer
             [title]="'AVERAGES.YEAR_AVERAGES.SECOND_SEMESTER.LABEL' | transloco"
             [gradeData]="years()[0].secondSemesterGrades"
-            [alternativesData]="currentYear.alternativeGrades?.secondSemester"></apo-averages-displayer>
+            [alternativesData]="currentYear.alternativeGrades?.secondSemester"
+            [isFirstSemester]="false"></apo-averages-displayer>
       </div>
    }
 </fieldset>

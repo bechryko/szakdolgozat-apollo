@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { SnackBarService, UniversitiesFetcherService } from "@apollo/shared/services";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, map, switchMap, tap } from "rxjs";
+import { catchError, filter, map, switchMap, tap } from "rxjs";
 import { universityMajorActions } from "../actions";
 
 @Injectable()
@@ -43,6 +43,19 @@ export class UniversityMajorEffects {
          tap(() => {
             this.snackBarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_SINGLE_MAJOR_SUCCESS");
          }),
+         catchError(error => {
+            // TODO: error handling
+            return [];
+         })
+      )
+   );
+
+   public readonly loadSingleUniversityMajor$ = createEffect(() =>
+      this.actions$.pipe(
+         ofType(universityMajorActions.loadSingleUniversityMajor),
+         switchMap(({ majorId }) => this.universitiesFetcherService.getMajor(majorId)),
+         filter(Boolean),
+         map(universityMajor => universityMajorActions.saveUniversityMajorsToStore({ universityMajors: [universityMajor] })),
          catchError(error => {
             // TODO: error handling
             return [];

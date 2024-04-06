@@ -4,4 +4,5 @@ export { isColorDark } from './is-color-dark';
 export { leadingZeros } from './leading-zeros';
 export { numberize } from './numberize';
 export { parameterizedRoute } from './parameterized-route';
+export { separateDigits } from './separate-digits';
 //@endindex

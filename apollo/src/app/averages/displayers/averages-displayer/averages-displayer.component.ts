@@ -1,8 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input, Signal, WritableSignal, computed, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { ApolloUser } from '@apollo/shared/models';
 import { DisplayValuePipe } from '@apollo/shared/pipes';
+import { UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
+import { ScholarshipCalculationDialogComponent } from '../../dialogs';
 import { AlternativeGrade, Grade } from '../../models';
 import { AverageCalculatorUtils } from '../../utils';
 
@@ -40,7 +45,13 @@ export class AveragesDisplayerComponent {
    public readonly alternativeCreditIndex: Signal<number | null>;
    public readonly alternativeAdjustedCreditIndex: Signal<number | null>;
 
-   constructor() {
+   @Input() public isFirstSemester!: boolean;
+   public readonly user: Signal<ApolloUser | null | undefined>;
+
+   constructor(
+      private readonly dialog: MatDialog,
+      private readonly userService: UserService
+   ) {
       this.grades = signal([]);
       this.weightedAverage = computed(() => AverageCalculatorUtils.calculateWeightedAverage(this.grades()));
       this.creditSum = computed(() => AverageCalculatorUtils.sumCredits(this.grades()));
@@ -80,9 +91,18 @@ export class AveragesDisplayerComponent {
          const index = AverageCalculatorUtils.calculateAdjustedCreditIndex(alternatives);
          return index === this.adjustedCreditIndex() ? null : index;
       });
+
+      this.user = toSignal(this.userService.user$);
    }
 
    public calculateScholarship(): void {
-      // TODO: open dialog
+      this.dialog.open(ScholarshipCalculationDialogComponent, {
+         data: {
+            adjustedCreditIndex: this.adjustedCreditIndex(),
+            alternativeAdjustedCreditIndex: this.alternativeAdjustedCreditIndex(),
+            majorId: this.user()!.major,
+            isFirstSemester: this.isFirstSemester
+         }
+      });
    }
 }

@@ -45,6 +45,10 @@ export class UniversitiesFetcherService {
       return this.coreFetcherService.getCollection<UniversityMajor>(MAJOR_COLLECTION, where('universityId', '==', universityId));
    }
 
+   public getMajor(majorId: string): Observable<UniversityMajor | undefined> {
+      return this.coreFetcherService.getDoc<UniversityMajor>(MAJOR_COLLECTION, majorId);
+   }
+
    public saveUniversityMajors(majors: UniversityMajor[], universityId: string): Observable<void> {
       return this.coreFetcherService.saveCollectionChanges<UniversityMajor>(
          MAJOR_COLLECTION,

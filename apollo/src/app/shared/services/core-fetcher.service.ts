@@ -59,6 +59,14 @@ export class CoreFetcherService {
       return collectionData$.pipe(take(1));
    }
 
+   public getDoc<T extends StoredValue>(collectionName: string, id: string): Observable<T | undefined> {
+      const _collection = collection(this.firestore, collectionName);
+
+      return docData<T>(doc(_collection, id) as any).pipe(
+         take(1)
+      );
+   }
+
    public saveCollectionChangesForCurrentUser<T extends UserStoredValue>(collectionName: string, values: T[]): Observable<void> {
       return this.userService.user$.pipe(
          take(1),

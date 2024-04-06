@@ -38,5 +38,6 @@
    </p>
    <button mat-raised-button
       color="primary"
+      [disabled]="!user()"
       (click)="calculateScholarship()">{{ "AVERAGES.DISPLAY.CALCULATE_SCHOLARSHIP_LABEL" | transloco }}</button>
 </fieldset>
