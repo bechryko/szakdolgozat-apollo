@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, ViewChildren, WritableSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Signal, ViewChildren, WritableSignal, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -9,8 +10,11 @@ import { MatTable } from '@angular/material/table';
 import { Grade, GradesCompletionYear } from '@apollo/averages/models';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { numberize } from '@apollo/shared/functions';
+import { UniversitySubject } from '@apollo/shared/models';
+import { UniversitiesService, UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
+import { EMPTY, startWith, switchMap } from 'rxjs';
 import { GradeEditingTableComponent } from './grade-editing-table/grade-editing-table.component';
 import { GradeManagerDialogData } from './grade-manager-dialog-data';
 
@@ -35,17 +39,32 @@ export class GradeManagerDialogComponent {
    public readonly years: WritableSignal<GradesCompletionYear[]>;
    public readonly selectedYear: WritableSignal<GradesCompletionYear | undefined>;
 
+   public readonly universitySubjects: Signal<UniversitySubject[]>;
+
    @ViewChildren(MatTable) private readonly table!: MatTable<Grade>[];
 
    constructor(
       private readonly dialogRef: MatDialogRef<GradeManagerDialogComponent, GradeManagerDialogData>,
       @Inject(MAT_DIALOG_DATA) data: GradeManagerDialogData,
-      private readonly dialog: MatDialog
+      private readonly dialog: MatDialog,
+      private readonly userService: UserService,
+      private readonly universitiesService: UniversitiesService
    ) {
       this.data = cloneDeep(data);
       
       this.years = signal(this.data.years);
       this.selectedYear = signal(this.data.years.find(year => year.id === this.data.selectedYearId));
+
+      this.universitySubjects = toSignal(this.userService.user$.pipe(
+         switchMap(user => {
+            if(!user?.university) {
+               return EMPTY;
+            }
+
+            return this.universitiesService.getSubjectsForUniversity(user.university);
+         }),
+         startWith([])
+      )) as Signal<UniversitySubject[]>;
    }
 
    public selectYear(year: GradesCompletionYear): void {

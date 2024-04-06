@@ -28,7 +28,8 @@
    
       &.wide-column {
          font-size: 1rem;
-         width: 15rem;
+         min-width: 15rem;
+         width: 90%;
       }
    
       &:focus-visible {

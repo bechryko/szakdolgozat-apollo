@@ -89,6 +89,7 @@
    "AVERAGES.DIALOGS.GRADE_ADD_LABEL": "Jegy hozzáadása",
    "AVERAGES.DIALOGS.GRADE_DISABLE_LABEL": "Letiltás",
    "AVERAGES.DIALOGS.GRADE_ENABLE_LABEL": "Engedélyezés",
+   "AVERAGES.DIALOGS.CUSTOM_GRADE": "Egyéni jegy",
    "AVERAGES.YEAR_ADD_DIALOG.TITLE": "Tanév hozzáadása",
    "AVERAGES.YEAR_ADD_DIALOG.INPUT_LABEL": "Tanév neve",
    "AVERAGES.NO_DATA_DIALOG.TITLE": "Kezdd egy tanév hozzáadásával!",

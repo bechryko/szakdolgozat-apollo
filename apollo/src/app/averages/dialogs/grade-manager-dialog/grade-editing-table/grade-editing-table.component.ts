@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild, WritableSignal, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { FileUploadComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
+import { UniversitySubject } from '@apollo/shared/models';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { Grade } from '../../../models';
 
@@ -14,7 +16,8 @@ import { Grade } from '../../../models';
       MatTableModule,
       FormsModule,
       MatButtonModule,
-      FileUploadComponent
+      FileUploadComponent,
+      MatSelectModule
    ],
    templateUrl: './grade-editing-table.component.html',
    styleUrl: './grade-editing-table.component.scss',
@@ -30,8 +33,14 @@ export class GradeEditingTableComponent {
 
    @Input() public titleKey!: string;
    @Input() grades: Grade[] = [];
+   public readonly universitySubjects = input.required<UniversitySubject[]>();
+   public readonly selectedSubject: WritableSignal<UniversitySubject | null>;
 
    @ViewChild(MatTable) private readonly table!: MatTable<Grade>;
+
+   constructor() {
+      this.selectedSubject = signal(null);
+   }
 
    public removeGrade(gradeArray: Grade[], index: number): void {
       gradeArray.splice(index, 1);
@@ -43,11 +52,21 @@ export class GradeEditingTableComponent {
    }
 
    public addGrade(gradeArray: Grade[]): void {
-      gradeArray.push({
-         name: '',
-         rating: 5,
-         credit: 0
-      });
+      const subject = this.selectedSubject();
+      if(subject) {
+         gradeArray.push({
+            name: subject.name,
+            rating: 5,
+            credit: subject.credit,
+            code: subject.code
+         });
+      } else {
+         gradeArray.push({
+            name: '',
+            rating: 5,
+            credit: 0
+         });
+      }
       this.updateTable();
    }
 

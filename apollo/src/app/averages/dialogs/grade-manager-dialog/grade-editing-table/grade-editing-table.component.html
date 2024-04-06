@@ -38,6 +38,14 @@
    </table>
    <div class="mat-mdc-table">
       <div class="input-table-footer">
+         <mat-select class="subject-select"
+            (valueChange)="selectedSubject.set($event)"
+            [placeholder]="'AVERAGES.DIALOGS.CUSTOM_GRADE' | transloco">
+            <mat-option [value]="null">{{ "AVERAGES.DIALOGS.CUSTOM_GRADE" | transloco }}</mat-option>
+            @for(subject of universitySubjects(); track $index) {
+               <mat-option [value]="subject">{{ subject.name }} ({{ subject.code }})</mat-option>
+            }
+         </mat-select>
          <button mat-raised-button
             color="accent"
             (click)="addGrade(grades)">{{ "AVERAGES.DIALOGS.GRADE_ADD_LABEL" | transloco }}</button>
