@@ -1,0 +1,44 @@
+@use 'styles/colors';
+
+.scholarship-calculation-dialog-container {
+   height: 80vh;
+   background-color: colors.$primary-background;
+   padding: 2.5rem;
+
+   h2, h3 {
+      text-align: center;
+   }
+}
+
+.scholarship-data-container {
+   border: 2px solid colors.$primary-darker;
+   border-radius: 1rem;
+   padding: 1rem;
+   width: 32rem;
+
+   p {
+      margin: 0.5rem auto;
+   }
+
+   & + & {
+      margin-top: 2rem;
+   }
+}
+
+.alternative-data {
+   display: inline-block;
+   color: colors.$alternative-font-color;
+   height: 1.25rem;
+
+   mat-icon {
+      height: 1rem;
+      position: relative;
+      top: -0.15rem;
+   }
+}
+
+.actions {
+   margin-top: 2rem;
+   display: flex;
+   justify-content: center;
+}

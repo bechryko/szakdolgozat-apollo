@@ -1,6 +1,6 @@
-import { languages } from "@apollo/shared/constants";
 import { Translation, TranslocoLoader } from "@ngneat/transloco";
 import { Observable, map, merge } from "rxjs";
+import { languages } from "./shared/languages";
 
 export function checkLanguageKeys(loader: TranslocoLoader): void {
    const translations: Record<string, Translation> = {};

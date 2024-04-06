@@ -1,12 +1,13 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { LanguageSelectionComponent } from '@apollo/shared/languages';
 import { ApolloUser } from '@apollo/shared/models';
 import { UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { NgLetModule } from 'ng-let';
 import { Observable } from 'rxjs';
-import { LanguageSelectionComponent, LoginComponent, RegisterComponent, UserSettingsComponent } from './components';
+import { LoginComponent, RegisterComponent, UserSettingsComponent } from './components';
 import { LoginData, RegisterData } from './models';
 
 @Component({

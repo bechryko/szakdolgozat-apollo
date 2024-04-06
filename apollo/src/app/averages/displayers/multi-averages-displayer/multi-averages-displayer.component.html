@@ -6,12 +6,31 @@
          color="accent"
          (click)="onSetAlternatives()">{{ "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL" | transloco }}</button>
    }
-   <p>
+   <p class="weighted-average-container">
       {{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() | displayValue }}
       @if(alternativeWeightedAverage()) {
          <span class="alternative-data">
             <mat-icon>arrow_right_alt</mat-icon>
             {{ alternativeWeightedAverage() | displayValue }}
+         </span>
+      }
+      @if(yearDisplay && userMajor()) {
+         <span class="state-scholarship-data-container"
+            *ngLet="userMajor()!.stateScholarshipRequiredAverage as requiredAverage">
+            @if(userMajor()!.stateScholarshipRequiredAverage) {
+               <apo-state-scholarship-information-icon
+                  [average]="weightedAverage()"
+                  [required]="requiredAverage!"></apo-state-scholarship-information-icon>
+               @if(alternativeWeightedAverage()) {
+                  <mat-icon class="alternative-arrow">arrow_right_alt</mat-icon>
+                  <apo-state-scholarship-information-icon
+                     [average]="alternativeWeightedAverage()!"
+                     [required]="requiredAverage!"></apo-state-scholarship-information-icon>
+               }
+            } @else {
+               <mat-icon class="no-data-icon"
+                  [matTooltip]="'AVERAGES.YEAR_AVERAGES.STATE_SCHOLARSHIP_TOOLTIP.NO_DATA' | transloco">warning</mat-icon>
+            }
          </span>
       }
    </p>
@@ -46,12 +65,16 @@
       <div class="year-averages-container" *ngLet="years()[0] as currentYear">
          <apo-averages-displayer
             [title]="'AVERAGES.YEAR_AVERAGES.FIRST_SEMESTER.LABEL' | transloco"
+            [userMajor]="userMajor()"
             [gradeData]="currentYear.firstSemesterGrades"
-            [alternativesData]="currentYear.alternativeGrades?.firstSemester"></apo-averages-displayer>
+            [alternativesData]="currentYear.alternativeGrades?.firstSemester"
+            [isFirstSemester]="true"></apo-averages-displayer>
          <apo-averages-displayer
             [title]="'AVERAGES.YEAR_AVERAGES.SECOND_SEMESTER.LABEL' | transloco"
+            [userMajor]="userMajor()"
             [gradeData]="years()[0].secondSemesterGrades"
-            [alternativesData]="currentYear.alternativeGrades?.secondSemester"></apo-averages-displayer>
+            [alternativesData]="currentYear.alternativeGrades?.secondSemester"
+            [isFirstSemester]="false"></apo-averages-displayer>
       </div>
    }
 </fieldset>

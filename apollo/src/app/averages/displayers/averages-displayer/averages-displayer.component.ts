@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, Signal, WritableSignal, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Signal, WritableSignal, computed, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { UniversityMajor } from '@apollo/shared/models';
 import { DisplayValuePipe } from '@apollo/shared/pipes';
 import { TranslocoPipe } from '@ngneat/transloco';
+import { ScholarshipCalculationDialogComponent } from '../../dialogs';
 import { AlternativeGrade, Grade } from '../../models';
 import { AverageCalculatorUtils } from '../../utils';
 
@@ -21,6 +24,7 @@ import { AverageCalculatorUtils } from '../../utils';
 })
 export class AveragesDisplayerComponent {
    @Input() public title: string = "";
+   public readonly userMajor = input.required<UniversityMajor | null>();
 
    @Input() set gradeData(value: Grade[]) {
       this.grades.set(value);
@@ -40,7 +44,11 @@ export class AveragesDisplayerComponent {
    public readonly alternativeCreditIndex: Signal<number | null>;
    public readonly alternativeAdjustedCreditIndex: Signal<number | null>;
 
-   constructor() {
+   @Input() public isFirstSemester!: boolean;
+
+   constructor(
+      private readonly dialog: MatDialog
+   ) {
       this.grades = signal([]);
       this.weightedAverage = computed(() => AverageCalculatorUtils.calculateWeightedAverage(this.grades()));
       this.creditSum = computed(() => AverageCalculatorUtils.sumCredits(this.grades()));
@@ -83,6 +91,13 @@ export class AveragesDisplayerComponent {
    }
 
    public calculateScholarship(): void {
-      // TODO: open dialog
+      this.dialog.open(ScholarshipCalculationDialogComponent, {
+         data: {
+            adjustedCreditIndex: this.adjustedCreditIndex(),
+            alternativeAdjustedCreditIndex: this.alternativeAdjustedCreditIndex(),
+            major: this.userMajor()!,
+            isFirstSemester: this.isFirstSemester
+         }
+      });
    }
 }

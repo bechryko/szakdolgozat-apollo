@@ -19,7 +19,7 @@ export class CompletionsFetcherService {
    }
 
    public saveCompletions(completions: UniversityCompletionYear[]): Observable<void> {
-      return this.coreFetcherService.saveCollectionChanges<UniversityCompletionYear>(COLLECTION, completions);
+      return this.coreFetcherService.saveCollectionChangesForCurrentUser<UniversityCompletionYear>(COLLECTION, completions);
    }
 
    public clearGuestStorage(): void {

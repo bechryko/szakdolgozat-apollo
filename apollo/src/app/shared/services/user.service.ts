@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { LoginData, RegisterData } from '@apollo/user/models';
 import { AuthService, UserFetcherService } from '@apollo/user/services';
 import { Store } from '@ngrx/store';
-import { Observable, distinctUntilChanged, map, of, switchMap, tap } from 'rxjs';
+import { Observable, distinctUntilChanged, map, of, startWith, switchMap, tap } from 'rxjs';
+import { LanguageService } from '../languages';
 import { ApolloUser } from '../models';
 import { multicast } from '../operators';
 import { userActions } from '../store/actions/user.actions';
-import { LanguageService } from './language.service';
 
 @Injectable({
    providedIn: 'root'
@@ -36,12 +36,14 @@ export class UserService {
 
       this.isUserLoggedIn$ = this.user$.pipe(
          map(Boolean),
+         startWith(false),
          multicast(),
          distinctUntilChanged()
       );
 
       this.isUserAdmin$ = this.user$.pipe(
          map(user => Boolean(user?.isAdmin)),
+         startWith(false),
          multicast(),
          distinctUntilChanged()
       );

@@ -2,17 +2,18 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { RouteUrls } from '@apollo/app.routes';
 import { TranslocoPipe } from '@ngneat/transloco';
+import { NgLetModule } from 'ng-let';
 import { Observable, map } from 'rxjs';
-import { RouteUrls } from '../../app.routes';
-import { UserService } from '../services';
+import { RouterService, UserService } from '../services';
 
 @Component({
    selector: 'apo-header',
    standalone: true,
    imports: [
       TranslocoPipe,
+      NgLetModule,
       MatButtonModule,
       MatIconModule,
       AsyncPipe
@@ -22,23 +23,42 @@ import { UserService } from '../services';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
-   public readonly menuItemKeys = [
-      'AVERAGES',
-      'MAJOR_COMPLETION',
-      'TIMETABLE'
-   ] as const;
+   public readonly routeUrls = RouteUrls;
+   public readonly routeUrlToTranslationKeyMap = Object.entries(RouteUrls).reduce((acc, [key, value]) => {
+      acc[value as any] = 'NAVIGATION.' + key;
+      return acc;
+   }, {} as any);
+
    public readonly isUserLoggedIn$: Observable<boolean>;
+   public readonly menuItemKeys$: Observable<RouteUrls[]>;
+   public readonly selectedMenu$: Observable<RouteUrls>;
 
    constructor(
-      private readonly router: Router,
+      private readonly routerService: RouterService,
       private readonly userService: UserService
    ) {
-      this.isUserLoggedIn$ = this.userService.user$.pipe(
-         map(Boolean)
+      this.isUserLoggedIn$ = this.userService.isUserLoggedIn$;
+
+      this.menuItemKeys$ = this.userService.isUserAdmin$.pipe(
+         map(isAdmin => {
+            const menuItemKeys: RouteUrls[] = [
+               RouteUrls.AVERAGES,
+               RouteUrls.MAJOR_COMPLETION,
+               RouteUrls.TIMETABLE
+            ];
+
+            if(isAdmin) {
+               menuItemKeys.push(RouteUrls.ADMINISTRATION);
+            }
+
+            return menuItemKeys;
+         })
       );
+
+      this.selectedMenu$ = this.routerService.currentPage$;
    }
 
-   public navigateTo(route: typeof this.menuItemKeys[number] | 'MENU' | 'USER'): void {
-      this.router.navigateByUrl("/" + RouteUrls[route]);
+   public selectMenuItem(route: RouteUrls): void {
+      this.routerService.navigate(route);
    }
 }

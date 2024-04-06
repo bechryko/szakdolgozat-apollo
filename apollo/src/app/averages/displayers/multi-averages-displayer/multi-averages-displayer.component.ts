@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Signal, WritableSignal, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Signal, WritableSignal, computed, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { UniversityMajor } from '@apollo/shared/models';
 import { DisplayValuePipe } from '@apollo/shared/pipes';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { NgLetModule } from 'ng-let';
 import { AlternativeGrade, Grade, GradesCompletionYear } from '../../models';
 import { AverageCalculatorUtils } from '../../utils';
 import { AveragesDisplayerComponent } from '../averages-displayer';
+import { StateScholarshipInformationIconComponent } from './state-scholarship-information-icon';
 
 @Component({
    selector: 'apo-multi-averages-displayer',
@@ -17,7 +20,9 @@ import { AveragesDisplayerComponent } from '../averages-displayer';
       MatButtonModule,
       NgLetModule,
       MatIconModule,
-      DisplayValuePipe
+      DisplayValuePipe,
+      StateScholarshipInformationIconComponent,
+      MatTooltipModule
    ],
    templateUrl: './multi-averages-displayer.component.html',
    styleUrl: './multi-averages-displayer.component.scss',
@@ -29,6 +34,8 @@ export class MultiAveragesDisplayerComponent { // TODO: add diagrams
    @Input() set yearData(value: GradesCompletionYear[]) {
       this.years.set(value);
    }
+   public readonly userMajor = input.required<UniversityMajor | null>();
+
    public readonly years: WritableSignal<GradesCompletionYear[]>;
    private readonly gradesCollected: Signal<Grade[]>;
    public readonly weightedAverage: Signal<number>;

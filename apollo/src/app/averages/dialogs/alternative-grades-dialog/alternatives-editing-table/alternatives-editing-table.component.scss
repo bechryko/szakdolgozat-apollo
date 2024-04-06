@@ -1,7 +1,7 @@
 @use 'styles/colors';
 @use 'styles/table-style';
 
-@include table-style.semesterTable;
+@include table-style.inputTable;
 
 td {
    &.changed {

@@ -8,6 +8,7 @@
    }
    <apo-multi-averages-displayer
       [title]="'AVERAGES.DISPLAY.TITLE.CUMULATED' | transloco"
+      [userMajor]="userMajor()"
       [yearData]="averages()!"></apo-multi-averages-displayer>
    <div class="actions">
       @if(selectedYear()) {
@@ -32,6 +33,7 @@
       @for(year of years; track -$index) {
          <apo-multi-averages-displayer
             [title]="year.name"
+            [userMajor]="userMajor()"
             [yearDisplay]="true"
             [yearData]="[ year ]"
             (setAlternatives)="openAlternativesDialog(year)"></apo-multi-averages-displayer>

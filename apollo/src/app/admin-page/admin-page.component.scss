@@ -1,0 +1,81 @@
+@use 'styles/colors';
+@use 'styles/table-style';
+@use 'styles/media-scroller' as ms;
+
+@include table-style.inputTable;
+
+h2 {
+   text-align: center;
+   font-size: 2rem;
+   margin: 0 0 3rem;
+}
+
+.university-list-container {
+   font-size: 0.75rem;
+
+   .university-panel {
+      background-color: colors.$primary-background;
+
+      .panel-header {
+         background-color: colors.$primary-darker-background;
+      }
+   }
+}
+
+.language-inputs-container {
+   $spacing: 1rem;
+
+   @include ms.media-scroller;
+   @include ms.snaps-inline;
+   gap: $spacing;
+   margin: $spacing 0;
+
+   .language-input {
+      display: inline-block;
+      padding: $spacing;
+      background-color: colors.$primary-lighter-background;
+      border-top-left-radius: $spacing;
+      border-top-right-radius: $spacing;
+
+      h4 {
+         text-align: center;
+         font-size: 0.875rem;
+         margin: 0 auto
+      }
+   }
+}
+
+.input-table-header h3 {
+   font-size: 1.25rem;
+}
+
+.header-cell {
+   width: 100%;
+   text-align: center;
+}
+
+.table-cell input {
+   font-size: 1em;
+   width: 100%;
+   border: none;
+   cursor: pointer;
+   padding: 0.5rem;
+   
+   &:focus-visible {
+      outline: 2px solid colors.$primary-main;
+      border-radius: 0.5rem;
+   }
+}
+
+.actions {
+   display: grid;
+   grid-auto-flow: column;
+   grid-auto-columns: max-content;
+   gap: 1rem;
+   margin-top: 2rem;
+}
+
+.add-university-button {
+   width: 100%;
+   margin-top: 1.5rem;
+}

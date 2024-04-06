@@ -1,5 +1,8 @@
-import { UniversityCompletionYear } from "../models";
+import { University, UniversityCompletionYear, UniversityMajor, UniversitySubject } from "../models";
 
 export interface CoreState {
-   completionYears: UniversityCompletionYear[] | null;
+   completions: UniversityCompletionYear[] | null;
+   universities: University[] | null;
+   universitySubjects: UniversitySubject[] | null;
+   universityMajors: UniversityMajor[] | null;
 }

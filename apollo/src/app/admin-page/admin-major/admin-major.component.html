@@ -1,0 +1,290 @@
+<div class="admin-major-container" *ngIf="major() as major">
+   <h2 class="title">{{ major.name }}</h2>
+   <h3 class="title">{{ university()!.name | multiLanguage }}</h3>
+   <div class="actions">
+      <button mat-raised-button
+         class="back-button"
+         color="accent"
+         (click)="back()">{{ "GENERAL_BUTTON_LABELS.BACK" | transloco }}</button>
+      <button mat-raised-button
+         color="primary"
+         (click)="saveMajor()">{{ "ADMINISTRATION.MAJOR_DETAILS.SAVE_MAJOR_LABEL" | transloco }}</button>
+   </div>
+   <mat-tab-group class="tabs">
+      <mat-tab [label]="'ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUPS_LABEL' | transloco">
+         <div class="major-data-container">
+            <div class="list-container">
+               @if(universitySubjects()) {
+                  @for(group of major.subjectGroups; track $index) {
+                     <mat-expansion-panel class="mat-expansion-panel"
+                        *ngLet="group.subjects | getSubjects: universitySubjects()! as wholeSubjects">
+                        <mat-expansion-panel-header class="mat-expansion-panel-header">
+                           <mat-panel-title>
+                              <h3>{{ group.name }}</h3>
+                           </mat-panel-title>
+                           <mat-panel-description>
+                              <p class="major-group-description">
+                                 {{ "ADMINISTRATION.MAJOR_DETAILS.CREDIT_REQUIREMENT_DESCRIPTION" | transloco: { credit: group.creditRequirement} }}
+                              </p>
+                           </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        @for(subject of wholeSubjects; track $index) {
+                           <div class="list-item"
+                              [class.selected]="selectedUniversityMajorSubject()?.code === subject.code"
+                              (click)="selectSubject(subject.code, group)">{{ subject.name }} ({{ subject.code }})</div>
+                        }
+                     </mat-expansion-panel>
+                  }
+                  <apo-file-upload
+                     class="file-upload"
+                     [parserFn]="getMajorParserFn()"
+                     (fileDataChange)="onMajorDataUpload($event)"></apo-file-upload>
+               }
+            </div>
+            <div class="details-container"
+               *ngLet="selectedUniversityMajorSubject() as selectedSubject"
+               [class.no-data]="!selectedSubject">
+               @if(selectedSubject) {
+                  <ng-container *ngLet="selectedUniversityMajorSubjectGroup()! as selectedGroup">
+                     <h3>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP.TITLE" | transloco }}</h3>
+                     <mat-form-field>
+                        <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP.NAME_LABEL" | transloco }}</mat-label>
+                        <input matInput
+                           [(ngModel)]="selectedGroup.name">
+                     </mat-form-field>
+                     <mat-form-field>
+                        <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP.CREDIT_REQUIREMENT_LABEL" | transloco }}</mat-label>
+                        <input matInput
+                           type="number"
+                           [(ngModel)]="selectedGroup.creditRequirement">
+                     </mat-form-field>
+                     @if(universitySubjects()) {
+                        <ng-container *ngLet="(selectedGroup.subjects | getSubjects: universitySubjects()!) | creditSum as creditSums">
+                           <p>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP.CREDIT_SUM" | transloco: { creditSum: creditSums[0] } }}</p>
+                           <p>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP.TALENT_MANAGER_CREDIT_SUM" | transloco: { creditSum: creditSums[1] } }}</p>
+                        </ng-container>
+                     }
+                  </ng-container>
+                  <mat-divider class="divider"></mat-divider>
+                  <h3>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP_SUBJECT.TITLE" | transloco }}</h3>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUP_SUBJECT.SUGGESTED_SEMESTER_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        type="number"
+                        [(ngModel)]="selectedSubject.suggestedSemester">
+                  </mat-form-field>
+                  <div class="actions">
+                     <button mat-raised-button
+                        color="warn"
+                        (click)="deleteGroupSubject(selectedSubject, selectedUniversityMajorSubjectGroup()!)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</button>
+                  </div>
+               } @else {
+                  <div class="no-data">
+                     <p>{{ "ADMINISTRATION.MAJOR_DETAILS.NO_SUBJECT_DATA" | transloco }}</p>
+                  </div>
+               }
+            </div>
+         </div>
+      </mat-tab>
+      <mat-tab [label]="'ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS_LABEL' | transloco">
+         <div class="major-data-container three-column">
+            <div class="list-container">
+               @for(specialization of major.specializations; track $index) {
+                  <div class="list-item"
+                     [class.selected]="selectedSpecialization() === specialization"
+                     (click)="selectSpecialization(specialization)">{{ specialization.name }}</div>
+               }
+               <apo-file-upload
+                  class="file-upload"
+                  [parserFn]="getSpecializationsParserFn()"
+                  (fileDataChange)="onSpecializationsUpload($event)"></apo-file-upload>
+            </div>
+            <div class="list-container"
+               *ngLet="selectedSpecialization()! as selectedSpec"
+               [class.no-data]="!selectedSpec">
+               @if(selectedSpec) {
+                  @for(group of selectedSpec.groups; track $index) {
+                     <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                           <mat-panel-title>
+                              <h3>{{ group.name }}</h3>
+                           </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        @for(subGroup of group.subGroups; track $index) {
+                           <div class="list-item"
+                              [class.selected]="selectedSpecializationSubjectSubGroup() === subGroup"
+                              (click)="selectSpecializationSubjectSubGroup(subGroup, group)">{{ subGroup.name }}</div>
+                        }
+                     </mat-expansion-panel>
+                  }
+               }
+            </div>
+            <div class="details-container"
+               *ngLet="selectedSpecializationSubjectSubGroup()! as selectedSubGroup"
+               [class.no-data]="!selectedSubGroup">
+               @if(selectedSubGroup) {
+                  <h3>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.TITLE" | transloco }}</h3>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.NAME_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedSpecialization()!.name">
+                  </mat-form-field>
+                  <mat-divider class="divider"></mat-divider>
+                  <h3>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.GROUP_TITLE" | transloco }}</h3>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.GROUP_NAME_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedSpecializationSubjectGroup()!.name">
+                  </mat-form-field>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.CREDIT_REQUIREMENT_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        type="number"
+                        [(ngModel)]="selectedSpecializationSubjectGroup()!.creditRequirement">
+                  </mat-form-field>
+                  <mat-divider class="divider"></mat-divider>
+                  <h3>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUB_GROUP_TITLE" | transloco }}</h3>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUB_GROUP_NAME_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedSubGroup.name">
+                  </mat-form-field>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.CREDIT_REQUIREMENT_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        type="number"
+                        [(ngModel)]="selectedSubGroup.creditRequirement">
+                  </mat-form-field>
+                  <ng-container *ngLet="selectedSubGroup.subjects | getSubjects: universitySubjects()! as wholeSubjects">
+                     <p *ngLet="wholeSubjects | creditSum as credits">
+                        {{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.CREDIT_SUM" | transloco: { creditSum: credits[0] + credits[1] } }}
+                     </p>
+                     <table class="specialization-table">
+                        <tr>
+                           <th>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.TABLE_HEADERS.SUBJECT" | transloco }}</th>
+                           <th></th>
+                        </tr>
+                        @for(subject of wholeSubjects; track $index) {
+                           <tr>
+                              <td>{{ subject.name }} ({{ subject.code }})</td>
+                              <td class="delete-button"
+                                 (click)="deleteSubjectFromSpecialization(subject.code, selectedSubGroup)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</td>
+                           </tr>
+                        }
+                     </table>
+                  </ng-container>
+                  <div class="add-subject-container">
+                     <mat-form-field>
+                        <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUBJECT_SELECT_LABEL" | transloco }}</mat-label>
+                        <mat-select [value]="selectedSubject()"
+                           (valueChange)="selectedSubject.set($event)">
+                           @for(subject of universitySubjects(); track $index) {
+                              <mat-option [value]="subject">{{ subject.name }} ({{ subject.code }})</mat-option>
+                           }
+                        </mat-select>
+                     </mat-form-field>
+                     <button mat-raised-button
+                        color="accent"
+                        [disabled]="!selectedSubject()"
+                        (click)="addSubjectToGroup(selectedSubGroup)">{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUBJECT_ADD_LABEL" | transloco }}</button>
+                  </div>
+               } @else {
+                  <p>{{ "ADMINISTRATION.MAJOR_DETAILS.NO_SPECIALIZATION_DATA" | transloco }}</p>
+               }
+            </div>
+         </div>
+      </mat-tab>
+      <mat-tab [label]="'ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS_LABEL' | transloco">
+         <div class="major-data-container">
+            <div class="list-container">
+               @for(scholarshipYear of major.scholarships; track $index) {
+                  <div class="list-item"
+                     [class.selected]="selectedScholarshipYear() === scholarshipYear"
+                     (click)="selectScholarshipYear(scholarshipYear)">{{ scholarshipYear.name }}</div>
+               }
+               <div class="actions">
+                  <button mat-raised-button
+                     class="add-button"
+                     color="accent"
+                     (click)="addScholarshipYear()">{{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.ADD_BUTTON_LABEL" | transloco }}</button>
+               </div>
+            </div>
+            <div class="details-container"
+               *ngLet="selectedScholarshipYear()! as selectedYear"
+               [class.no-data]="!selectedYear">
+               @if(selectedYear) {
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.NAME_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        [(ngModel)]="selectedYear.name">
+                  </mat-form-field>
+                  <div class="actions">
+                     <button mat-raised-button
+                        color="warn"
+                        (click)="deleteScholarshipYear(selectedYear)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</button>
+                  </div>
+                  <mat-divider class="divider"></mat-divider>
+                  <div class="scholarship-data-container">
+                     <div>
+                        <h3>{{ "GENERAL_PHRASE.FIRST_SEMESTER" | transloco }}</h3>
+                        <apo-file-upload
+                           class="file-upload"
+                           [parserFn]="getScholarshipParserFn()"
+                           (fileDataChange)="onScholarshipUpload($event, selectedYear.firstSemester)"></apo-file-upload>
+                        @if(selectedYear.firstSemester.length) {
+                           <table class="scholarship-table">
+                              <tr>
+                                 <th>
+                                    {{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.AVERAGE" | transloco }} 
+                                 </th>
+                                 <th>
+                                    {{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.AMOUNT" | transloco }}
+                                    <br>
+                                    ({{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.PEOPLE" | transloco }})
+                                 </th>
+                              </tr>
+                              @for(scholarshipEntry of selectedYear.firstSemester; track $index) {
+                                 <tr>
+                                    <td>{{ scholarshipEntry.adjustedCreditIndex }}</td>
+                                    <td>{{ scholarshipEntry.scholarshipAmount | apoCurrency }} ({{ scholarshipEntry.peopleEligible }})</td>
+                                 </tr>
+                              }
+                           </table>
+                        }
+                     </div>
+                     <div>
+                        <h3>{{ "GENERAL_PHRASE.SECOND_SEMESTER" | transloco }}</h3>
+                        <apo-file-upload
+                           class="file-upload"
+                           [parserFn]="getScholarshipParserFn()"
+                           (fileDataChange)="onScholarshipUpload($event, selectedYear.secondSemester)"></apo-file-upload>
+                        @if(selectedYear.secondSemester.length) {
+                           <table class="scholarship-table">
+                              <tr>
+                                 <th>
+                                    {{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.AVERAGE" | transloco }}
+                                 </th>
+                                 <th>
+                                    {{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.AMOUNT" | transloco }}
+                                    <br>
+                                    ({{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.TABLE_HEADERS.PEOPLE" | transloco }})
+                                 </th>
+                              </tr>
+                              @for(scholarshipEntry of selectedYear.secondSemester; track $index) {
+                                 <tr>
+                                    <td>{{ scholarshipEntry.adjustedCreditIndex }}</td>
+                                    <td>{{ scholarshipEntry.scholarshipAmount | apoCurrency }} ({{ scholarshipEntry.peopleEligible }})</td>
+                                 </tr>
+                              }
+                           </table>
+                        }
+                     </div>
+                  </div>
+               } @else {
+                  <p>{{ "ADMINISTRATION.MAJOR_DETAILS.NO_SCHOLARSHIP_DATA" | transloco }}</p>
+               }
+            </div>
+         </div>
+      </mat-tab>
+   </mat-tab-group>
+</div>

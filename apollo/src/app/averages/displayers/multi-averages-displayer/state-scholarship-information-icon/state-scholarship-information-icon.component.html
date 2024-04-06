@@ -1,0 +1,10 @@
+@if(average() < required()) {
+   <mat-icon class="error-icon"
+      [matTooltip]="('AVERAGES.YEAR_AVERAGES.STATE_SCHOLARSHIP_TOOLTIP.NOT_ENTITLED' | transloco) + ' ' + ('AVERAGES.YEAR_AVERAGES.STATE_SCHOLARSHIP_TOOLTIP.REQUIRED_INFO' | transloco: { requiredAverage: required() })">error</mat-icon>
+} @else if(average() < noWarnRequired()) {
+   <mat-icon class="warning-icon"
+   [matTooltip]="('AVERAGES.YEAR_AVERAGES.STATE_SCHOLARSHIP_TOOLTIP.ENTITLED_WITH_WARNING' | transloco) + ' ' + ('AVERAGES.YEAR_AVERAGES.STATE_SCHOLARSHIP_TOOLTIP.REQUIRED_INFO' | transloco: { requiredAverage: required() })">check_circle</mat-icon>
+} @else {
+   <mat-icon class="check-icon"
+   [matTooltip]="('AVERAGES.YEAR_AVERAGES.STATE_SCHOLARSHIP_TOOLTIP.ENTITLED' | transloco) + ' ' + ('AVERAGES.YEAR_AVERAGES.STATE_SCHOLARSHIP_TOOLTIP.REQUIRED_INFO' | transloco: { requiredAverage: required() })">check_circle</mat-icon>
+}

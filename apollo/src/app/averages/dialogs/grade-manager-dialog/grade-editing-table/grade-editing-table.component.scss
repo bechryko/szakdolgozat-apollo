@@ -1,3 +1,23 @@
+@use 'styles/colors';
 @use 'styles/table-style';
 
-@include table-style.semesterTable;
+@include table-style.inputTable;
+
+table {
+   width: 57rem;
+}
+
+.input-table-footer {
+   justify-content: space-between;
+   padding: 0 1rem;
+}
+
+.subject-select {
+   max-width: 20rem;
+   padding: 0.5rem;
+   border-radius: 0.5rem;
+
+   &:focus {
+      outline: 2px solid colors.$primary-main;
+   }
+}

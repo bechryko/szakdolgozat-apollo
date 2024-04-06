@@ -1,5 +1,5 @@
-@use '../../../styles/colors';
-@use '../../../styles/variables' as *;
+@use 'styles/colors';
+@use 'styles/variables' as *;
 
 .header-container {
    background-color: colors.$primary-main;
@@ -9,18 +9,37 @@
    height: $header-height;
 }
 
+@mixin menu-button {
+   height: $header-height;
+   font-size: 1.5rem;
+   width: 15%;
+   transition: background-color 0.3s ease-in-out;
+   border-radius: 0;
+
+   &.selected {
+      background-color: colors.$primary-darker;
+   }
+}
+
 nav {
    display: flex;
-   width: 40%;
    
    button {
       flex: 1;
-      height: $header-height;
-      font-size: 1.5rem;
+      @include menu-button;
    }
 }
 
 .title-button {
    user-select: none;
    cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   @include menu-button;
+
+   h1 {
+      margin: 0;
+   }
 }

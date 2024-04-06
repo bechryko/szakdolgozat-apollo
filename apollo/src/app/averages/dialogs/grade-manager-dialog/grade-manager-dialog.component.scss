@@ -1,7 +1,8 @@
 @use '../../../../styles/colors';
 
 .grade-manager-dialog-container {
-   height: 80vh;
+   height: 80dvh;
+   width: 70vw;
    background-color: colors.$primary-background;
    padding: 2.5rem;
    display: flex;

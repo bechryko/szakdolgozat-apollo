@@ -1,7 +1,9 @@
 <apo-header></apo-header>
 <div class="content">
-   <apo-sidebar></apo-sidebar>
-   <main>
+   @if(!isAdminPage()) {
+      <apo-sidebar></apo-sidebar>
+   }
+   <main [class.show-scrollbar]="isAdminPage()">
       <router-outlet></router-outlet>
    </main>
 </div>

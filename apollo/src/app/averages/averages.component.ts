@@ -7,14 +7,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { ActivatedRoute } from '@angular/router';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
+import { UniversityMajor } from '@apollo/shared/models';
 import { UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { isEqual } from 'lodash';
 import { NgLetModule } from 'ng-let';
 import { Observable, map, tap } from 'rxjs';
 import { AlternativeGradesDialogComponent, AlternativeGradesDialogData, AlternativeGradesDialogOutputData, GradeManagerDialogComponent, GradeManagerDialogData } from './dialogs';
-import { AveragesDisplayerComponent, MultiAveragesDisplayerComponent } from './displayers';
+import { MultiAveragesDisplayerComponent } from './displayers';
 import { Grade, GradesCompletionYear } from './models';
 import { AveragesService } from './services';
 
@@ -24,7 +26,6 @@ import { AveragesService } from './services';
    imports: [
       AsyncPipe,
       NgLetModule,
-      AveragesDisplayerComponent,
       MultiAveragesDisplayerComponent,
       MatFormFieldModule,
       MatSelectModule,
@@ -43,13 +44,17 @@ export class AveragesComponent {
    public readonly allGrades: Signal<Grade[][] | undefined>;
    private readonly selectedYearId: WritableSignal<string | undefined>;
    public readonly selectedYear: Signal<GradesCompletionYear | undefined>;
+
    public readonly singleYearViewMode: WritableSignal<boolean>;
+
    public readonly isUserLoggedOut$: Observable<boolean>;
+   public readonly userMajor: Signal<UniversityMajor | null>;
    
    constructor(
       private readonly averagesService: AveragesService,
       private readonly dialog: MatDialog,
-      private readonly userService: UserService
+      private readonly userService: UserService,
+      private readonly activatedRoute: ActivatedRoute
    ) {
       this.selectedYearId = signal(undefined);
       this.averages = toSignal(this.averagesService.grades$.pipe(
@@ -102,6 +107,10 @@ export class AveragesComponent {
       this.isUserLoggedOut$ = this.userService.isUserLoggedIn$.pipe(
          map(isLoggedIn => !isLoggedIn)
       );
+
+      this.userMajor = toSignal(this.activatedRoute.data.pipe(
+         map(({ userMajor }) => userMajor)
+      ));
    }
 
    public toggleViewMode(): void {

@@ -1,0 +1,18 @@
+@use 'styles/colors';
+
+mat-icon {
+   position: relative;
+   top: -0.15rem;
+}
+
+.error-icon {
+   color: colors.$error;
+}
+
+.warning-icon {
+   color: colors.$warning;
+}
+
+.check-icon {
+   color: colors.$success;
+}

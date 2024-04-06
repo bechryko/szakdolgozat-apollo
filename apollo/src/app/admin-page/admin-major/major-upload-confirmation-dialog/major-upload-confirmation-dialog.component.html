@@ -1,0 +1,27 @@
+<div class="major-upload-confirmation-dialog-container">
+   <h2>{{ "ADMINISTRATION.MAJOR_UPLOAD_DIALOG.TITLE" | transloco }}</h2>
+   <p>{{ "ADMINISTRATION.MAJOR_UPLOAD_DIALOG.DESCRIPTION" | transloco }}</p>
+   @for(group of data.majorGroups; track $index) {
+      <mat-expansion-panel class="mat-expansion-panel"
+         *ngLet="group.subjects | getSubjects: data.subjects as wholeSubjects">
+         <mat-expansion-panel-header class="mat-expansion-panel-header">
+            <mat-panel-title>
+               <h3>{{ group.name }}</h3>
+            </mat-panel-title>
+            <mat-panel-description>
+               <p>
+                  {{ "ADMINISTRATION.MAJOR_DETAILS.CREDIT_REQUIREMENT_DESCRIPTION" | transloco: { credit: group.creditRequirement} }}
+               </p>
+            </mat-panel-description>
+         </mat-expansion-panel-header>
+         @for(subject of wholeSubjects; track $index) {
+            <div class="list-item">{{ subject.name }} ({{ subject.code }})</div>
+         }
+      </mat-expansion-panel>
+   }
+   <div class="actions">
+      <button mat-raised-button
+         color="primary"
+         (click)="onConfirm()">{{ "GENERAL_DIALOG.ACCEPT" | transloco }}</button>
+   </div>
+</div>

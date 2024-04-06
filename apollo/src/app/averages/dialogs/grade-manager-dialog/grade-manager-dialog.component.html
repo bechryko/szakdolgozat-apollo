@@ -16,9 +16,11 @@
    <div class="semester-tables">
       <apo-grade-editing-table
          titleKey="AVERAGES.YEAR_AVERAGES.FIRST_SEMESTER.LABEL"
+         [universitySubjects]="universitySubjects()"
          [grades]="selectedYear()!.firstSemesterGrades"></apo-grade-editing-table>
       <apo-grade-editing-table
          titleKey="AVERAGES.YEAR_AVERAGES.SECOND_SEMESTER.LABEL"
+         [universitySubjects]="universitySubjects()"
          [grades]="selectedYear()!.secondSemesterGrades"></apo-grade-editing-table>
    </div>
    <button mat-raised-button
