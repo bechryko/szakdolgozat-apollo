@@ -10,4 +10,5 @@ export interface UniversityMajor {
    subjectGroups: UniversityMajorSubjectGroup[];
    scholarships?: UniversityScholarshipYear[];
    specializations?: UniversitySpecialization[];
+   stateScholarshipRequiredAverage?: number;
 }

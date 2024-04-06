@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, Component, Inject, Signal, computed } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, Inject, Signal, computed, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { UniversityMajor } from '@apollo/shared/models';
 import { CurrencyPipe } from '@apollo/shared/pipes';
-import { UniversitiesService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { NgLetModule } from 'ng-let';
 import { ScholarshipCalculationResult } from './models';
@@ -14,7 +12,7 @@ import { ScholarshipCalculationUtils } from './scholarship-calculation.utils';
 interface ScholarshipCalculationDialogData {
    adjustedCreditIndex: number;
    alternativeAdjustedCreditIndex: number | null;
-   majorId: string;
+   major: UniversityMajor;
    isFirstSemester: boolean;
 }
 
@@ -45,11 +43,10 @@ export class ScholarshipCalculationDialogComponent {
 
    constructor(
       private readonly dialogRef: MatDialogRef<ScholarshipCalculationDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: ScholarshipCalculationDialogData,
-      private readonly universitiesService: UniversitiesService
+      @Inject(MAT_DIALOG_DATA) public data: ScholarshipCalculationDialogData
    ) {
-      this.major = toSignal(this.universitiesService.getMajor(data.majorId));
-
+      this.major = signal(data.major);
+      
       this.averageScholarship = computed(() => {
          const major = this.major();
          if(!major?.scholarships) {

@@ -77,8 +77,13 @@ export class AdminUniversityComponent {
                
                this.universitiesService.getMajorsForUniversity(university.id).pipe(
                   takeUntilDestroyed()
-               ).subscribe(subjects => {
-                  this.universityMajors.set(cloneDeep(subjects));
+               ).subscribe(majors => {
+                  this.universityMajors.set(cloneDeep(majors));
+                  this.universityMajors()!.forEach(major => {
+                     if(!major.stateScholarshipRequiredAverage) {
+                        major.stateScholarshipRequiredAverage = undefined;
+                     }
+                  });
                   this.selectedUniversityMajor.set(this.universityMajors()!.find(s => s.id === this.selectedUniversityMajor()?.id));
                });
             }

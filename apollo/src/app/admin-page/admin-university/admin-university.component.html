@@ -105,6 +105,12 @@
                         }
                      </mat-select>
                   </mat-form-field>
+                  <mat-form-field>
+                     <mat-label>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.STATE_SCHOLARSHIP_LABEL" | transloco }}</mat-label>
+                     <input matInput
+                        type="number"
+                        [(ngModel)]="selectedMajor.stateScholarshipRequiredAverage">
+                  </mat-form-field>
                   <div class="actions">
                      <button mat-raised-button
                         color="warn"

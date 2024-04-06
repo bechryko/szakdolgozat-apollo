@@ -1,6 +1,6 @@
 import { UniversityScholarshipData } from "@apollo/shared/models";
 import { mean } from "lodash";
-import { IntervalScholarshipData, ScholarshipCalculationResult } from "./models";
+import { ScholarshipCalculationResult, ScholarshipDataInterval } from "./models";
 
 export class ScholarshipCalculationUtils {
    public static calculateAverageScholarship(average: number, scholarshipDatas: UniversityScholarshipData[][]): ScholarshipCalculationResult {
@@ -49,14 +49,14 @@ export class ScholarshipCalculationUtils {
          const intervalData = this.getIntervalScholarshipData(scholarshipData);
 
          for (const interval of intervalData) {
-            if(average >= interval.lowerBound && average < interval.upperBound) {
+            if(average >= interval.lowerBoundAdjustedCreditIndex && average < interval.upperBoundAdjustedCreditIndex) {
                scholarshipInEachYear.push(interval.scholarshipAmount);
                return;
             }
          }
 
          scholarshipInEachYear.push(null);
-         const belowLowestInterval = average < intervalData[0].lowerBound;
+         const belowLowestInterval = average < intervalData[0].lowerBoundAdjustedCreditIndex;
          didNotRecieveScholarship ||= belowLowestInterval;
          didBetterThanTheBest ||= !belowLowestInterval;
       });
@@ -84,26 +84,26 @@ export class ScholarshipCalculationUtils {
       return closestData;
    }
 
-   private static getIntervalScholarshipData(scholarshipData: UniversityScholarshipData[]): IntervalScholarshipData[] {
-      const intervalScholarshipData: IntervalScholarshipData[] = [];
+   private static getIntervalScholarshipData(scholarshipData: UniversityScholarshipData[]): ScholarshipDataInterval[] {
+      const intervalScholarshipData: ScholarshipDataInterval[] = [];
 
       scholarshipData.forEach((data, index) => {
          const previousData = scholarshipData[index - 1];
          const nextData = scholarshipData[index + 1];
 
-         let lowerBound = previousData
+         let lowerBoundAdjustedCreditIndex = previousData
             ? (data.adjustedCreditIndex * data.peopleEligible + previousData.adjustedCreditIndex * previousData.peopleEligible) / (data.peopleEligible + previousData.peopleEligible)
             : undefined;
-         let upperBound = nextData
+         let upperBoundAdjustedCreditIndex = nextData
             ? (data.adjustedCreditIndex * data.peopleEligible + nextData.adjustedCreditIndex * nextData.peopleEligible) / (data.peopleEligible + nextData.peopleEligible)
             : undefined;
-         lowerBound ??= data.adjustedCreditIndex * 2 - upperBound!;
-         upperBound ??= data.adjustedCreditIndex * 2 - lowerBound!;
+         lowerBoundAdjustedCreditIndex ??= data.adjustedCreditIndex * 2 - upperBoundAdjustedCreditIndex!;
+         upperBoundAdjustedCreditIndex ??= data.adjustedCreditIndex * 2 - lowerBoundAdjustedCreditIndex!;
 
          intervalScholarshipData.push({
             scholarshipAmount: data.scholarshipAmount,
-            lowerBound,
-            upperBound
+            lowerBoundAdjustedCreditIndex,
+            upperBoundAdjustedCreditIndex
          });
       });
 

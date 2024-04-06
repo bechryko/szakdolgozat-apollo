@@ -1,3 +1,4 @@
+@use 'styles/colors';
 @use '../displayer-style';
 
 .year-averages-container {
@@ -10,4 +11,24 @@
 
 .alternatives-button {
    float: right;
+}
+
+.weighted-average-container {
+   position: relative;
+   
+   .state-scholarship-data-container {
+      position: absolute;
+      top: -2px;
+      margin-left: 1rem;
+
+      .alternative-arrow {
+         position: relative;
+         top: -0.15rem;
+         color: colors.$alternative-font-color;
+      }
+
+      .no-data-icon {
+         color: colors.$disabled;
+      }
+   }
 }

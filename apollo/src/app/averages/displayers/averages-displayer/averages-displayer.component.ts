@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, Signal, WritableSignal, computed, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, Input, Signal, WritableSignal, computed, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { ApolloUser } from '@apollo/shared/models';
+import { UniversityMajor } from '@apollo/shared/models';
 import { DisplayValuePipe } from '@apollo/shared/pipes';
-import { UserService } from '@apollo/shared/services';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { ScholarshipCalculationDialogComponent } from '../../dialogs';
 import { AlternativeGrade, Grade } from '../../models';
@@ -26,6 +24,7 @@ import { AverageCalculatorUtils } from '../../utils';
 })
 export class AveragesDisplayerComponent {
    @Input() public title: string = "";
+   public readonly userMajor = input.required<UniversityMajor | null>();
 
    @Input() set gradeData(value: Grade[]) {
       this.grades.set(value);
@@ -46,11 +45,9 @@ export class AveragesDisplayerComponent {
    public readonly alternativeAdjustedCreditIndex: Signal<number | null>;
 
    @Input() public isFirstSemester!: boolean;
-   public readonly user: Signal<ApolloUser | null | undefined>;
 
    constructor(
-      private readonly dialog: MatDialog,
-      private readonly userService: UserService
+      private readonly dialog: MatDialog
    ) {
       this.grades = signal([]);
       this.weightedAverage = computed(() => AverageCalculatorUtils.calculateWeightedAverage(this.grades()));
@@ -91,8 +88,6 @@ export class AveragesDisplayerComponent {
          const index = AverageCalculatorUtils.calculateAdjustedCreditIndex(alternatives);
          return index === this.adjustedCreditIndex() ? null : index;
       });
-
-      this.user = toSignal(this.userService.user$);
    }
 
    public calculateScholarship(): void {
@@ -100,7 +95,7 @@ export class AveragesDisplayerComponent {
          data: {
             adjustedCreditIndex: this.adjustedCreditIndex(),
             alternativeAdjustedCreditIndex: this.alternativeAdjustedCreditIndex(),
-            majorId: this.user()!.major,
+            major: this.userMajor()!,
             isFirstSemester: this.isFirstSemester
          }
       });

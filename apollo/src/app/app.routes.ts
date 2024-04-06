@@ -7,6 +7,7 @@ import { AdminUniversityComponent } from './admin-page/admin-university';
 import { majorRouteParam, universityRouteParam } from './admin-page/constants';
 import { majorResolver, universityResolver } from './admin-page/resolvers';
 import { AveragesComponent } from './averages/averages.component';
+import { userMajorResolver } from './averages/resolvers';
 import { averagesFeature } from './averages/store';
 import { MenuComponent } from './menu/menu.component';
 import { MenuEffects, menuFeature } from './menu/store';
@@ -48,7 +49,10 @@ export const routes: Routes = [
       component: AveragesComponent,
       providers: [
          provideState(averagesFeature)
-      ]
+      ],
+      resolve: {
+         userMajor: userMajorResolver
+      }
    },
    {
       path: RouteUrls.ADMINISTRATION,
