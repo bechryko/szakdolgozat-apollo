@@ -1,27 +1,28 @@
+import { round } from "lodash";
 import { Grade, GradesCompletionYear } from "../models";
 
 export class AverageCalculatorUtils {
    public static calculateWeightedAverage(grades: Grade[]): number {
       const totalCredits = this.sumCredits(grades);
       const totalWeightedGrades = grades.reduce((acc, grade) => acc + (grade.rating * grade.credit), 0);
-      return this.round(totalWeightedGrades / totalCredits);
+      return round(totalWeightedGrades / totalCredits, 3);
    }
 
    public static sumCredits(grades: Grade[]): number {
       return grades.reduce((acc, grade) => acc + grade.credit, 0);
    }
 
-   public static calculateCreditIndex(grades: Grade[]): number {
-      return this.round(this.calculateUnroundedCreditIndex(grades));
+   public static calculateCreditIndex(grades: Grade[], semesterNumber = 1): number {
+      return round(this.calculateUnroundedCreditIndex(grades, semesterNumber), 3);
    }
 
-   private static calculateUnroundedCreditIndex(grades: Grade[]): number {
+   private static calculateUnroundedCreditIndex(grades: Grade[], semesterNumber: number): number {
       const totalWeightedGrades = grades.reduce((acc, grade) => acc + (grade.rating * grade.credit), 0);
-      return totalWeightedGrades / 30;
+      return totalWeightedGrades / (30 * semesterNumber);
    }
 
-   public static calculateAdjustedCreditIndex(grades: Grade[]): number {
-      return this.round(this.calculateUnroundedCreditIndex(grades) * this.calculateAdjustmentFactor(grades));
+   public static calculateAdjustedCreditIndex(grades: Grade[], semesterNumber = 1): number {
+      return round(this.calculateUnroundedCreditIndex(grades, semesterNumber) * this.calculateAdjustmentFactor(grades), 3);
    }
 
    private static calculateAdjustmentFactor(grades: Grade[]): number {
@@ -31,21 +32,24 @@ export class AverageCalculatorUtils {
    }
 
    public static calculateAverage(...numbers: number[]): number {
-      return this.round(numbers.reduce((acc, number) => acc + number, 0) / numbers.length);
-   }
-
-   private static round(number: number, precision = 3): number {
-      const factor = Math.pow(10, precision);
-      return Math.round(number * factor) / factor;
+      return round(numbers.reduce((acc, number) => acc + number, 0) / numbers.length, 3);
    }
 
    public static calculateCreditIndexForMultipleYears(years: GradesCompletionYear[]): number {
-      const grades = years.flatMap(year => year.firstSemesterGrades.concat(year.secondSemesterGrades));
-      return this.calculateCreditIndex(grades); // TODO: is it the correct calculation method?
+      let semesterNumber = 0;
+      const grades = years.flatMap(year => {
+         semesterNumber += Number(year.firstSemesterGrades.length > 0) + Number(year.secondSemesterGrades.length > 0);
+         return year.firstSemesterGrades.concat(year.secondSemesterGrades);
+      });
+      return this.calculateCreditIndex(grades, semesterNumber);
    }
 
    public static calculateAdjustedCreditIndexForMultipleYears(years: GradesCompletionYear[]): number {
-      const grades = years.flatMap(year => year.firstSemesterGrades.concat(year.secondSemesterGrades));
-      return this.calculateAdjustedCreditIndex(grades); // TODO: is it the correct calculation method?
+      let semesterNumber = 0;
+      const grades = years.flatMap(year => {
+         semesterNumber += Number(year.firstSemesterGrades.length > 0) + Number(year.secondSemesterGrades.length > 0);
+         return year.firstSemesterGrades.concat(year.secondSemesterGrades);
+      });
+      return this.calculateAdjustedCreditIndex(grades, semesterNumber);
    }
 }

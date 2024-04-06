@@ -14,7 +14,7 @@ import { isEqual } from 'lodash';
 import { NgLetModule } from 'ng-let';
 import { Observable, map, tap } from 'rxjs';
 import { AlternativeGradesDialogComponent, AlternativeGradesDialogData, AlternativeGradesDialogOutputData, GradeManagerDialogComponent, GradeManagerDialogData } from './dialogs';
-import { AveragesDisplayerComponent, MultiAveragesDisplayerComponent } from './displayers';
+import { MultiAveragesDisplayerComponent } from './displayers';
 import { Grade, GradesCompletionYear } from './models';
 import { AveragesService } from './services';
 
@@ -24,7 +24,6 @@ import { AveragesService } from './services';
    imports: [
       AsyncPipe,
       NgLetModule,
-      AveragesDisplayerComponent,
       MultiAveragesDisplayerComponent,
       MatFormFieldModule,
       MatSelectModule,
