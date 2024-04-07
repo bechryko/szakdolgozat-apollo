@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { isEqual } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { Observable, distinctUntilChanged, filter, map, tap } from 'rxjs';
-import { UniversityCompletionYear } from '../models';
+import { UniversityCompletionYear, UniversitySubject, UniversitySubjectCompletion } from '../models';
 import { multicast } from '../operators';
 import { completionsActions, coreFeature } from '../store';
 
@@ -29,7 +29,28 @@ export class CompletionsService {
    }
 
    public saveUniversityCompletions(completions: UniversityCompletionYear[]): void {
+      completions = cloneDeep(completions);
+
+      const unassignedCompletionsCollector = completions.find(completion => completion.isUnassignedCompletionsCollector);
+      if(unassignedCompletionsCollector) {
+         const allOtherYears = completions.filter(completion => !completion.isUnassignedCompletionsCollector);
+         const allCompletions = allOtherYears.reduce((acc, completion) => [...acc, ...completion.firstSemester, ...completion.secondSemester], [] as UniversitySubjectCompletion[]);
+         unassignedCompletionsCollector.firstSemester.forEach((unassignedCompletion, idx) => {
+            if(allCompletions.some(completion => completion.code === unassignedCompletion.code)) {
+               unassignedCompletionsCollector.firstSemester.splice(idx, 1);
+            }
+         });
+
+         if(unassignedCompletionsCollector.firstSemester.length === 0) {
+            completions = completions.filter(completion => !completion.isUnassignedCompletionsCollector);
+         }
+      }
+
       this.store.dispatch(completionsActions.saveCompletions({ completions }));
+   }
+
+   public completeSubject(subject: UniversitySubject): void {
+      this.store.dispatch(completionsActions.completeSubject({ subject }));
    }
 
    public deleteGuestData(): void {

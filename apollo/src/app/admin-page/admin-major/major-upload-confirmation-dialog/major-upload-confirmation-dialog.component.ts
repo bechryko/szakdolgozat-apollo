@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { UniversityMajorSubjectGroup, UniversitySubject } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
-import { GetSubjectsPipe } from '../../pipes';
+import { GetSubjectsPipe } from '@apollo/shared/pipes';
 
 interface MajorUploadConfirmationDialogComponentData {
    majorGroups: UniversityMajorSubjectGroup[];

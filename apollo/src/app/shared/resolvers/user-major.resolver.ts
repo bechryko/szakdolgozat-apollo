@@ -1,8 +1,8 @@
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
-import { UniversityMajor } from "@apollo/shared/models";
-import { UniversitiesService, UserService } from "@apollo/shared/services";
 import { catchError, map, of, switchMap } from "rxjs";
+import { UniversityMajor } from "../models";
+import { UniversitiesService, UserService } from "../services";
 
 export const userMajorResolver: ResolveFn<UniversityMajor | null> = () => {
    const userService = inject(UserService);
