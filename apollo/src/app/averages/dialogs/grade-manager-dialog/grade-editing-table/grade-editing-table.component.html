@@ -11,10 +11,19 @@
                [(ngModel)]="grades[idx].name">
          </td>
       </ng-container>
+      <ng-container matColumnDef="code">
+         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.CODE" | transloco }}</th>
+         <td mat-cell *matCellDef="let idx = index">
+            <input class="table-cell-input medium-column"
+               [placeholder]="'AVERAGES.DIALOGS.CODE_INPUT_PLACEHOLDER' | transloco"
+               [(ngModel)]="grades[idx].code">
+         </td>
+      </ng-container>
       <ng-container matColumnDef="rating">
          <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.RATING" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index">
             <input class="table-cell-input"
+               type="number"
                [(ngModel)]="grades[idx].rating">
          </td>
       </ng-container>
@@ -22,6 +31,7 @@
          <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.CREDIT" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index">
             <input class="table-cell-input"
+               type="number"
                [(ngModel)]="grades[idx].credit">
          </td>
       </ng-container>

@@ -7,7 +7,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTable } from '@angular/material/table';
 import { Grade, GradesCompletionYear } from '@apollo/averages/models';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
-import { numberize } from '@apollo/shared/functions';
 import { UniversitySubject } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { UniversitiesService, UserService } from '@apollo/shared/services';
@@ -92,15 +91,8 @@ export class GradeManagerDialogComponent {
    }
 
    public save(): void {
-      const years = this.years();
-
-      years.forEach(year => {
-         year.firstSemesterGrades = year.firstSemesterGrades.map(grade => numberize<Grade>(grade, 'name'));
-         year.secondSemesterGrades = year.secondSemesterGrades.map(grade => numberize<Grade>(grade, 'name'));
-      });
-
       this.dialogRef.close({
-         years,
+         years: this.years(),
          selectedYearId: this.selectedYear()!.id
       });
    }

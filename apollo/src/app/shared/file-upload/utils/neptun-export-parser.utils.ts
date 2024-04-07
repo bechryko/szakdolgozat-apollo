@@ -11,16 +11,22 @@ export class NeptunExportParserUtils {
    private static SPECIAL_CHARACTER_REGEXP = /[$&+,:;=?@#|'<>.^*()%!-]/;
 
    public static parseSemesterGrades(exported: string): Grade[] {
-      const table = this.splitIntoTable(exported);
+      const table = this.splitIntoTable(exported, {
+         doNotFilterEmptyCells: true,
+         maxColumnNumber: 8,
+         headerRows: 1
+      });
       
       const grades: Grade[] = [];
       table.forEach(row => {
          if(row.length < 6) {
             return;
          }
+
+         const code = row[0];
          const name = this.trimSpecialCharacters(row[1].split(',')[0]);
          const credit = Number(row[2]);
-         const ratings = row[5].match(/(\d)/);
+         const ratings = row[7].match(/(\d)/);
          if(!ratings?.length) {
             return;
          }
@@ -30,7 +36,7 @@ export class NeptunExportParserUtils {
             return;
          }
 
-         grades.push({ name, credit, rating });
+         grades.push({ name, code, credit, rating });
       });
 
       return grades;
