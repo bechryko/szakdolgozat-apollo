@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header';
 import { LanguageService } from './shared/languages';
+import { ApolloCommonModule } from './shared/modules';
 import { RouterService } from './shared/services';
 import { SidebarComponent } from './shared/sidebar';
 
@@ -11,7 +11,7 @@ import { SidebarComponent } from './shared/sidebar';
    selector: 'apo-root',
    standalone: true,
    imports: [
-      CommonModule,
+      ApolloCommonModule,
       RouterOutlet,
       HeaderComponent,
       SidebarComponent

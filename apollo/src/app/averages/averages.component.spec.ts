@@ -52,7 +52,7 @@ describe('AveragesComponent', () => {
 
    function activatedRouteFactory() {
       return {
-         data: new BehaviorSubject(null)
+         data: new BehaviorSubject({ userMajor: null })
       };
    }
 

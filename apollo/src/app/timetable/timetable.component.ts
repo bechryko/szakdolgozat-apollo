@@ -1,11 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Signal, ViewChild, WritableSignal, computed, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { UserService } from '@apollo/shared/services';
-import { TranslocoPipe } from '@ngneat/transloco';
 import { Observable, fromEvent, map, startWith } from 'rxjs';
 import { ActivityStylePipe } from './activity/activity-style.pipe';
 import { ActivityComponent } from './activity/activity.component';
@@ -19,12 +16,9 @@ import { TimetableSplitUtils, TimetableUtils } from './utils';
    selector: 'apo-timetable',
    standalone: true,
    imports: [
-      CommonModule,
-      TranslocoPipe,
-      MatButtonModule,
+      ApolloCommonModule,
       ActivityComponent,
-      ActivityStylePipe,
-      MatIconModule
+      ActivityStylePipe
    ],
    templateUrl: './timetable.component.html',
    styleUrl: './timetable.component.scss',

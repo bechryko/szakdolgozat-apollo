@@ -1,8 +1,7 @@
-import { CommonModule, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Signal, WritableSignal, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -15,11 +14,11 @@ import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { FileUploadComponent, FileUploadDataConfirmationDialogComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
 import { RawUniversitySubject, University, UniversityMajor, UniversityMajorSubjectGroup, UniversityMajorSubjectGroupSubject, UniversityScholarshipYear, UniversitySpecialization, UniversitySpecializationSubjectGroup, UniversitySubject } from '@apollo/shared/models';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { CurrencyPipe } from '@apollo/shared/pipes';
 import { UniversitiesService } from '@apollo/shared/services';
-import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
-import { NgLetModule } from 'ng-let';
 import { filter, map, take } from 'rxjs';
 import { CreditSumPipe, GetSubjectsPipe } from '../pipes';
 import { UniversityScholarshipData } from './../../shared/models/university-scholarship-year.d';
@@ -29,10 +28,7 @@ import { MajorUploadConfirmationDialogComponent } from './major-upload-confirmat
    selector: 'apo-admin-major',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      CommonModule,
-      NgLetModule,
-      MatButtonModule,
+      ApolloCommonModule,
       MatFormFieldModule,
       MatInputModule,
       MatTabsModule,

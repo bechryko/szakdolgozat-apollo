@@ -1,19 +1,15 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { UniversityMajor } from '@apollo/shared/models';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { UserService } from '@apollo/shared/services';
-import { TranslocoPipe } from '@ngneat/transloco';
 import { isEqual } from 'lodash';
-import { NgLetModule } from 'ng-let';
 import { Observable, map, tap } from 'rxjs';
 import { AlternativeGradesDialogComponent, AlternativeGradesDialogData, AlternativeGradesDialogOutputData, GradeManagerDialogComponent, GradeManagerDialogData } from './dialogs';
 import { MultiAveragesDisplayerComponent } from './displayers';
@@ -24,15 +20,11 @@ import { AveragesService } from './services';
    selector: 'apo-averages',
    standalone: true,
    imports: [
-      AsyncPipe,
-      NgLetModule,
+      ApolloCommonModule,
       MultiAveragesDisplayerComponent,
       MatFormFieldModule,
       MatSelectModule,
       FormsModule,
-      TranslocoPipe,
-      MatButtonModule,
-      MatIconModule,
       GeneralInputDialogComponent
    ],
    templateUrl: './averages.component.html',

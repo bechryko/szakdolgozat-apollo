@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, Signal, WritableSignal, computed, input, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
 import { UniversityMajor } from '@apollo/shared/models';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { DisplayValuePipe } from '@apollo/shared/pipes';
-import { TranslocoPipe } from '@ngneat/transloco';
 import { ScholarshipCalculationDialogComponent } from '../../dialogs';
 import { AlternativeGrade, Grade } from '../../models';
 import { AverageCalculatorUtils } from '../../utils';
@@ -13,9 +11,7 @@ import { AverageCalculatorUtils } from '../../utils';
    selector: 'apo-averages-displayer',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      MatButtonModule,
-      MatIconModule,
+      ApolloCommonModule,
       DisplayValuePipe
    ],
    templateUrl: './averages-displayer.component.html',

@@ -1,7 +1,5 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,8 +7,8 @@ import { MatTable, MatTableModule } from '@angular/material/table';
 import { RouteUrls } from '@apollo/app.routes';
 import { LanguageLabelKeyPipe, MultiLanguage, MultiLanguagePipe, languages } from '@apollo/shared/languages';
 import { University } from '@apollo/shared/models';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { RouterService, UniversitiesService } from '@apollo/shared/services';
-import { TranslocoPipe } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { Observable, tap } from 'rxjs';
 
@@ -18,14 +16,12 @@ import { Observable, tap } from 'rxjs';
    selector: 'apo-admin-page',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      AsyncPipe,
+      ApolloCommonModule,
       MultiLanguagePipe,
       MatExpansionModule,
       MatFormFieldModule,
       MatInputModule,
       MatTableModule,
-      MatButtonModule,
       LanguageLabelKeyPipe,
       FormsModule
    ],

@@ -1,15 +1,13 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { GeneralDialogConfig } from '../general-dialog-config';
 
 @Component({
    selector: 'apo-general-dialog',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      MatButtonModule
+      ApolloCommonModule
    ],
    templateUrl: './general-dialog.component.html',
    styleUrl: './general-dialog.component.scss',

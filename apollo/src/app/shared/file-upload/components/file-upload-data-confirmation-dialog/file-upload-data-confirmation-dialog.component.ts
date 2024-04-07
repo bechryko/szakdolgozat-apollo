@@ -1,17 +1,15 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { FileUploadDataConfirmationDialogData } from './file-upload-data-confirmation-dialog-data';
 
 @Component({
    selector: 'apo-file-upload-data-confirmation-dialog',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      MatTableModule,
-      MatButtonModule
+      ApolloCommonModule,
+      MatTableModule
    ],
    templateUrl: './file-upload-data-confirmation-dialog.component.html',
    styleUrl: './file-upload-data-confirmation-dialog.component.scss',

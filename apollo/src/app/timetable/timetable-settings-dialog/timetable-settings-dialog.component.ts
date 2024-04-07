@@ -1,7 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,8 +8,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { numberize } from '@apollo/shared/functions';
 import { GeneralDialogService } from '@apollo/shared/general-dialog';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { SnackBarService } from '@apollo/shared/services';
-import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { ColorPickerModule, ColorPickerService } from 'ngx-color-picker';
 import { Semester } from '../models';
@@ -23,13 +22,11 @@ import { TimetableSettingsFormsUtils } from './timetable-settings-forms.utils';
    selector: 'apo-timetable-settings-dialog',
    standalone: true,
    imports: [
-      CommonModule,
-      TranslocoPipe,
+      ApolloCommonModule,
       MatFormFieldModule,
       MatSelectModule,
       MatTabsModule,
       MatInputModule,
-      MatButtonModule,
       FormsModule,
       ReactiveFormsModule,
       ColorPickerModule,

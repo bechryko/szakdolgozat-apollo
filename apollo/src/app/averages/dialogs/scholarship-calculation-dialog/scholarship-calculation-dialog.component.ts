@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, Signal, computed, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
 import { UniversityMajor } from '@apollo/shared/models';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { CurrencyPipe } from '@apollo/shared/pipes';
-import { TranslocoPipe } from '@ngneat/transloco';
-import { NgLetModule } from 'ng-let';
 import { ScholarshipCalculationResult } from './models';
 import { ScholarshipCalculationUtils } from './utils';
 
@@ -25,11 +22,8 @@ interface ScholarshipAmounts {
    selector: 'apo-scholarship-calculation-dialog',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      NgLetModule,
-      MatIconModule,
-      CurrencyPipe,
-      MatButtonModule
+      ApolloCommonModule,
+      CurrencyPipe
    ],
    templateUrl: './scholarship-calculation-dialog.component.html',
    styleUrl: './scholarship-calculation-dialog.component.scss',

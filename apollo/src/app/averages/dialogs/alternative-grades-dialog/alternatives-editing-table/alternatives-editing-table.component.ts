@@ -1,21 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { AlternativeGrade, Grade } from '@apollo/averages/models';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { CellStylePipe } from './cell-style.pipe';
 
 @Component({
    selector: 'apo-alternatives-editing-table',
    standalone: true,
    imports: [
-      CommonModule,
-      TranslocoPipe,
+      ApolloCommonModule,
       MatTableModule,
       FormsModule,
-      MatButtonModule,
       CellStylePipe
    ],
    templateUrl: './alternatives-editing-table.component.html',

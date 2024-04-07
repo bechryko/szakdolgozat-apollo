@@ -1,22 +1,14 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { RouteUrls } from '@apollo/app.routes';
-import { TranslocoPipe } from '@ngneat/transloco';
-import { NgLetModule } from 'ng-let';
 import { Observable, map } from 'rxjs';
+import { ApolloCommonModule } from '../modules';
 import { RouterService, UserService } from '../services';
 
 @Component({
    selector: 'apo-header',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      NgLetModule,
-      MatButtonModule,
-      MatIconModule,
-      AsyncPipe
+      ApolloCommonModule
    ],
    templateUrl: './header.component.html',
    styleUrl: './header.component.scss',

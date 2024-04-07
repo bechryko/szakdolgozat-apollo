@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { UniversityMajorSubjectGroup, UniversitySubject } from '@apollo/shared/models';
-import { TranslocoPipe } from '@ngneat/transloco';
-import { NgLetModule } from 'ng-let';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { GetSubjectsPipe } from '../../pipes';
 
 interface MajorUploadConfirmationDialogComponentData {
@@ -16,11 +14,9 @@ interface MajorUploadConfirmationDialogComponentData {
    selector: 'apo-major-upload-confirmation-dialog',
    standalone: true,
    imports: [
-      TranslocoPipe,
+      ApolloCommonModule,
       MatExpansionModule,
-      MatButtonModule,
-      GetSubjectsPipe,
-      NgLetModule
+      GetSubjectsPipe
    ],
    templateUrl: './major-upload-confirmation-dialog.component.html',
    styleUrl: './major-upload-confirmation-dialog.component.scss',

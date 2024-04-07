@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AlternativeGrade } from '@apollo/averages/models';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { cloneDeep } from 'lodash';
 import { AlternativeGradesDialogData, AlternativeGradesDialogOutputData } from './alternative-grades-dialog-data';
 import { AlternativesEditingTableComponent } from './alternatives-editing-table/alternatives-editing-table.component';
@@ -11,9 +10,8 @@ import { AlternativesEditingTableComponent } from './alternatives-editing-table/
    selector: 'apo-alternative-grades-dialog',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      AlternativesEditingTableComponent,
-      MatButtonModule
+      ApolloCommonModule,
+      AlternativesEditingTableComponent
    ],
    templateUrl: './alternative-grades-dialog.component.html',
    styleUrl: './alternative-grades-dialog.component.scss',

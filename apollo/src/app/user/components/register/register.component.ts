@@ -1,10 +1,8 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { Observable, map, startWith } from 'rxjs';
 import { RegisterData } from '../../models';
 import { AuthFormsUtils } from '../../utils';
@@ -13,11 +11,9 @@ import { AuthFormsUtils } from '../../utils';
    selector: 'apo-register',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      AsyncPipe,
+      ApolloCommonModule,
       MatFormFieldModule,
       MatInputModule,
-      MatButtonModule,
       FormsModule,
       ReactiveFormsModule
    ],

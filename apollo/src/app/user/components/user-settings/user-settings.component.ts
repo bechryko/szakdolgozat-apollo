@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, Signal, WritableSignal, computed, effect, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,8 +8,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { deleteNullish } from '@apollo/shared/functions';
 import { LanguageSelectionComponent, MultiLanguagePipe } from '@apollo/shared/languages';
 import { ApolloUser, University, UniversityMajor } from '@apollo/shared/models';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { UniversitiesService } from '@apollo/shared/services';
-import { TranslocoPipe } from '@ngneat/transloco';
 import { startWith, take } from 'rxjs';
 import { AuthFormsUtils } from '../../utils';
 
@@ -18,13 +17,12 @@ import { AuthFormsUtils } from '../../utils';
    selector: 'apo-user-settings',
    standalone: true,
    imports: [
-      TranslocoPipe,
+      ApolloCommonModule,
       MatExpansionModule,
       FormsModule,
       ReactiveFormsModule,
       MatFormFieldModule,
       MatInputModule,
-      MatButtonModule,
       MatSelectModule,
       LanguageSelectionComponent,
       MultiLanguagePipe

@@ -1,21 +1,19 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, WritableSignal, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { FileUploadComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
 import { UniversitySubject } from '@apollo/shared/models';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { Grade } from '../../../models';
 
 @Component({
    selector: 'apo-grade-editing-table',
    standalone: true,
    imports: [
-      TranslocoPipe,
+      ApolloCommonModule,
       MatTableModule,
       FormsModule,
-      MatButtonModule,
       FileUploadComponent,
       MatSelectModule
    ],

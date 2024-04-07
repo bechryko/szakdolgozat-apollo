@@ -1,11 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Signal, WritableSignal, computed, input, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { UniversityMajor } from '@apollo/shared/models';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { DisplayValuePipe } from '@apollo/shared/pipes';
-import { TranslocoPipe } from '@ngneat/transloco';
-import { NgLetModule } from 'ng-let';
 import { AlternativeGrade, Grade, GradesCompletionYear } from '../../models';
 import { AverageCalculatorUtils } from '../../utils';
 import { AveragesDisplayerComponent } from '../averages-displayer';
@@ -15,14 +11,10 @@ import { StateScholarshipInformationIconComponent } from './state-scholarship-in
    selector: 'apo-multi-averages-displayer',
    standalone: true,
    imports: [
-      TranslocoPipe,
+      ApolloCommonModule,
       AveragesDisplayerComponent,
-      MatButtonModule,
-      NgLetModule,
-      MatIconModule,
       DisplayValuePipe,
-      StateScholarshipInformationIconComponent,
-      MatTooltipModule
+      StateScholarshipInformationIconComponent
    ],
    templateUrl: './multi-averages-displayer.component.html',
    styleUrl: './multi-averages-displayer.component.scss',

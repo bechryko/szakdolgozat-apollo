@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { languages } from '../constants/languages';
 import { LanguageService } from '../services/language.service';
 
@@ -8,7 +8,7 @@ import { LanguageService } from '../services/language.service';
    selector: 'apo-language-selection',
    standalone: true,
    imports: [
-      TranslocoPipe,
+      ApolloCommonModule,
       MatChipsModule
    ],
    templateUrl: './language-selection.component.html',

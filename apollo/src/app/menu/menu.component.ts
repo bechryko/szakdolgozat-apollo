@@ -1,7 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { concat } from 'lodash';
 import { Observable, combineLatest, map } from 'rxjs';
 import { MenuCard } from './models';
@@ -11,7 +11,7 @@ import { MenuCardsService } from './services';
    selector: 'apo-menu',
    standalone: true,
    imports: [
-      CommonModule,
+      ApolloCommonModule,
       MatCardModule,
       MultiLanguagePipe
    ],

@@ -1,8 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, Signal, ViewChildren, WritableSignal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -11,8 +9,8 @@ import { Grade, GradesCompletionYear } from '@apollo/averages/models';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { numberize } from '@apollo/shared/functions';
 import { UniversitySubject } from '@apollo/shared/models';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { UniversitiesService, UserService } from '@apollo/shared/services';
-import { TranslocoPipe } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { EMPTY, startWith, switchMap } from 'rxjs';
 import { GradeEditingTableComponent } from './grade-editing-table/grade-editing-table.component';
@@ -22,12 +20,10 @@ import { GradeManagerDialogData } from './grade-manager-dialog-data';
    selector: 'apo-grade-manager-dialog',
    standalone: true,
    imports: [
-      CommonModule,
-      TranslocoPipe,
+      ApolloCommonModule,
       MatFormFieldModule,
       MatSelectModule,
       FormsModule,
-      MatButtonModule,
       GradeEditingTableComponent
    ],
    templateUrl: './grade-manager-dialog.component.html',

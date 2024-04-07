@@ -1,15 +1,11 @@
 import { ChangeDetectionStrategy, Component, Signal, computed, input } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 
 @Component({
    selector: 'apo-state-scholarship-information-icon',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      MatIconModule,
-      MatTooltipModule
+      ApolloCommonModule
    ],
    templateUrl: './state-scholarship-information-icon.component.html',
    styleUrl: './state-scholarship-information-icon.component.scss',

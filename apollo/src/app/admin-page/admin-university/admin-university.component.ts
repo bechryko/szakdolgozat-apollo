@@ -1,8 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Signal, WritableSignal, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,21 +14,18 @@ import { bypassFirebaseFreePlan } from '@apollo/shared/constants';
 import { FileUploadComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
 import { RawUniversitySubject, University, UniversityMajor, UniversitySubject } from '@apollo/shared/models';
+import { ApolloCommonModule } from '@apollo/shared/modules';
 import { RouterService, UniversitiesService } from '@apollo/shared/services';
-import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
-import { NgLetModule } from 'ng-let';
 import { filter, map } from 'rxjs';
 
 @Component({
    selector: 'apo-admin-university',
    standalone: true,
    imports: [
-      TranslocoPipe,
-      CommonModule,
-      NgLetModule,
+      ApolloCommonModule,
       MultiLanguagePipe,
-      MatButtonModule,
       MatTabsModule,
       FormsModule,
       MatFormFieldModule,
