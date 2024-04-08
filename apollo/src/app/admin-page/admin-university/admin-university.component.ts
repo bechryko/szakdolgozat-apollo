@@ -126,6 +126,7 @@ export class AdminUniversityComponent {
          name: this.transloco.translate("ADMINISTRATION.UNIVERSITY_DETAILS.NEW_MAJOR_NAME"),
          universityId: this.university()!.id,
          facultyId: -1,
+         creditRequirement: 0,
          subjectGroups: []
       };
       this.universityMajors.set([ ...this.universityMajors()!, newMajor ]);

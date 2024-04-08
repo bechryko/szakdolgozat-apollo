@@ -11,9 +11,19 @@ h3 {
    font-size: 1.75rem;
 }
 
-h4 {
+h4, .main-label {
    margin-top: 0;
    font-size: 1.75rem;
+}
+
+.main-label {
+   margin: 1rem;
+   margin-bottom: 3rem;
+
+   .credits-info {
+      font-weight: bold;
+      margin-right: 1rem;
+   }
 }
 
 .major-completion-data {

@@ -1,7 +1,11 @@
 <h2>{{ "MAJOR_COMPLETION.TITLE" | transloco }}</h2>
 <h3>{{ userMajor().name }}</h3>
-<div class="major-completion-data">
-   <h4>{{ "MAJOR_COMPLETION.MAJOR_SUBJECTS.TITLE" | transloco }}:</h4>
+<div class="major-completion-data"
+   *ngLet="userMajor() | missingCredits: userCompletions() as majorMissingCredits">
+   <p class="main-label">
+      <span class="credits-info">{{ "MAJOR_COMPLETION.MAJOR_CREDITS_LABEL" | transloco: { missingCredits: majorMissingCredits } }}</span>
+      {{ "MAJOR_COMPLETION.TOTAL_CREDITS" | transloco: { totalCredits: userMajor().creditRequirement } }}
+   </p>
    @for(group of userMajor().subjectGroups; track $index) {
       <div class="completion-group"
          *ngLet="group | missingCredits: userCompletions() as missingCredits">
@@ -36,7 +40,7 @@
 </div>
 <div class="major-specializations-data"
    *ngIf="userMajor().specializations as specializations">
-   <h4>{{ "MAJOR_COMPLETION.SPECIALIZATIONS.TITLE" | transloco }}:</h4>
+   <h4>{{ "MAJOR_COMPLETION.SPECIALIZATIONS_TITLE" | transloco }}:</h4>
    @for(specialization of specializations; track $index) {
       <mat-expansion-panel>
          <mat-expansion-panel-header>
