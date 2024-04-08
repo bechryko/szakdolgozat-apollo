@@ -1,0 +1,227 @@
+\documentclass[a4paper,12pt]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\def\magyarOptions{defaults=hu-min}
+\usepackage[magyar]{babel}
+\usepackage{amsthm, amssymb,amsmath,hyperref}
+\usepackage{enumerate, graphicx, xcolor}
+
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\counterwithout{figure}{section}
+\counterwithout{figure}{subsection}
+%\usepackage{pgf,tikz,float}
+%\usepackage{tikzlings}
+%\usepackage{tikzducks}
+%\usetikzlibrary{arrows}
+\usepackage[nobysame]{amsrefs}
+%\usepackage{amsmath}
+
+\usepackage{geometry}
+   \geometry{
+   a4paper,
+   total={160mm,247mm},
+   left=25mm,
+   top=25mm,
+}
+
+
+\newtheorem{theo}{tétel}[section]
+\newtheorem{defin}[theo]{definíció}
+\newtheorem{lemma}[theo]{lemma}
+\newtheorem{all}[theo]{állítás}
+\newtheorem{kov}[theo]{következmény}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theo]{definíció}
+
+\theoremstyle{remark}
+\newtheorem{megj}[theo]{megjegyzés}
+
+
+
+
+\date{today}
+
+\linespread{1.3}
+
+
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{center}
+   {\Large A dolgozat formai követelményei}   
+\end{center}
+
+\vspace{1 cm}
+
+{\bf Ajánlott oldalszám:}
+\begin{itemize}
+\item BSc szakdolgozat: 20-25 oldal, 
+\item MSc diplomamunka: 35-50 oldal
+\item Tanárszakos szakdolgozat: 50000-80000 karakter szóközökkel (lásd. TKK szabályzat)
+\end{itemize}
+
+\vspace{1 cm}
+
+{\bf Másfeles sorköz, sorkizárt, 12-es betű méret (általában Computer Modern), margók: jobb, bal, lent és fent 2,5 cm} (ahogy ez a template van beállítva, az jó).
+
+\vspace{1 cm}
+
+{\bf Kötelező elemei a dolgozatnak}
+\begin{itemize}
+   \item Címlap
+   \item Tartalmi összefoglaló (kivonat)
+   \item Tartalomjegyzék
+   \item \textcolor{red}{Érdemi rész}
+(Szakterület specifikus fejezeteket tartalmaz, kérjük, konzultáljon a témavezetővel, hogy a példában közzétett kísérletes tudományterületeken használt fejezetekből az Ön dolgozatában melyikre van szükség!)
+\item Irodalomjegyzék
+\item Nyilatkozat
+\end{itemize}
+\newpage
+
+
+
+\pagenumbering{roman}
+
+%Elso  oldal 
+\thispagestyle{empty}
+
+\begin{center}
+\vspace*{0.2cm} {\Large\bf Szegedi Tudományegyetem}
+\vspace{0.3cm}
+
+{\Large\bf Természettudományi és Informatikai Kar}
+\vspace{0.3cm}
+
+{\Large\bf XXXXXXX Intézet, Számítástudomány Alapjai Tanszék}
+\vspace{3cm}
+
+
+
+{\Large SZAKDOLGOZAT}
+
+\vspace*{1.5cm}
+
+{\LARGE\bf A szakdolgozat címe}
+
+opcionálisan, formázatlanul
+A szakdolgozat angol címe 
+
+
+
+\vspace*{4cm}
+
+{\large
+\begin{tabular}{c@{\hspace{2cm}}c}
+\emph{Készítette:}     &\emph{Témavezető:}\\
+\bf{Kozma Kristóf}  &\bf{Dr. Iván Szabolcs}\\
+Programtervező Informatikus BSc hallgató    & egyetemi docens\\
+&
+\end{tabular}
+}
+
+\vspace*{1,5cm}
+
+{\Large Szeged\\ \vspace{2mm} 20XX}
+\end{center}
+
+%masodik oldal osszefogalalo
+\begin{abstract}
+A dolgozat tartalmának rövid (max. 1 oldal) összefoglalása. A következő részekből áll: rövid irodalmi összefoglaló, a dolgozat elkészítéséhez használt módszerek, eredmények, konklúzió
+
+{\bf Kulcsszavak:} a dolgozat tartalmára specifikusan jellemző 4-6 szó, egymástól vesszővel elválasztva
+\end{abstract}
+
+
+
+\newpage
+
+
+\pagebreak
+
+\tableofcontents
+\pagebreak
+%\listoffigures
+%\pagebreak
+
+
+
+\chapter{Bevezetés}
+\pagenumbering{arabic}
+
+(a fejezet új oldalon kezdve)
+
+Tartalmazza a problémafelvetést, a témaválasztás indoklását és a munka célját.
+
+A célkitűzések részletes megfogalmazása külön fejezetben az irodalmi áttekintés után legyen.
+
+
+
+\chapter*{Motiváció}
+
+\chapter*{Piackutatás}
+
+\chapter*{Funkcionális specifikáció}
+
+\chapter*{Használt technológiák}
+
+\chapter*{Modulok}
+
+\chapter*{Adatmodell}
+
+\chapter*{A rendszer magasszintű folyamatai, működése}
+
+\chapter*{Fontosabb kódrészletek}
+
+\chapter*{Tesztelés}
+
+\chapter*{Tapsztalatok, továbbfejlesztési lehetőségek}
+
+
+\chapter{Összefoglalás}
+
+(új oldalon kezdve)
+
+A dolgozat eredményeinek összefoglalása, következtetések levonása.
+
+Az összefoglalásban egyértelműen jelezve legyen a hallgató saját szerepe/eredményei.
+
+
+\newpage
+{\Huge \bf Köszönetnyilvánítás}
+
+\addcontentsline{toc}{chapter}{Köszönetnyilvánítás}
+
+\vspace{2 cm}
+
+(nem kötelező elem), (új oldalon kezdve) 
+
+Ebben a fejezetben lehet köszönetet mondani mindazoknak, akik segítették a dolgozat elkészülését. Itt lehet megemlíteni továbbá a munkát támogató pályázatokat, ösztöndíjakat, stb.
+
+\newpage
+{\Huge \bf Nyilatkozat}
+
+\addcontentsline{toc}{chapter}{Nyilatkozat}
+
+\vspace{2 cm}
+
+Alulírott, Kozma Kristóf, Programtervező Informatikus BSc szakos hallgató, kijelentem, hogy a szakdolgozatban ismertetettek saját munkám eredményei, és minden felhasznált, nem saját munkából származó eredmény esetén hivatkozással jelöltem annak forrását. 
+
+
+\begin{flushleft}
+\vspace*{1cm}
+Szeged, \today
+\end{flushleft}
+
+\begin{flushright}
+   \vspace*{1cm}
+   \makebox[7cm]{\rule{6cm}{.4pt}}\\
+   \makebox[7cm]{\emph{Kozma Kristóf}}
+\end{flushright}
+
+\end{document}
+
+
+
