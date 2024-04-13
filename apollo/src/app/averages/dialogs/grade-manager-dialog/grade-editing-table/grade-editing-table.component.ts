@@ -25,10 +25,10 @@ import { Grade } from '../../../models';
 export class GradeEditingTableComponent {
    public readonly displayedColumns = ['name', 'code', 'credit', 'rating', 'remove'];
    public readonly confirmationDialogTableHeaderKeys = [
-      "AVERAGES.DIALOGS.TABLE_HEADERS.NAME",
-      "AVERAGES.DIALOGS.TABLE_HEADERS.CODE",
-      "AVERAGES.DIALOGS.TABLE_HEADERS.CREDIT",
-      "AVERAGES.DIALOGS.TABLE_HEADERS.RATING"
+      "COMPLETION_MANAGER_TABLE.HEADERS.NAME",
+      "COMPLETION_MANAGER_TABLE.HEADERS.CODE",
+      "COMPLETION_MANAGER_TABLE.HEADERS.CREDIT",
+      "COMPLETION_MANAGER_TABLE.HEADERS.RATING"
    ];
 
    @Input() public titleKey!: string;

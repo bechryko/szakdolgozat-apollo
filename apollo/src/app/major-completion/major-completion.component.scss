@@ -26,6 +26,14 @@ h4, .main-label {
    }
 }
 
+.manage-button {
+   float: right;
+
+   .major-completion-data & {
+      margin-top: 1rem;
+   }
+}
+
 .major-completion-data {
    border: 2px solid colors.$primary-darker;
    border-radius: 1rem;

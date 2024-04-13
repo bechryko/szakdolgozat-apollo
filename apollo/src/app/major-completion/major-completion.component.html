@@ -2,6 +2,10 @@
 <h3>{{ userMajor().name }}</h3>
 <div class="major-completion-data"
    *ngLet="userMajor() | missingCredits: userCompletions() as majorMissingCredits">
+   <button mat-raised-button
+      class="manage-button"
+      color="primary"
+      (click)="manageCompletions()">{{ "MAJOR_COMPLETION.MANAGE_COMPLETIONS_LABEL" | transloco }}</button>
    <p class="main-label">
       <span class="credits-info">{{ "MAJOR_COMPLETION.MAJOR_CREDITS_LABEL" | transloco: { missingCredits: majorMissingCredits } }}</span>
       {{ "MAJOR_COMPLETION.TOTAL_CREDITS" | transloco: { totalCredits: userMajor().creditRequirement } }}
@@ -40,6 +44,10 @@
 </div>
 <div class="major-specializations-data"
    *ngIf="userMajor().specializations as specializations">
+   <button mat-raised-button
+      class="manage-button"
+      color="primary"
+      (click)="manageCompletions()">{{ "MAJOR_COMPLETION.MANAGE_COMPLETIONS_LABEL" | transloco }}</button>
    <h4>{{ "MAJOR_COMPLETION.SPECIALIZATIONS_TITLE" | transloco }}:</h4>
    @for(specialization of specializations; track $index) {
       <mat-expansion-panel>

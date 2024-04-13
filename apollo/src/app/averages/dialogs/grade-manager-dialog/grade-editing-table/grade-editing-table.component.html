@@ -4,23 +4,23 @@
    </div>
    <table mat-table [dataSource]="grades">
       <ng-container matColumnDef="name">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.NAME" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "COMPLETION_MANAGER_TABLE.HEADERS.NAME" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index">
             <input class="table-cell-input wide-column"
-               [placeholder]="'AVERAGES.DIALOGS.NAME_INPUT_PLACEHOLDER' | transloco"
+               [placeholder]="'COMPLETION_MANAGER_TABLE.NAME_INPUT_PLACEHOLDER' | transloco"
                [(ngModel)]="grades[idx].name">
          </td>
       </ng-container>
       <ng-container matColumnDef="code">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.CODE" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "COMPLETION_MANAGER_TABLE.HEADERS.CODE" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index">
             <input class="table-cell-input medium-column"
-               [placeholder]="'AVERAGES.DIALOGS.CODE_INPUT_PLACEHOLDER' | transloco"
+               [placeholder]="'COMPLETION_MANAGER_TABLE.CODE_INPUT_PLACEHOLDER' | transloco"
                [(ngModel)]="grades[idx].code">
          </td>
       </ng-container>
       <ng-container matColumnDef="rating">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.RATING" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "COMPLETION_MANAGER_TABLE.HEADERS.RATING" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index">
             <input class="table-cell-input"
                type="number"
@@ -28,7 +28,7 @@
          </td>
       </ng-container>
       <ng-container matColumnDef="credit">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.CREDIT" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "COMPLETION_MANAGER_TABLE.HEADERS.CREDIT" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index">
             <input class="table-cell-input"
                type="number"
@@ -40,7 +40,7 @@
          <td mat-cell *matCellDef="let idx = index">
             <button mat-flat-button
                color="warn"
-               (click)="removeGrade(grades, idx)">{{ "AVERAGES.DIALOGS.GRADE_REMOVE_LABEL" | transloco }}</button>
+               (click)="removeGrade(grades, idx)">{{ "INPUT_TABLE.REMOVE_BUTTON_LABEL" | transloco }}</button>
          </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -50,8 +50,8 @@
       <div class="input-table-footer">
          <mat-select class="subject-select"
             (valueChange)="selectedSubject.set($event)"
-            [placeholder]="'AVERAGES.DIALOGS.CUSTOM_GRADE' | transloco">
-            <mat-option [value]="null">{{ "AVERAGES.DIALOGS.CUSTOM_GRADE" | transloco }}</mat-option>
+            [placeholder]="'COMPLETION_MANAGER_TABLE.CUSTOM_SUBJECT_LABEL' | transloco">
+            <mat-option [value]="null">{{ "COMPLETION_MANAGER_TABLE.CUSTOM_SUBJECT_LABEL" | transloco }}</mat-option>
             @for(subject of universitySubjects(); track $index) {
                <mat-option [value]="subject">{{ subject.name }} ({{ subject.code }})</mat-option>
             }

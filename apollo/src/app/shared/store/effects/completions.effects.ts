@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { UniversityCompletionYear } from "@apollo/shared/models";
+import { CompletionsUtils } from "@apollo/shared/utils";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { cloneDeep } from "lodash";
 import { catchError, map, switchMap, take, tap } from "rxjs";
@@ -42,31 +42,7 @@ export class CompletionsEffects {
                const updatedCompletions = cloneDeep(completions);
 
                const unassignedCompletionsCollector = updatedCompletions.find(completion => completion.isUnassignedCompletionsCollector);
-               if(unassignedCompletionsCollector) {
-                  unassignedCompletionsCollector.firstSemester.push({
-                     name: subject.name,
-                     code: subject.code,
-                     rating: 3,
-                     credit: subject.credit
-                  });
-               } else {
-                  const newCompletion: UniversityCompletionYear = {
-                     id: "unassignedCompletionsCollector" + Date.now(),
-                     name: "unassignedCompletionsCollector",
-                     owner: "",
-                     firstSemester: [
-                        {
-                           name: subject.name,
-                           code: subject.code,
-                           rating: 3,
-                           credit: subject.credit
-                        }
-                     ],
-                     secondSemester: [],
-                     isUnassignedCompletionsCollector: true
-                  };
-                  updatedCompletions.push(newCompletion);
-               }
+               CompletionsUtils.addToUnassignedCompletionsCollector(unassignedCompletionsCollector, subject, updatedCompletions);
 
                return updatedCompletions;
             })

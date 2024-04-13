@@ -4,11 +4,11 @@
    </div>
    <table mat-table [dataSource]="alternativeGrades">
       <ng-container matColumnDef="name">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.NAME" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "COMPLETION_MANAGER_TABLE.HEADERS.NAME" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index" [ngClass]="alternativeGrades[idx] | cellStyle: originalGrades[idx]">
             @if(alternativeGrades[idx].bonus) {
                <input class="table-cell-input wide-column"
-                  [placeholder]="'AVERAGES.DIALOGS.NAME_INPUT_PLACEHOLDER' | transloco"
+                  [placeholder]="'COMPLETION_MANAGER_TABLE.NAME_INPUT_PLACEHOLDER' | transloco"
                   [(ngModel)]="alternativeGrades[idx].name">
             } @else {
                <p class="wide-column">{{ alternativeGrades[idx].name }}</p>
@@ -16,7 +16,7 @@
          </td>
       </ng-container>
       <ng-container matColumnDef="rating">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.RATING" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "COMPLETION_MANAGER_TABLE.HEADERS.RATING" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index" [ngClass]="alternativeGrades[idx] | cellStyle: originalGrades[idx]">
             <input class="table-cell-input"
                [value]="alternativeGrades[idx].rating"
@@ -24,7 +24,7 @@
          </td>
       </ng-container>
       <ng-container matColumnDef="credit">
-         <th mat-header-cell *matHeaderCellDef>{{ "AVERAGES.DIALOGS.TABLE_HEADERS.CREDIT" | transloco }}</th>
+         <th mat-header-cell *matHeaderCellDef>{{ "COMPLETION_MANAGER_TABLE.HEADERS.CREDIT" | transloco }}</th>
          <td mat-cell *matCellDef="let idx = index" [ngClass]="alternativeGrades[idx] | cellStyle: originalGrades[idx]">
             @if(alternativeGrades[idx].bonus) {
                <input class="table-cell-input"
@@ -40,7 +40,7 @@
             @if(alternativeGrades[idx].bonus) {
                <button mat-flat-button
                   color="warn"
-                  (click)="removeGrade(alternativeGrades, idx)">{{ "AVERAGES.DIALOGS.GRADE_REMOVE_LABEL" | transloco }}</button>
+                  (click)="removeGrade(alternativeGrades, idx)">{{ "INPUT_TABLE.REMOVE_BUTTON_LABEL" | transloco }}</button>
             } @else {
                <button mat-flat-button
                   [color]="alternativeGrades[idx].disabled ? 'accent' : 'warn'"
