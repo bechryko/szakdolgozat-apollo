@@ -20,7 +20,9 @@ export class GetSubjectsPipe implements PipeTransform {
       return values.map(value => {
          const code = typeof value === 'string' ? value : value.code;
          const subject: ExtendedUniversitySubject = cloneDeep(subjects.find(subject => subject.code === code)) ?? this.getDefaultSubject(code);
-         subject.suggestedSemester = typeof value === 'string' ? undefined : value.suggestedSemester;
+         if(typeof value !== 'string' && value.suggestedSemester) {
+            subject.suggestedSemester = value.suggestedSemester;
+         }
          return subject;
       }).sort((a, b) => a.name.localeCompare(b.name));
    }

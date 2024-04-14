@@ -1,3 +1,4 @@
+import { newCompletionDefaultRating } from "../constants";
 import { UniversityCompletionYear, UniversitySubjectCompletion } from "../models";
 
 export class CompletionsUtils {
@@ -14,7 +15,7 @@ export class CompletionsUtils {
             credit: subject.credit
          });
       } else {
-         const newCompletion: UniversityCompletionYear = {
+         const newCompletionYear: UniversityCompletionYear = {
             id: "unassignedCompletionsCollector" + Date.now(),
             name: "unassignedCompletionsCollector",
             owner: "",
@@ -22,14 +23,14 @@ export class CompletionsUtils {
                {
                   name: subject.name,
                   code: subject.code,
-                  rating: 3,
+                  rating: newCompletionDefaultRating,
                   credit: subject.credit
                }
             ],
             secondSemester: [],
             isUnassignedCompletionsCollector: true
          };
-         completionYearsArray.push(newCompletion);
+         completionYearsArray.push(newCompletionYear);
       }
    }
 }
