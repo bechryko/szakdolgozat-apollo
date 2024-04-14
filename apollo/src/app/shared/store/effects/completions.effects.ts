@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { LoadingService, LoadingType, completionsLoadingKey } from "@apollo/shared/loading";
 import { CompletionsUtils } from "@apollo/shared/utils";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { cloneDeep } from "lodash";
@@ -12,9 +13,14 @@ export class CompletionsEffects {
    public readonly loadCompletions$ = createEffect(() => 
       this.actions$.pipe(
          ofType(completionsActions.loadCompletions),
+         tap(() => this.loadingService.startLoading(completionsLoadingKey, LoadingType.LOAD)),
          switchMap(() => this.completionsFetcherService.getCompletionsForCurrentUser()),
-         map(completions => completionsActions.saveCompletionsToStore({ completions })),
+         map(completions => {
+            this.loadingService.finishLoading(completionsLoadingKey);
+            return completionsActions.saveCompletionsToStore({ completions });
+         }),
          catchError(() => {
+            this.loadingService.finishLoading(completionsLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -24,9 +30,14 @@ export class CompletionsEffects {
    public readonly saveCompletions$ = createEffect(() =>
       this.actions$.pipe(
          ofType(completionsActions.saveCompletions),
+         tap(() => this.loadingService.startLoading(completionsLoadingKey, LoadingType.SAVE)),
          switchMap(({ completions }) => this.completionsFetcherService.saveCompletions(completions)),
-         map(() => completionsActions.loadCompletions()),
+         map(() => {
+            this.loadingService.finishLoading(completionsLoadingKey);
+            return completionsActions.loadCompletions();
+         }),
          catchError(() => {
+            this.loadingService.finishLoading(completionsLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -36,6 +47,7 @@ export class CompletionsEffects {
    public readonly completeSubject$ = createEffect(() =>
       this.actions$.pipe(
          ofType(completionsActions.completeSubject),
+         tap(() => this.loadingService.startLoading(completionsLoadingKey, LoadingType.SAVE)),
          switchMap(({ subject }) => this.completionsService.universityCompletions$.pipe(
             take(1),
             map(completions => {
@@ -49,6 +61,7 @@ export class CompletionsEffects {
          )),
          map(completions => completionsActions.saveCompletions({ completions })),
          catchError(() => {
+            this.loadingService.finishLoading(completionsLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -73,6 +86,7 @@ export class CompletionsEffects {
    constructor(
       private readonly actions$: Actions,
       private readonly completionsFetcherService: CompletionsFetcherService,
-      private readonly completionsService: CompletionsService
+      private readonly completionsService: CompletionsService,
+      private readonly loadingService: LoadingService
    ) { }
 }

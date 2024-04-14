@@ -4,8 +4,7 @@ import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { RouteUrls } from '@apollo/app.routes';
 import { isEqual } from 'lodash';
 import { Observable, distinctUntilChanged, filter, map } from 'rxjs';
-import { navigationLoadingKey } from '../constants';
-import { LoadingService, LoadingType } from '../loading';
+import { LoadingService, LoadingType, navigationLoadingKey } from '../loading';
 import { multicast } from '../operators';
 
 @Injectable({

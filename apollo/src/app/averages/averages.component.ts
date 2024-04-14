@@ -80,7 +80,7 @@ export class AveragesComponent {
                title: "AVERAGES.NO_DATA_DIALOG.TITLE",
                description: "AVERAGES.NO_DATA_DIALOG.DESCRIPTION",
                inputType: 'text',
-               inputLabel: "AVERAGES.YEAR_ADD_DIALOG.INPUT_LABEL",
+               inputLabel: "COMPLETION_YEAR_ADD_DIALOG.INPUT_LABEL",
                submitLabel: "AVERAGES.NO_DATA_DIALOG.SUBMIT_LABEL"
             }
          }).afterClosed().subscribe(yearName => {

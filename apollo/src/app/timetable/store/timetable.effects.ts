@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { LoadingService, LoadingType, timetableLoadingKey } from "@apollo/shared/loading";
 import { userActions } from "@apollo/shared/store";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, switchMap, tap } from "rxjs";
@@ -7,15 +8,22 @@ import { timetableActions } from "./timetable.actions";
 
 @Injectable()
 export class TimetableEffects {
-   public readonly loadTimetable$ = createEffect(() => 
+   public readonly loadTimetable$ = createEffect(() =>
       this.actions$.pipe(
          ofType(timetableActions.loadTimetable),
+         tap(() => this.loadingService.startLoading(timetableLoadingKey, LoadingType.LOAD)),
          switchMap(_ => this.timetableFetcherService.getSemestersForCurrentUser()),
-         map(semesters => timetableActions.saveTimetableToStore({ newState: {
-            semesters,
-            selectedSemesterId: semesters.length >= 1 ? semesters[0].id : undefined
-         } })),
+         map(semesters => {
+            this.loadingService.finishLoading(timetableLoadingKey);
+            return timetableActions.saveTimetableToStore({
+               newState: {
+                  semesters,
+                  selectedSemesterId: semesters.length >= 1 ? semesters[0].id : undefined
+               }
+            });
+         }),
          catchError(errorKey => {
+            this.loadingService.finishLoading(timetableLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -25,11 +33,16 @@ export class TimetableEffects {
    public readonly updateTimetable$ = createEffect(() =>
       this.actions$.pipe(
          ofType(timetableActions.updateTimetable),
+         tap(() => this.loadingService.startLoading(timetableLoadingKey, LoadingType.SAVE)),
          switchMap(({ newState }) => this.timetableFetcherService.saveSemesters(newState.semesters!).pipe(
             map(_ => newState)
          )),
-         map(newState => timetableActions.saveTimetableToStore({ newState })),
+         map(newState => {
+            this.loadingService.finishLoading(timetableLoadingKey);
+            return timetableActions.saveTimetableToStore({ newState });
+         }),
          catchError(errorKey => {
+            this.loadingService.finishLoading(timetableLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -53,6 +66,7 @@ export class TimetableEffects {
 
    constructor(
       private readonly actions$: Actions,
-      private readonly timetableFetcherService: TimetableFetcherService
+      private readonly timetableFetcherService: TimetableFetcherService,
+      private readonly loadingService: LoadingService
    ) { }
 }

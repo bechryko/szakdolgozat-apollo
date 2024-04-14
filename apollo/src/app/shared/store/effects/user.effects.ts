@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { authLoadingKey, userUpdateLoadingKey } from "@apollo/shared/constants";
 import { GeneralDialogService } from "@apollo/shared/general-dialog";
-import { LoadingService, LoadingType } from "@apollo/shared/loading";
+import { LoadingService, LoadingType, authCRUDLoadingKey, userUpdateLoadingKey } from "@apollo/shared/loading";
 import { CompletionsFetcherService, SnackBarService } from "@apollo/shared/services";
 import { TimetableFetcherService } from "@apollo/timetable/services/timetable-fetcher.service";
 import { AuthService, UserFetcherService } from "@apollo/user/services";
@@ -14,14 +13,14 @@ export class UserEffects {
    public readonly login$ = createEffect(() =>
       this.actions$.pipe(
          ofType(userActions.login),
-         tap(() => this.loadingService.startLoading(authLoadingKey, LoadingType.AUTHENTICATION)),
+         tap(() => this.loadingService.startLoading(authCRUDLoadingKey, LoadingType.AUTHENTICATION)),
          switchMap(({ loginData }) => this.authService.signInUser(loginData.email, loginData.password)),
          map(() => {
-            this.loadingService.finishLoading(authLoadingKey);
+            this.loadingService.finishLoading(authCRUDLoadingKey);
             return userActions.clearUserData();
          }),
          catchError(error => {
-            this.loadingService.finishLoading(authLoadingKey);
+            this.loadingService.finishLoading(authCRUDLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -31,7 +30,7 @@ export class UserEffects {
    public readonly register$ = createEffect(() =>
       this.actions$.pipe(
          ofType(userActions.register),
-         tap(() => this.loadingService.startLoading(authLoadingKey, LoadingType.AUTHENTICATION)),
+         tap(() => this.loadingService.startLoading(authCRUDLoadingKey, LoadingType.AUTHENTICATION)),
          switchMap(({ registerData }) => this.authService.registerUser(registerData.email, registerData.password).pipe(
             switchMap(() => this.userFetcherService.saveNewUserData(registerData))
          )),
@@ -82,11 +81,11 @@ export class UserEffects {
                )
             );
          }),
-         tap(() => this.loadingService.finishLoading(authLoadingKey)),
+         tap(() => this.loadingService.finishLoading(authCRUDLoadingKey)),
          filter(value => Boolean(value)),
          map(value => value!),
          catchError(error => {
-            this.loadingService.finishLoading(authLoadingKey);
+            this.loadingService.finishLoading(authCRUDLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -103,6 +102,7 @@ export class UserEffects {
             this.snackbar.open("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
          }),
          catchError(error => {
+            this.loadingService.finishLoading(userUpdateLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -112,14 +112,14 @@ export class UserEffects {
    public readonly logout$ = createEffect(() =>
       this.actions$.pipe(
          ofType(userActions.logout),
-         tap(() => this.loadingService.startLoading(authLoadingKey, LoadingType.AUTHENTICATION)),
+         tap(() => this.loadingService.startLoading(authCRUDLoadingKey, LoadingType.AUTHENTICATION)),
          switchMap(() => this.authService.signOutUser()),
          map(() => {
-            this.loadingService.finishLoading(authLoadingKey);
+            this.loadingService.finishLoading(authCRUDLoadingKey);
             return userActions.clearUserData();
          }),
          catchError(error => {
-            this.loadingService.finishLoading(authLoadingKey);
+            this.loadingService.finishLoading(authCRUDLoadingKey);
             // TODO: error handling
             return [];
          })

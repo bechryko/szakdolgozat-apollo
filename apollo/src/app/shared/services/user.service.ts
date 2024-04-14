@@ -4,9 +4,10 @@ import { AuthService, UserFetcherService } from '@apollo/user/services';
 import { Store } from '@ngrx/store';
 import { Observable, distinctUntilChanged, map, of, startWith, switchMap, tap } from 'rxjs';
 import { LanguageService } from '../languages';
+import { LoadingService, LoadingType, authLoadingKey } from '../loading';
 import { ApolloUser } from '../models';
 import { multicast } from '../operators';
-import { userActions } from '../store/actions/user.actions';
+import { userActions } from '../store';
 
 @Injectable({
    providedIn: 'root'
@@ -20,8 +21,11 @@ export class UserService {
       private readonly authService: AuthService,
       private readonly userFetcherService: UserFetcherService,
       private readonly store: Store,
-      private readonly languageService: LanguageService
+      private readonly languageService: LanguageService,
+      private readonly loadingService: LoadingService
    ) {
+      this.loadingService.startLoading(authLoadingKey, LoadingType.AUTHENTICATION);
+
       this.user$ = this.authService.user$.pipe(
          map(user => user ? user.email : null),
          distinctUntilChanged(),
@@ -30,6 +34,7 @@ export class UserService {
             if(user?.selectedLanguage) {
                this.languageService.setLanguage(user.selectedLanguage);
             }
+            loadingService.finishLoading(authLoadingKey);
          }),
          multicast()
       );

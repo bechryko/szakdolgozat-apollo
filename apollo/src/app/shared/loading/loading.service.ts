@@ -8,7 +8,9 @@ import { DisplayedLoadingOverlayConfig, LoadingOverlayConfig } from './models';
    providedIn: 'root'
 })
 export class LoadingService {
-   private readonly loadingKeys: LoadingOverlayConfig[];
+   private static readonly OVERLAY_CLOSE_DELAY = 250;
+
+   private readonly loadingJobConfigs: LoadingOverlayConfig[];
    private readonly currentConfig: WritableSignal<LoadingOverlayConfig | null>;
 
    public readonly config: Signal<DisplayedLoadingOverlayConfig | null>;
@@ -16,7 +18,7 @@ export class LoadingService {
    constructor(
       private readonly spinnerService: NgxSpinnerService
    ) {
-      this.loadingKeys = [];
+      this.loadingJobConfigs = [];
       this.currentConfig = signal(null);
 
       this.config = computed(() => {
@@ -28,27 +30,30 @@ export class LoadingService {
       });
    }
 
-   public startLoading(key: Symbol, type: LoadingType, fullscreen = true) {
-      const config: LoadingOverlayConfig = { key, type, fullscreen };
-      this.loadingKeys.push(config);
+   public startLoading(key: Symbol, type: LoadingType, fullscreen = true) { // TODO: timeout handling?
+      if(this.loadingJobConfigs.some(config => config.key === key)) {
+         return;
+      }
 
-      if(this.loadingKeys.length === 1) {
+      const config: LoadingOverlayConfig = { key, type, fullscreen };
+      this.loadingJobConfigs.push(config);
+
+      if(this.loadingJobConfigs.length === 1) {
          this.openLoadingOverlay();
          this.currentConfig.set(config);
       }
    }
 
    public finishLoading(key: Symbol) {
-      const index = this.loadingKeys.findIndex(loadingKey => loadingKey.key === key);
+      const index = this.loadingJobConfigs.findIndex(config => config.key === key);
       if (index > -1) {
-         this.loadingKeys.splice(index, 1);
+         this.loadingJobConfigs.splice(index, 1);
       }
 
-      if (!this.loadingKeys.length) {
-         this.closeLoadingOverlay();
-         this.currentConfig.set(null);
+      if (!this.loadingJobConfigs.length) {
+         setTimeout(() => this.closeLoadingOverlay(), LoadingService.OVERLAY_CLOSE_DELAY);
       } else if (index === 0) {
-         this.currentConfig.set(this.loadingKeys[0]);
+         this.currentConfig.set(this.loadingJobConfigs[0]);
       }
    }
 
@@ -57,6 +62,11 @@ export class LoadingService {
    }
 
    private closeLoadingOverlay() {
+      if(this.loadingJobConfigs.length) {
+         return;
+      }
+
       this.spinnerService.hide();
+      this.currentConfig.set(null);
    }
 }

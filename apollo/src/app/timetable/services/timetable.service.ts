@@ -17,7 +17,7 @@ export class TimetableService {
    ) {
       this.semesters$ = this.store.select(timetableFeature.selectSemesters).pipe(
          tap(semesters => {
-            if(!semesters) { // TODO: handle if database is empty
+            if(!semesters) {
                this.store.dispatch(timetableActions.loadTimetable());
             }
          }),
