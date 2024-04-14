@@ -1,0 +1,113 @@
+<h2>{{ "MAJOR_COMPLETION.TITLE" | transloco }}</h2>
+<h3>{{ userMajor().name }}</h3>
+<div class="major-completion-data"
+   *ngLet="userMajor() | missingCredits: userCompletions() as majorMissingCredits">
+   <button mat-raised-button
+      class="manage-button"
+      color="primary"
+      (click)="manageCompletions()">{{ "MAJOR_COMPLETION.MANAGE_COMPLETIONS_LABEL" | transloco }}</button>
+   <p class="main-label">
+      <span class="credits-info">{{ "MAJOR_COMPLETION.MAJOR_CREDITS_LABEL" | transloco: { missingCredits: majorMissingCredits } }}</span>
+      {{ "MAJOR_COMPLETION.TOTAL_CREDITS" | transloco: { totalCredits: userMajor().creditRequirement } }}
+   </p>
+   @for(group of userMajor().subjectGroups; track $index) {
+      <div class="completion-group"
+         *ngLet="group | missingCredits: userCompletions() as missingCredits">
+         <h5>{{ group.name }}</h5>
+         @if(missingCredits > 0) {
+            <p *ngIf="group.creditRequirement">
+               <span class="credits-info">{{ "MAJOR_COMPLETION.MISSING_CREDITS" | transloco: { missingCredits } }}</span>
+               {{ "MAJOR_COMPLETION.TOTAL_CREDITS" | transloco: { totalCredits: group.creditRequirement } }}
+            </p>
+            <div class="completion-subjects"
+               *ngLet="(group.subjects | getSubjects: universitySubjects()) | filterCompleted: userCompletions() as incompleteSubjects">
+               @for(subject of incompleteSubjects; track $index) {
+                  <div class="completion-subject-container">
+                     <p>{{ subject.name }} ({{ subject.code }})</p>
+                     <p>{{ "MAJOR_COMPLETION.CREDIT_LABEL" | transloco: { credit: subject.credit} }}</p>
+                     <p>
+                        @if(subject.suggestedSemester) {
+                           {{ "MAJOR_COMPLETION.SUGGESTED_SEMESTER_LABEL" | transloco: { suggestedSemester: subject.suggestedSemester} }}
+                        }
+                     </p>
+                     <button mat-raised-button
+                        color="accent"
+                        (click)="completeSubject(subject)">{{ "MAJOR_COMPLETION.COMPLETE_SUBJECT_LABEL" | transloco }}</button>
+                  </div>
+               }
+            </div>
+         } @else {
+            <p class="all-complete">{{ "MAJOR_COMPLETION.ALL_COMPLETED_IN_GROUP" | transloco }}</p>
+         }
+      </div>
+   }
+</div>
+<div class="major-specializations-data"
+   *ngIf="userMajor().specializations as specializations">
+   <button mat-raised-button
+      class="manage-button"
+      color="primary"
+      (click)="manageCompletions()">{{ "MAJOR_COMPLETION.MANAGE_COMPLETIONS_LABEL" | transloco }}</button>
+   <h4>{{ "MAJOR_COMPLETION.SPECIALIZATIONS_TITLE" | transloco }}:</h4>
+   @for(specialization of specializations; track $index) {
+      <mat-expansion-panel>
+         <mat-expansion-panel-header>
+            <mat-panel-title>
+               <h5>
+                  {{ specialization.name }}
+                  @if(!(specialization | missingCredits: userCompletions())) {
+                     <mat-icon class="check-icon">check_circle</mat-icon>
+                  }
+               </h5>
+            </mat-panel-title>
+         </mat-expansion-panel-header>
+         <div class="specialization">
+            @for(group of specialization.groups; track $index) {
+               <div class="specialization-group"
+                  *ngLet="group | missingCredits: userCompletions() as groupMissingCredits">
+                  <h5>{{ group.name }}</h5>
+                  @if(group.creditRequirement && groupMissingCredits) {
+                     <p>
+                        <span class="credits-info">{{ "MAJOR_COMPLETION.MISSING_CREDITS" | transloco: { missingCredits: groupMissingCredits } }}</span>
+                        {{ "MAJOR_COMPLETION.TOTAL_CREDITS" | transloco: { totalCredits: group.creditRequirement } }}
+                     </p>
+                  }
+                  <div class="specialization-subgroups">
+                     @for(subGroup of group.subGroups; track $index) {
+                        <div class="specialization-subgroup-container"
+                           *ngLet="subGroup | missingCredits: userCompletions() as subGroupMissingCredits">
+                           <h6>{{ subGroup.name }}</h6>
+                           @if((!subGroup.creditRequirement || subGroupMissingCredits > 0) && groupMissingCredits > 0) {
+                              <p *ngIf="subGroup.creditRequirement">
+                                 <span class="credits-info">{{ "MAJOR_COMPLETION.MISSING_CREDITS" | transloco: { missingCredits: subGroupMissingCredits } }}</span>
+                                 {{ "MAJOR_COMPLETION.TOTAL_CREDITS" | transloco: { totalCredits: subGroup.creditRequirement } }}
+                              </p>
+                              <div class="completion-subjects"
+                                 *ngLet="(subGroup.subjects | getSubjects: universitySubjects()) | filterCompleted: userCompletions() as incompleteSubjects">
+                                 @for(subject of incompleteSubjects; track $index) {
+                                    <div class="completion-subject-container">
+                                       <p>{{ subject.name }} ({{ subject.code }})</p>
+                                       <p>{{ "MAJOR_COMPLETION.CREDIT_LABEL" | transloco: { credit: subject.credit} }}</p>
+                                       <p>
+                                          @if(subject.suggestedSemester) {
+                                             {{ "MAJOR_COMPLETION.SUGGESTED_SEMESTER_LABEL" | transloco: { suggestedSemester: subject.suggestedSemester} }}
+                                          }
+                                       </p>
+                                       <button mat-raised-button
+                                          color="accent"
+                                          (click)="completeSubject(subject)">{{ "MAJOR_COMPLETION.COMPLETE_SUBJECT_LABEL" | transloco }}</button>
+                                    </div>
+                                 }
+                              </div>
+                           } @else {
+                              <p class="all-complete">{{ "MAJOR_COMPLETION.ALL_COMPLETED_IN_GROUP" | transloco }}</p>
+                           }
+                        </div>
+                     }
+                  </div>
+               </div>
+            }
+         </div>
+      </mat-expansion-panel>
+   }
+</div>

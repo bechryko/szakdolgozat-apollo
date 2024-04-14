@@ -7,11 +7,12 @@ import { AdminUniversityComponent } from './admin-page/admin-university';
 import { majorRouteParam, universityRouteParam } from './admin-page/constants';
 import { majorResolver, universityResolver } from './admin-page/resolvers';
 import { AveragesComponent } from './averages/averages.component';
-import { userMajorResolver } from './averages/resolvers';
 import { averagesFeature } from './averages/store';
+import { MajorCompletionComponent } from './major-completion/major-completion.component';
 import { MenuComponent } from './menu/menu.component';
 import { MenuEffects, menuFeature } from './menu/store';
 import { parameterizedRoute } from './shared/functions';
+import { universitySubjectsResolver, userMajorResolver } from './shared/resolvers';
 import { TimetableEffects, timetableFeature } from './timetable/store';
 import { TimetableComponent } from './timetable/timetable.component';
 import { UserComponent } from './user/user.component';
@@ -71,6 +72,14 @@ export const routes: Routes = [
       resolve: {
          university: universityResolver,
          major: majorResolver
+      }
+   },
+   {
+      path: RouteUrls.MAJOR_COMPLETION,
+      component: MajorCompletionComponent,
+      resolve: {
+         userMajor: userMajorResolver,
+         universitySubjects: universitySubjectsResolver
       }
    },
    {

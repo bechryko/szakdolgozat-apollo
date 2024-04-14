@@ -7,6 +7,7 @@ export interface UniversityMajor {
    name: string;
    universityId: string;
    facultyId: number;
+   creditRequirement: number;
    subjectGroups: UniversityMajorSubjectGroup[];
    scholarships?: UniversityScholarshipYear[];
    specializations?: UniversitySpecialization[];

@@ -7,7 +7,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTable } from '@angular/material/table';
 import { Grade, GradesCompletionYear } from '@apollo/averages/models';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
-import { numberize } from '@apollo/shared/functions';
 import { UniversitySubject } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { UniversitiesService, UserService } from '@apollo/shared/services';
@@ -70,9 +69,10 @@ export class GradeManagerDialogComponent {
    public addYear(): void {
       this.dialog.open(GeneralInputDialogComponent<String>, {
          data: {
-            title: "AVERAGES.YEAR_ADD_DIALOG.TITLE",
+            title: "COMPLETION_YEAR_ADD_DIALOG.TITLE",
+            description: "COMPLETION_YEAR_ADD_DIALOG.DESCRIPTION",
             inputType: 'text',
-            inputLabel: "AVERAGES.YEAR_ADD_DIALOG.INPUT_LABEL"
+            inputLabel: "COMPLETION_YEAR_ADD_DIALOG.INPUT_LABEL"
          }
       }).afterClosed().subscribe((semesterName: string) => {
          if(!semesterName) {
@@ -92,15 +92,8 @@ export class GradeManagerDialogComponent {
    }
 
    public save(): void {
-      const years = this.years();
-
-      years.forEach(year => {
-         year.firstSemesterGrades = year.firstSemesterGrades.map(grade => numberize<Grade>(grade, 'name'));
-         year.secondSemesterGrades = year.secondSemesterGrades.map(grade => numberize<Grade>(grade, 'name'));
-      });
-
       this.dialogRef.close({
-         years,
+         years: this.years(),
          selectedYearId: this.selectedYear()!.id
       });
    }

@@ -6,4 +6,5 @@ export interface UniversityCompletionYear {
    owner: string;
    firstSemester: UniversitySubjectCompletion[];
    secondSemester: UniversitySubjectCompletion[];
+   isUnassignedCompletionsCollector?: boolean;
 }

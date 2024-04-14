@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { FileUploadComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
+import { GeneralDialogService } from '@apollo/shared/general-dialog';
 import { UniversitySubject } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { Grade } from '../../../models';
@@ -22,11 +23,12 @@ import { Grade } from '../../../models';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GradeEditingTableComponent {
-   public readonly displayedColumns = ['name', 'rating', 'credit', 'remove'];
+   public readonly displayedColumns = ['name', 'code', 'credit', 'rating', 'remove'];
    public readonly confirmationDialogTableHeaderKeys = [
-      "AVERAGES.DIALOGS.TABLE_HEADERS.NAME",
-      "AVERAGES.DIALOGS.TABLE_HEADERS.RATING",
-      "AVERAGES.DIALOGS.TABLE_HEADERS.CREDIT"
+      "COMPLETION_MANAGER_TABLE.HEADERS.NAME",
+      "COMPLETION_MANAGER_TABLE.HEADERS.CODE",
+      "COMPLETION_MANAGER_TABLE.HEADERS.CREDIT",
+      "COMPLETION_MANAGER_TABLE.HEADERS.RATING"
    ];
 
    @Input() public titleKey!: string;
@@ -36,7 +38,9 @@ export class GradeEditingTableComponent {
 
    @ViewChild(MatTable) private readonly table!: MatTable<Grade>;
 
-   constructor() {
+   constructor(
+      private readonly generalDialogService: GeneralDialogService
+   ) {
       this.selectedSubject = signal(null);
    }
 
@@ -61,6 +65,7 @@ export class GradeEditingTableComponent {
       } else {
          gradeArray.push({
             name: '',
+            code: '',
             rating: 5,
             credit: 0
          });
@@ -69,8 +74,21 @@ export class GradeEditingTableComponent {
    }
 
    public fileUpload(newGrades: Grade[], gradeArray: Grade[]): void {
-      gradeArray.push(...newGrades);
-      this.updateTable();
+      this.generalDialogService.openDialog({
+         title: "AVERAGES.DIALOGS.ERASE_GRADES_ON_UPLOAD.TITLE",
+         content: "AVERAGES.DIALOGS.ERASE_GRADES_ON_UPLOAD.CONTENT",
+         accept: "AVERAGES.DIALOGS.ERASE_GRADES_ON_UPLOAD.CONFIRM",
+         cancel: "AVERAGES.DIALOGS.ERASE_GRADES_ON_UPLOAD.REJECT"
+      }).subscribe(eraseData => {
+         if(eraseData) {
+            gradeArray.splice(0, gradeArray.length);
+         }
+
+         newGrades.forEach(grade => {
+            gradeArray.push(grade);
+         });
+         this.updateTable();
+      });
    }
 
    public fileParserFn(exported: string): Grade[] {

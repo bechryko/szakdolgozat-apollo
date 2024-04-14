@@ -15,12 +15,12 @@ import { FileUploadComponent, FileUploadDataConfirmationDialogComponent, NeptunE
 import { MultiLanguagePipe } from '@apollo/shared/languages';
 import { RawUniversitySubject, University, UniversityMajor, UniversityMajorSubjectGroup, UniversityMajorSubjectGroupSubject, UniversityScholarshipYear, UniversitySpecialization, UniversitySpecializationSubjectGroup, UniversitySubject } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
-import { CurrencyPipe } from '@apollo/shared/pipes';
+import { CurrencyPipe, GetSubjectsPipe } from '@apollo/shared/pipes';
 import { UniversitiesService } from '@apollo/shared/services';
 import { TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { filter, map, take } from 'rxjs';
-import { CreditSumPipe, GetSubjectsPipe } from '../pipes';
+import { CreditSumPipe } from '../pipes';
 import { UniversityScholarshipData } from './../../shared/models/university-scholarship-year.d';
 import { MajorUploadConfirmationDialogComponent } from './major-upload-confirmation-dialog';
 

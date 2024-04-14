@@ -20,7 +20,7 @@ export class AveragesService {
       private readonly store: Store
    ) {
       this.grades$ = this.completionsService.universityCompletions$.pipe(
-         map(completions => completions.map(completion => this.mapUniversityCompletionYearToGradesCompletionYear(completion))),
+         map(completions => completions.filter(completion => !completion.isUnassignedCompletionsCollector).map(completion => this.mapUniversityCompletionYearToGradesCompletionYear(completion))),
          switchMap(grades => this.alternatives$.pipe(
             tap(alternativeSemesters => this.checkAlternativeYearsChange(grades, alternativeSemesters)),
             map(alternatives => grades.map(grade => this.mapAlternativeYearToGradesCompletionYear(grade, alternatives)))
