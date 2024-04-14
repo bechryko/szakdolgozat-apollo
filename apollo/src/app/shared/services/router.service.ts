@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { RouteUrls } from '@apollo/app.routes';
+import { isEqual } from 'lodash';
 import { Observable, distinctUntilChanged, filter, map } from 'rxjs';
+import { navigationLoadingKey } from '../constants';
+import { LoadingService, LoadingType } from '../loading';
 import { multicast } from '../operators';
 
 @Injectable({
@@ -11,9 +15,24 @@ export class RouterService {
    public readonly currentPage$: Observable<RouteUrls>;
    public readonly isAdminPage$: Observable<boolean>;
 
+   private readonly routerEvents$ = this.router.events.pipe(
+      takeUntilDestroyed(),
+      multicast(),
+      distinctUntilChanged(isEqual)
+   );
+
    constructor(
-      private readonly router: Router
+      private readonly router: Router,
+      private readonly loadingService: LoadingService
    ) {
+      this.routerEvents$.subscribe(event => {
+         if(event instanceof NavigationStart) {
+            this.loadingService.startLoading(navigationLoadingKey, LoadingType.NAVIGATION, false);
+         } else if(event instanceof NavigationEnd) {
+            this.loadingService.finishLoading(navigationLoadingKey);
+         }
+      });
+
       this.currentPage$ = this.router.events.pipe(
          filter((event): event is NavigationEnd => event instanceof NavigationEnd),
          map(event => event.urlAfterRedirects.split('/')[1] as RouteUrls),

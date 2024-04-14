@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
+import { authLoadingKey, userUpdateLoadingKey } from "@apollo/shared/constants";
 import { GeneralDialogService } from "@apollo/shared/general-dialog";
+import { LoadingService, LoadingType } from "@apollo/shared/loading";
 import { CompletionsFetcherService, SnackBarService } from "@apollo/shared/services";
 import { TimetableFetcherService } from "@apollo/timetable/services/timetable-fetcher.service";
 import { AuthService, UserFetcherService } from "@apollo/user/services";
@@ -12,9 +14,14 @@ export class UserEffects {
    public readonly login$ = createEffect(() =>
       this.actions$.pipe(
          ofType(userActions.login),
+         tap(() => this.loadingService.startLoading(authLoadingKey, LoadingType.AUTHENTICATION)),
          switchMap(({ loginData }) => this.authService.signInUser(loginData.email, loginData.password)),
-         map(() => userActions.clearUserData()),
+         map(() => {
+            this.loadingService.finishLoading(authLoadingKey);
+            return userActions.clearUserData();
+         }),
          catchError(error => {
+            this.loadingService.finishLoading(authLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -24,6 +31,7 @@ export class UserEffects {
    public readonly register$ = createEffect(() =>
       this.actions$.pipe(
          ofType(userActions.register),
+         tap(() => this.loadingService.startLoading(authLoadingKey, LoadingType.AUTHENTICATION)),
          switchMap(({ registerData }) => this.authService.registerUser(registerData.email, registerData.password).pipe(
             switchMap(() => this.userFetcherService.saveNewUserData(registerData))
          )),
@@ -74,9 +82,11 @@ export class UserEffects {
                )
             );
          }),
+         tap(() => this.loadingService.finishLoading(authLoadingKey)),
          filter(value => Boolean(value)),
          map(value => value!),
          catchError(error => {
+            this.loadingService.finishLoading(authLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -86,8 +96,10 @@ export class UserEffects {
    public readonly updateUserProfile$ = createEffect(() =>
       this.actions$.pipe(
          ofType(userActions.updateUserProfile),
+         tap(() => this.loadingService.startLoading(userUpdateLoadingKey, LoadingType.SAVE)),
          switchMap(({ user }) => this.userFetcherService.updateUserData(user)),
          tap(() => {
+            this.loadingService.finishLoading(userUpdateLoadingKey);
             this.snackbar.open("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
          }),
          catchError(error => {
@@ -100,9 +112,14 @@ export class UserEffects {
    public readonly logout$ = createEffect(() =>
       this.actions$.pipe(
          ofType(userActions.logout),
+         tap(() => this.loadingService.startLoading(authLoadingKey, LoadingType.AUTHENTICATION)),
          switchMap(() => this.authService.signOutUser()),
-         map(() => userActions.clearUserData()),
+         map(() => {
+            this.loadingService.finishLoading(authLoadingKey);
+            return userActions.clearUserData();
+         }),
          catchError(error => {
+            this.loadingService.finishLoading(authLoadingKey);
             // TODO: error handling
             return [];
          })
@@ -116,6 +133,7 @@ export class UserEffects {
       private readonly snackbar: SnackBarService,
       private readonly generalDialog: GeneralDialogService,
       private readonly completionsFetcherService: CompletionsFetcherService,
-      private readonly timetableFetcherService: TimetableFetcherService
+      private readonly timetableFetcherService: TimetableFetcherService,
+      private readonly loadingService: LoadingService
    ) { }
 }

@@ -4,6 +4,17 @@
       <apo-sidebar></apo-sidebar>
    }
    <main [class.show-scrollbar]="isAdminPage()">
+      @if(loadingOverlayConfig()) {
+         <ngx-spinner
+            *ngLet="loadingOverlayConfig()! as config"
+            bdColor="rgba(51,51,51,0.8)"
+            size="medium"
+            color="#fff"
+            type="square-jelly-box"
+            [fullScreen]="config.fullscreen">
+            <p class="loading-message">{{ "LOADING_OVERLAY." + config.type | transloco }}...</p>
+         </ngx-spinner>
+      }
       <router-outlet></router-outlet>
    </main>
 </div>

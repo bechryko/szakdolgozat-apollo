@@ -1,0 +1,7 @@
+export enum LoadingType {
+   NAVIGATION = "NAVIGATION",
+   AUTHENTICATION = "AUTHENTICATION",
+   SAVE = "SAVE",
+   DELETE = "DELETE",
+   LOAD = "LOAD"
+}
