@@ -59,7 +59,10 @@ export class CompletionsEffects {
                return updatedCompletions;
             })
          )),
-         map(completions => completionsActions.saveCompletions({ completions })),
+         map(completions => {
+            this.loadingService.finishLoading(completionsLoadingKey);
+            return completionsActions.saveCompletions({ completions });
+         }),
          catchError(() => {
             this.loadingService.finishLoading(completionsLoadingKey);
             // TODO: error handling

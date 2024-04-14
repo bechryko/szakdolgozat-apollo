@@ -1,6 +1,7 @@
 import { Injectable, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { loadingAnimationTypes, rareLoadingAnimationTypes } from './constants';
 import { LoadingType } from './enums';
 import { DisplayedLoadingOverlayConfig, LoadingOverlayConfig } from './models';
 
@@ -14,6 +15,7 @@ export class LoadingService {
    private readonly currentConfig: WritableSignal<LoadingOverlayConfig | null>;
 
    public readonly config: Signal<DisplayedLoadingOverlayConfig | null>;
+   private lastConfig: DisplayedLoadingOverlayConfig | null;
 
    constructor(
       private readonly spinnerService: NgxSpinnerService
@@ -21,21 +23,31 @@ export class LoadingService {
       this.loadingJobConfigs = [];
       this.currentConfig = signal(null);
 
+      this.lastConfig = null;
       this.config = computed(() => {
-         const config = cloneDeep(this.currentConfig() as any);
+         const config = cloneDeep(this.currentConfig()) as any;
+
          if(config) {
             delete config.key;
+            
+            if(this.lastConfig === null) {
+               config.animationType = this.getLoadingAnimation();
+            } else {
+               config.animationType = this.lastConfig.animationType;
+            }
          }
+
+         this.lastConfig = config;
          return config;
       });
    }
 
-   public startLoading(key: Symbol, type: LoadingType, fullscreen = true) { // TODO: timeout handling?
+   public startLoading(key: Symbol, type: LoadingType) { // TODO: timeout handling?
       if(this.loadingJobConfigs.some(config => config.key === key)) {
          return;
       }
 
-      const config: LoadingOverlayConfig = { key, type, fullscreen };
+      const config: LoadingOverlayConfig = { key, type };
       this.loadingJobConfigs.push(config);
 
       if(this.loadingJobConfigs.length === 1) {
@@ -68,5 +80,16 @@ export class LoadingService {
 
       this.spinnerService.hide();
       this.currentConfig.set(null);
+   }
+
+   private getLoadingAnimation(): string {
+      if(Math.random() < 0.001) {
+         return this.randomElement(rareLoadingAnimationTypes);
+      }
+      return this.randomElement(loadingAnimationTypes);
+   }
+
+   private randomElement(array: Readonly<any[]>): string {
+      return array[Math.floor(Math.random() * array.length)];
    }
 }

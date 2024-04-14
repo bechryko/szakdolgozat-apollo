@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { RouteUrls } from '@apollo/app.routes';
 import { isEqual } from 'lodash';
 import { Observable, distinctUntilChanged, filter, map } from 'rxjs';
@@ -26,8 +26,12 @@ export class RouterService {
    ) {
       this.routerEvents$.subscribe(event => {
          if(event instanceof NavigationStart) {
-            this.loadingService.startLoading(navigationLoadingKey, LoadingType.NAVIGATION, false);
-         } else if(event instanceof NavigationEnd) {
+            this.loadingService.startLoading(navigationLoadingKey, LoadingType.NAVIGATION);
+         } else if(
+            event instanceof NavigationEnd ||
+            event instanceof NavigationError ||
+            event instanceof NavigationCancel
+         ) {
             this.loadingService.finishLoading(navigationLoadingKey);
          }
       });

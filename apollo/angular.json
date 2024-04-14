@@ -32,7 +32,31 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/ngx-spinner/animations/square-jelly-box.css"
+              "node_modules/ngx-spinner/animations/ball-8bits.css",
+              "node_modules/ngx-spinner/animations/ball-atom.css",
+              "node_modules/ngx-spinner/animations/ball-beat.css",
+              "node_modules/ngx-spinner/animations/ball-circus.css",
+              "node_modules/ngx-spinner/animations/ball-clip-rotate-multiple.css",
+              "node_modules/ngx-spinner/animations/ball-clip-rotate-pulse.css",
+              "node_modules/ngx-spinner/animations/ball-elastic-dots.css",
+              "node_modules/ngx-spinner/animations/ball-fussion.css",
+              "node_modules/ngx-spinner/animations/ball-newton-cradle.css",
+              "node_modules/ngx-spinner/animations/ball-pulse-rise.css",
+              "node_modules/ngx-spinner/animations/ball-rotate.css",
+              "node_modules/ngx-spinner/animations/ball-running-dots.css",
+              "node_modules/ngx-spinner/animations/ball-scale-pulse.css",
+              "node_modules/ngx-spinner/animations/ball-scale-ripple-multiple.css",
+              "node_modules/ngx-spinner/animations/ball-spin.css",
+              "node_modules/ngx-spinner/animations/ball-spin-clockwise.css",
+              "node_modules/ngx-spinner/animations/ball-square-clockwise-spin.css",
+              "node_modules/ngx-spinner/animations/ball-square-spin.css",
+              "node_modules/ngx-spinner/animations/ball-triangle-path.css",
+              "node_modules/ngx-spinner/animations/fire.css",
+              "node_modules/ngx-spinner/animations/line-scale.css",
+              "node_modules/ngx-spinner/animations/pacman.css",
+              "node_modules/ngx-spinner/animations/square-jelly-box.css",
+              "node_modules/ngx-spinner/animations/square-loader.css",
+              "node_modules/ngx-spinner/animations/timer.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["src"]

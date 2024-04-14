@@ -80,3 +80,7 @@ table thead {
 table {
    border-collapse: collapse;
 }
+
+.ngx-spinner-overlay {
+   backdrop-filter: blur(0.5rem);
+}
