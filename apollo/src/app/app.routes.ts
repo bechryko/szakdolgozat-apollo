@@ -11,7 +11,9 @@ import { averagesFeature } from './averages/store';
 import { MajorCompletionComponent } from './major-completion/major-completion.component';
 import { MenuComponent } from './menu/menu.component';
 import { MenuEffects, menuFeature } from './menu/store';
+import { NoAccessComponent } from './shared/components';
 import { parameterizedRoute } from './shared/functions';
+import { adminGuard, loginGuard } from './shared/guards';
 import { universitySubjectsResolver, userMajorResolver } from './shared/resolvers';
 import { TimetableEffects, timetableFeature } from './timetable/store';
 import { TimetableComponent } from './timetable/timetable.component';
@@ -26,6 +28,7 @@ export enum RouteUrls {
    ADMINISTRATION = 'administration',
    ADMIN_UNIVERSITY = 'administration/university',
    ADMIN_MAJOR = 'administration/major',
+   NO_ACCESS = 'not-found'
 }
 
 export const routes: Routes = [
@@ -57,14 +60,16 @@ export const routes: Routes = [
    },
    {
       path: RouteUrls.ADMINISTRATION,
-      component: AdminPageComponent
+      component: AdminPageComponent,
+      canActivate: [ adminGuard ]
    },
    {
       path: parameterizedRoute(RouteUrls.ADMIN_UNIVERSITY, universityRouteParam),
       component: AdminUniversityComponent,
       resolve: {
          university: universityResolver
-      }
+      },
+      canActivate: [ adminGuard ]
    },
    {
       path: parameterizedRoute(RouteUrls.ADMIN_MAJOR, universityRouteParam, majorRouteParam),
@@ -72,7 +77,8 @@ export const routes: Routes = [
       resolve: {
          university: universityResolver,
          major: majorResolver
-      }
+      },
+      canActivate: [ adminGuard ]
    },
    {
       path: RouteUrls.MAJOR_COMPLETION,
@@ -80,11 +86,16 @@ export const routes: Routes = [
       resolve: {
          userMajor: userMajorResolver,
          universitySubjects: universitySubjectsResolver
-      }
+      },
+      canActivate: [ loginGuard ]
    },
    {
       path: RouteUrls.USER,
       component: UserComponent
+   },
+   {
+      path: parameterizedRoute(RouteUrls.NO_ACCESS, "reason"),
+      component: NoAccessComponent
    },
    {
       path: '**',

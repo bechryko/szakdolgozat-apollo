@@ -1,0 +1,14 @@
+<div class="no-access-container">
+   <h2>{{ "NO_ACCESS.TITLE" | transloco }}</h2>
+   @switch (reason()) {
+      @case(allowedReasons.NOT_LOGGED_IN) {
+         <p class="reason-message">{{ "NO_ACCESS.REASONS.NOT_LOGGED_IN" | transloco }}</p>
+         <button mat-raised-button
+            color="primary"
+            (click)="toLogin()">{{ "NO_ACCESS.TO_LOGIN_LABEL" | transloco }}</button>
+      }
+      @case(allowedReasons.NOT_ADMIN) {
+         <p class="reason-message">{{ "NO_ACCESS.REASONS.NOT_ADMIN" | transloco }}</p>
+      }
+   }
+</div>

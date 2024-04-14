@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouteUrls } from '@apollo/app.routes';
-import { Observable, map } from 'rxjs';
+import { Observable, map, startWith } from 'rxjs';
 import { ApolloCommonModule } from '../modules';
 import { RouterService, UserService } from '../services';
 
@@ -32,6 +32,7 @@ export class HeaderComponent {
       this.isUserLoggedIn$ = this.userService.isUserLoggedIn$;
 
       this.menuItemKeys$ = this.userService.isUserAdmin$.pipe(
+         startWith(false),
          map(isAdmin => {
             const menuItemKeys: RouteUrls[] = [
                RouteUrls.AVERAGES,
