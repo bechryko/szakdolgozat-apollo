@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, Inject, Signal, WritableSignal, com
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { newCompletionDefaultRating } from '@apollo/shared/constants';
 import { orderSubject } from '@apollo/shared/functions';
 import { UniversityCompletionYear, UniversitySubject } from '@apollo/shared/models';
@@ -17,6 +18,8 @@ import { map, take } from 'rxjs';
 import { CompletionsSort } from './enums';
 import { CompletionGroup, CompletionManagerDialogData, CompletionYearSkeleton, ManagableSubjectCompletion, NormalManagableSubjectCompletion } from './models';
 import { CompletionMapperUtils, CompletionsSortUtils } from './utils';
+
+let newYears = 0;
 
 @Component({
    selector: 'apo-completion-manager-dialog',
@@ -52,7 +55,8 @@ export class CompletionManagerDialogComponent {
       private readonly dialogRef: MatDialogRef<CompletionManagerDialogComponent, UniversityCompletionYear[]>,
       @Inject(MAT_DIALOG_DATA) private readonly data: CompletionManagerDialogData,
       transloco: TranslocoService,
-      private readonly userService: UserService
+      private readonly userService: UserService,
+      private readonly dialog: MatDialog
    ) {
       this.selectedSortType = signal(CompletionsSort.NAME);
       this.completions = signal(CompletionMapperUtils.mapCompletionYearsToManagableSubjectCompletions(this.data.completions));
@@ -106,7 +110,42 @@ export class CompletionManagerDialogComponent {
       ]);
    }
 
-   public changeYear(completion: ManagableSubjectCompletion, yearId: string): void {
+   public changeYear(completion: ManagableSubjectCompletion, yearId: string | null | true): void {
+      if(yearId === true) {
+         this.dialog.open(GeneralInputDialogComponent<String>, {
+            data: {
+               title: "COMPLETION_YEAR_ADD_DIALOG.TITLE",
+               description: "COMPLETION_YEAR_ADD_DIALOG.DESCRIPTION",
+               inputType: 'text',
+               inputLabel: "COMPLETION_YEAR_ADD_DIALOG.INPUT_LABEL"
+            }
+         }).afterClosed().subscribe((completionYearName: string) => {
+            if(!completionYearName) {
+               const oldYearId = completion.completionYearId;
+               this.changeYear(completion, oldYearId);
+               return;
+            }
+            
+            const newCompletionYear: CompletionYearSkeleton = {
+               id: 'newYear' + newYears++,
+               name: completionYearName
+            };
+            this.completionYears.set([...this.completionYears(), newCompletionYear]);
+
+            const newCompletion: ManagableSubjectCompletion = {
+               ...completion,
+               completionYearId: newCompletionYear.id,
+               completionYearName,
+               isFirstSemesterCompletion: completion.completionYearId === null ? true : completion.isFirstSemesterCompletion
+            };
+            this.completions.set([
+               ...this.completions().filter(c => !isEqual(c, completion)),
+               newCompletion
+            ]);
+         });
+         return;
+      }
+
       this.completions.set([
          ...this.completions().filter(c => !isEqual(c, completion)),
          this.getNewCompletion(completion, yearId)
@@ -120,7 +159,7 @@ export class CompletionManagerDialogComponent {
       ).subscribe(email => this.dialogRef.close(CompletionMapperUtils.mapManagableSubjectCompletionsToCompletionYears(this.completions(), email)));
    }
 
-   private getNewCompletion(completion: ManagableSubjectCompletion, yearId: string): ManagableSubjectCompletion {
+   private getNewCompletion(completion: ManagableSubjectCompletion, yearId: string | null): ManagableSubjectCompletion {
       if(yearId === null) {
          return { ...completion, completionYearId: null };
       }
@@ -129,7 +168,7 @@ export class CompletionManagerDialogComponent {
          ...completion,
          completionYearId: yearId,
          completionYearName: this.completionYears().find(year => year.id === yearId)?.name!,
-         isFirstSemesterCompletion: true
+         isFirstSemesterCompletion: completion.completionYearId === null ? true : completion.isFirstSemesterCompletion
       };
    }
 }

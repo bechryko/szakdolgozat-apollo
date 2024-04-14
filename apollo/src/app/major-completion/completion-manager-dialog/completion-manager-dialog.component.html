@@ -61,6 +61,7 @@
                         @for(year of completionYears(); track $index) {
                            <mat-option [value]="year.id">{{ year.name }}</mat-option>
                         }
+                        <mat-option [value]="true">{{ "MAJOR_COMPLETION.MANAGER_DIALOG.ADD_YEAR" | transloco }}</mat-option>
                      </mat-select>
                   </td>
                </ng-container>

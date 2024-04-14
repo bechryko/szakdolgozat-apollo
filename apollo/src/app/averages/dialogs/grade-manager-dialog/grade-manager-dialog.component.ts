@@ -69,9 +69,10 @@ export class GradeManagerDialogComponent {
    public addYear(): void {
       this.dialog.open(GeneralInputDialogComponent<String>, {
          data: {
-            title: "AVERAGES.YEAR_ADD_DIALOG.TITLE",
+            title: "COMPLETION_YEAR_ADD_DIALOG.TITLE",
+            description: "COMPLETION_YEAR_ADD_DIALOG.DESCRIPTION",
             inputType: 'text',
-            inputLabel: "AVERAGES.YEAR_ADD_DIALOG.INPUT_LABEL"
+            inputLabel: "COMPLETION_YEAR_ADD_DIALOG.INPUT_LABEL"
          }
       }).afterClosed().subscribe((semesterName: string) => {
          if(!semesterName) {
