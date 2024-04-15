@@ -1,4 +1,4 @@
-@use 'styles/colors';
+@use 'styles/variables' as colors;
 
 .alternative-grades-dialog-container {
    height: 80vh;
@@ -11,13 +11,6 @@
    h2 {
       text-align: center;
    }
-}
-
-.actions {
-   display: flex;
-   gap: 3rem;
-   align-items: center;
-   justify-content: center;
 }
 
 .semester-tables {

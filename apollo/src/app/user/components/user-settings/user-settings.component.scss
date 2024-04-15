@@ -1,4 +1,4 @@
-@use 'styles/colors';
+@use 'styles/variables' as colors;
 
 .settings-container {
    display: flex;
@@ -33,7 +33,5 @@
 }
 
 .actions {
-   display: flex;
    justify-content: space-between;
-   align-items: center;
 }

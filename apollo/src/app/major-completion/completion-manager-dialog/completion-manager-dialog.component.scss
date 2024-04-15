@@ -1,7 +1,7 @@
-@use 'styles/colors';
-@use 'styles/table-style';
+@use 'styles/variables' as colors;
+@use 'styles/elements/table-style' as *;
 
-@include table-style.inputTable;
+@include input-table;
 
 .completion-manager-dialog-container {
    height: 100dvh;

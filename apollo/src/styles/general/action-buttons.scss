@@ -1,0 +1,10 @@
+.actions {
+   display: flex;
+   gap: 3rem;
+   align-items: center;
+   justify-content: center;
+
+   .mat-mdc-form-field-subscript-wrapper {
+      height: 0;
+   }
+}

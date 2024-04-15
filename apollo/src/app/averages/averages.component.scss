@@ -3,15 +3,8 @@
    position: relative;
 }
 
-.actions {
-   display: flex;
-   gap: 3rem;
-   align-items: center;
-   justify-content: center;
-
-   > * {
-      flex-basis: 20%;
-   }
+.actions > * {
+   flex-basis: 20%;
 }
 
 fieldset {

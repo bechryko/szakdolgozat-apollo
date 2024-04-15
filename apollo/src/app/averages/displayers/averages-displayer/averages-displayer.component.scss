@@ -1,1 +1,3 @@
-@use '../displayer-style';
+@use 'styles/elements/displayer' as *;
+
+@include displayer-style;

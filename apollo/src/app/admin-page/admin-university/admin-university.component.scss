@@ -1,4 +1,4 @@
-@use 'styles/colors';
+@use 'styles/variables' as colors;
 
 .admin-university-container {
    display: flex;
@@ -14,7 +14,6 @@
 
    .actions {
       width: 100%;
-      display: flex;
       justify-content: space-around;
 
       button {

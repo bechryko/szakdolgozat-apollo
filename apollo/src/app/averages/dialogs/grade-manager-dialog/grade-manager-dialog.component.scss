@@ -1,4 +1,4 @@
-@use '../../../../styles/colors';
+@use 'styles/variables' as colors;
 
 .grade-manager-dialog-container {
    height: 80dvh;
@@ -12,13 +12,6 @@
    h2 {
       margin-top: 0;
    }
-}
-
-.actions {
-   display: flex;
-   gap: 3rem;
-   align-items: center;
-   justify-content: center;
 }
 
 .semester-tables {

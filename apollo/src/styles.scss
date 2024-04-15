@@ -1,7 +1,6 @@
-@use 'styles/colors';
+@use 'styles/variables' as colors;
 @use 'styles/material-override';
-@use 'styles/color-picker';
-@use 'styles/action-buttons';
+@use 'styles/general';
 
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
@@ -48,19 +47,6 @@ body {
    font-family: Roboto, "Helvetica Neue", sans-serif;
    background-color: colors.$background-color;
    overflow: hidden;
-}
-
-p.error {
-   color: colors.$error-text;
-   font-weight: bold;
-   border: 2px solid colors.$error;
-   padding: 1rem;
-   border-radius: 0.5rem;
-   width: fit-content;
-}
-
-.actions .mat-mdc-form-field-subscript-wrapper {
-   height: 0;
 }
 
 .invisible {

@@ -1,8 +1,8 @@
-@use 'styles/colors';
-@use 'styles/table-style';
-@use 'styles/media-scroller' as ms;
+@use 'styles/variables' as colors;
+@use 'styles/elements/table-style' as *;
+@use 'styles/elements/media-scroller' as *;
 
-@include table-style.inputTable;
+@include input-table;
 
 h2 {
    text-align: center;
@@ -25,8 +25,8 @@ h2 {
 .language-inputs-container {
    $spacing: 1rem;
 
-   @include ms.media-scroller;
-   @include ms.snaps-inline;
+   @include media-scroller;
+   @include snaps-inline;
    gap: $spacing;
    margin: $spacing 0;
 
@@ -71,6 +71,7 @@ h2 {
    display: grid;
    grid-auto-flow: column;
    grid-auto-columns: max-content;
+   justify-content: left;
    gap: 1rem;
    margin-top: 2rem;
 }

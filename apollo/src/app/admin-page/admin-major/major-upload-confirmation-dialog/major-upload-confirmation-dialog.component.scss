@@ -1,4 +1,4 @@
-@use 'styles/colors';
+@use 'styles/variables' as colors;
 
 .major-upload-confirmation-dialog-container {
    width: 70vw;
@@ -13,7 +13,6 @@
 }
 
 .actions {
-   display: flex;
    justify-content: space-around;
    margin-top: 2rem;
 

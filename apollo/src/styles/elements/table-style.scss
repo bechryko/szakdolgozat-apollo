@@ -1,6 +1,6 @@
-@use 'styles/colors';
+@use 'styles/variables' as colors;
 
-@mixin inputTable {
+@mixin input-table {
    .input-table-header {
       display: flex;
       justify-content: space-around;

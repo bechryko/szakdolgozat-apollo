@@ -1,0 +1,3 @@
+//@index('./*', f => `@forward "${f.path}";`)
+@forward "./mat-card";
+//@endindex

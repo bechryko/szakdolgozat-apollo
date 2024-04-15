@@ -1,5 +1,5 @@
 @use 'styles/variables' as *;
-@use 'styles/colors';
+@use 'styles/variables' as colors;
 
 .content {
    display: flex;

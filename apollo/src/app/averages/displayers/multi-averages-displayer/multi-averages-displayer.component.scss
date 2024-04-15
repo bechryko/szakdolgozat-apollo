@@ -1,5 +1,7 @@
-@use 'styles/colors';
-@use '../displayer-style';
+@use 'styles/variables' as colors;
+@use 'styles/elements/displayer' as *;
+
+@include displayer-style;
 
 .year-averages-container {
    display: flex;

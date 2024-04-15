@@ -1,0 +1,5 @@
+//@index('./*', f => `@forward "${f.path}";`)
+@forward "./displayer";
+@forward "./media-scroller";
+@forward "./table-style";
+//@endindex

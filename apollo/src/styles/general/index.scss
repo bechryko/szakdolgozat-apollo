@@ -1,0 +1,4 @@
+//@index('./*', f => `@forward "${f.path}";`)
+@forward "./action-buttons";
+@forward "./color-picker";
+//@endindex

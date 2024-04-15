@@ -1,4 +1,4 @@
-@use 'styles/colors';
+@use 'styles/variables' as colors;
 
 :host {
    border: 2px solid colors.$primary-darker;
