@@ -1,5 +1,18 @@
 @use 'styles/variables' as colors;
 
+@mixin table-cell-input($font-size: 1.2rem) {
+   font-size: $font-size;
+   width: 100%;
+   border: none;
+   cursor: pointer;
+   padding: 0.5rem;
+   
+   &:focus-visible {
+      outline: 2px solid colors.$primary-main;
+      border-radius: 0.5rem;
+   }
+}
+
 @mixin input-table {
    .input-table-header {
       display: flex;
@@ -20,11 +33,8 @@
    }
    
    .table-cell-input {
-      font-size: 1.2rem;
+      @include table-cell-input;
       width: 2rem;
-      border: none;
-      cursor: pointer;
-      padding: 0.5rem;
 
       &.medium-column {
          font-size: 1rem;
@@ -35,11 +45,6 @@
          font-size: 1rem;
          min-width: 15rem;
          width: 90%;
-      }
-   
-      &:focus-visible {
-         outline: 2px solid colors.$primary-main;
-         border-radius: 0.5rem;
       }
    }
 }

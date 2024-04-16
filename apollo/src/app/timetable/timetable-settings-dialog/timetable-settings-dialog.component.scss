@@ -1,10 +1,8 @@
 @use 'styles/variables' as colors;
+@use 'styles/elements/dialog' as *;
 
 .timetable-settings-dialog-container {
-   width: 70vw;
-   height: 70vh;
-   background-color: colors.$primary-background;
-   padding: 2.5rem;
+   @include dialog-container(large);
 }
 
 .settings {

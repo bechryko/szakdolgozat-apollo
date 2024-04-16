@@ -1,0 +1,41 @@
+@use 'styles/variables' as colors;
+
+@mixin dialog-container($size, $flex: flex) {
+   min-width: 25rem;
+   @if($size != small) {
+      min-height: 20rem;
+   }
+   
+   @if($size == large) {
+      width: 70vw;
+      height: 100dvh;
+   } @else if($size == medium) {
+      width: 70vw;
+      height: 80dvh;
+   } @else if($size == small) {
+      width: 45vw;
+      height: fit-content;
+   } @else {
+      @error "Invalid size: #{ $size }.";
+   }
+
+   @if($flex == flex) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+   } @else if ($flex != noflex) {
+      @error "Invalid flex value: #{ $flex }.";
+   }
+
+   background-color: colors.$primary-background;
+   padding: 2rem;
+
+   h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin: 0 auto 2rem;
+   }
+
+   // TODO: scrollable content
+   // TODO: fixed actions
+}

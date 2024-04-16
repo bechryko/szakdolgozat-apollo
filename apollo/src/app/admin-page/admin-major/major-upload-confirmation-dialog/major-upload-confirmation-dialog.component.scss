@@ -1,15 +1,9 @@
 @use 'styles/variables' as colors;
+@use 'styles/elements/dialog' as *;
 
 .major-upload-confirmation-dialog-container {
-   width: 70vw;
-   height: 70vh;
-   background-color: colors.$primary-background;
-   padding: 2.5rem;
+   @include dialog-container(medium);
    overflow-y: auto;
-
-   h2 {
-      text-align: center;
-   }
 }
 
 .actions {

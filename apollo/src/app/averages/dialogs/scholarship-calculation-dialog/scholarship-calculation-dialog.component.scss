@@ -1,11 +1,10 @@
 @use 'styles/variables' as colors;
+@use 'styles/elements/dialog' as *;
 
 .scholarship-calculation-dialog-container {
-   height: 80vh;
-   background-color: colors.$primary-background;
-   padding: 2.5rem;
+   @include dialog-container(small);
 
-   h2, h3 {
+   h3 {
       text-align: center;
    }
 }

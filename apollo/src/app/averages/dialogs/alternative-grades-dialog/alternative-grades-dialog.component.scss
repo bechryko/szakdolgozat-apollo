@@ -1,16 +1,8 @@
 @use 'styles/variables' as colors;
+@use 'styles/elements/dialog' as *;
 
 .alternative-grades-dialog-container {
-   height: 80vh;
-   background-color: colors.$primary-background;
-   padding: 2.5rem;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-
-   h2 {
-      text-align: center;
-   }
+   @include dialog-container(medium);
 }
 
 .semester-tables {

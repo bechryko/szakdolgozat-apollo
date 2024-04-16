@@ -1,20 +1,9 @@
 @use 'styles/variables' as colors;
 @use 'styles/elements/table-style' as *;
-
-@include input-table;
+@use 'styles/elements/dialog' as *;
 
 .completion-manager-dialog-container {
-   height: 100dvh;
-   width: 70vw;
-   background-color: colors.$primary-background;
-   padding: 2.5rem;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-
-   h2 {
-      margin-top: 0;
-   }
+   @include dialog-container(large);
 
    ::ng-deep .mdc-evolution-chip-set__chips {
       align-items: center;
@@ -25,38 +14,39 @@
    }
 }
 
-.completion-year-container {
-   h3 {
-      text-align: center;
-   }
-
-   & + & {
-      margin-top: 2rem;
-   }
-}
-
 .displayed-years-container {
-   overflow-y: auto;
+   overflow: hidden auto;
    max-height: 40rem;
    margin: 2rem 0;
    padding-right: 0.5rem;
+
+   .completion-year-container {
+      h3 {
+         text-align: center;
+      }
+   
+      & + .completion-year-container {
+         margin-top: 2.5rem;
+      }
+   }
 }
 
-table {
+.completion-group-input-table-container {
+   @include input-table;
    width: 57rem;
-}
-
-.input-table-footer {
-   justify-content: space-around;
-   padding: 0 1rem;
-}
-
-.subject-select {
-   max-width: 30rem;
-   padding: 0.5rem;
-   border-radius: 0.5rem;
-
-   &:focus {
-      outline: 2px solid colors.$primary-main;
+   
+   & + .input-table-footer {
+      justify-content: space-around;
+      padding: 0 1rem;
+   }
+   
+   .subject-select {
+      max-width: 30rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+   
+      &:focus {
+         outline: 2px solid colors.$primary-main;
+      }
    }
 }

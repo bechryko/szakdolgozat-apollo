@@ -40,7 +40,7 @@ h2 {
       h4 {
          text-align: center;
          font-size: 0.875rem;
-         margin: 0 auto
+         margin: 0 auto;
       }
    }
 }
@@ -55,16 +55,7 @@ h2 {
 }
 
 .table-cell input {
-   font-size: 1em;
-   width: 100%;
-   border: none;
-   cursor: pointer;
-   padding: 0.5rem;
-   
-   &:focus-visible {
-      outline: 2px solid colors.$primary-main;
-      border-radius: 0.5rem;
-   }
+   @include table-cell-input(1em);
 }
 
 .actions {

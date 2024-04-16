@@ -1,6 +1,7 @@
+@use 'styles/elements/dialog' as *;
+
 .general-dialog-container {
-   padding: 1.5rem;
-   box-sizing: border-box;
+   @include dialog-container(small);
 }
 
 .actions {

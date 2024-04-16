@@ -21,7 +21,6 @@
 }
 
 .mat-mdc-standard-chip {
-   box-sizing: border-box;
    border: 1px solid colors.$accent-highlight;
 
    &:not(.mdc-evolution-chip--selected) {
