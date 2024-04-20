@@ -1,14 +1,10 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
+@use 'styles/elements/section';
 
 @mixin displayer-style {
    :host {
+      @include section.general-section;
       display: block;
-      margin: 1.5rem;
-   }
-   
-   legend {
-      font-size: 1.5rem;
-      font-weight: bold;
    }
    
    p {
@@ -17,7 +13,7 @@
    
    .alternative-data {
       display: inline-block;
-      color: colors.$alternative-font-color;
+      color: variables.$alternative-font-color;
       height: 1.25rem;
    
       mat-icon {

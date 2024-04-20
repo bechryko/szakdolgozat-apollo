@@ -1,4 +1,5 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
+@use 'styles/elements/section';
 
 .settings-container {
    display: flex;
@@ -14,10 +15,8 @@
 }
 
 .user-settings-container {
-   border: 2px solid colors.$primary-darker;
-   border-radius: 1rem;
+   @include section.general-section;
    margin-bottom: 3rem;
-   padding: 2rem;
 }
 
 .expansion-panel-title {
@@ -29,7 +28,7 @@
 }
 
 .mat-expansion-panel {
-   background-color: colors.$primary-background;
+   background-color: variables.$primary-background;
 }
 
 .actions {

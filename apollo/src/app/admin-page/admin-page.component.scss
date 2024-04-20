@@ -1,12 +1,12 @@
-@use 'styles/variables' as colors;
-@use 'styles/elements/table-style' as *;
-@use 'styles/elements/media-scroller' as *;
+@use 'styles/variables';
+@use 'styles/elements/table-style';
+@use 'styles/elements/media-scroller';
 
-@include input-table;
+@include table-style.input-table;
 
 h2 {
    text-align: center;
-   font-size: 2rem;
+   font-size: variables.$page-heading-font-size;
    margin: 0 0 3rem;
 }
 
@@ -14,10 +14,10 @@ h2 {
    font-size: 0.75rem;
 
    .university-panel {
-      background-color: colors.$primary-background;
+      background-color: variables.$primary-background;
 
       .panel-header {
-         background-color: colors.$primary-darker-background;
+         background-color: variables.$primary-darker-background;
       }
    }
 }
@@ -25,15 +25,15 @@ h2 {
 .language-inputs-container {
    $spacing: 1rem;
 
-   @include media-scroller;
-   @include snaps-inline;
+   @include media-scroller.media-scroller;
+   @include media-scroller.snaps-inline;
    gap: $spacing;
    margin: $spacing 0;
 
    .language-input {
       display: inline-block;
       padding: $spacing;
-      background-color: colors.$primary-lighter-background;
+      background-color: variables.$primary-lighter-background;
       border-top-left-radius: $spacing;
       border-top-right-radius: $spacing;
 
@@ -55,7 +55,7 @@ h2 {
 }
 
 .table-cell input {
-   @include table-cell-input(1em);
+   @include table-style.table-cell-input(1em);
 }
 
 .actions {

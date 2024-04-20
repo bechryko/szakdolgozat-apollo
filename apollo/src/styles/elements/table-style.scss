@@ -1,4 +1,4 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 
 @mixin table-cell-input($font-size: 1.2rem) {
    font-size: $font-size;
@@ -8,7 +8,7 @@
    padding: 0.5rem;
    
    &:focus-visible {
-      outline: 2px solid colors.$primary-main;
+      outline: variables.$input-focus-outline;
       border-radius: 0.5rem;
    }
 }
@@ -19,7 +19,7 @@
       justify-content: space-around;
       align-items: center;
       height: 3.5rem;
-      font-size: 2rem;
+      font-size: variables.$section-heading-font-size;
    }
    
    .input-table-footer {

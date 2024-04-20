@@ -1,4 +1,4 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 
 .admin-university-container {
    display: flex;
@@ -42,20 +42,20 @@
    .list-container {
       height:  37rem;
       overflow: auto;
-      background-color: colors.$primary-background;
+      background-color: variables.$primary-background;
 
       .list-item {
          padding: 0.5rem;
-         border-bottom: 1px solid colors.$primary-darker;
+         border-bottom: variables.$table-border;
          cursor: pointer;
          user-select: none;
 
          &:hover {
-            background-color: colors.$primary-darker-background;
+            background-color: variables.$primary-darker-background;
          }
 
          &.selected {
-            background-color: colors.$primary-darker;
+            background-color: variables.$primary-darker;
             color: white;
          }
       }
@@ -69,8 +69,8 @@
       height:  37rem;
       overflow: auto;
       padding: 1.5rem;
-      background-color: colors.$primary-background;
-      border: 2px solid colors.$primary-darker;
+      background-color: variables.$primary-background;
+      border: variables.$section-border;
       border-top: none;
 
       mat-form-field {

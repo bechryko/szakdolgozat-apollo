@@ -1,5 +1,5 @@
-<fieldset>
-   <legend>{{ title }}</legend>
+<div>
+   <h3>{{ title }}</h3>
    <p>
       {{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() | displayValue }}
       @if(alternativeWeightedAverage()) {
@@ -40,4 +40,4 @@
       color="primary"
       [disabled]="!userMajor()"
       (click)="calculateScholarship()">{{ "AVERAGES.DISPLAY.CALCULATE_SCHOLARSHIP_LABEL" | transloco }}</button>
-</fieldset>
+</div>

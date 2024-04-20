@@ -1,1 +1,13 @@
+@use './color-references' as *;
+
 $header-height: 6rem;
+
+$page-heading-font-size: 2.25rem;
+$section-heading-font-size: 1.75rem;
+$table-header-font-size: 1.5rem;
+$dialog-heading-font-size: 2rem;
+
+$section-border: 2px solid $border-color;
+$table-border: 1px solid $border-color;
+
+$input-focus-outline: 2px solid $input-highlight-color;

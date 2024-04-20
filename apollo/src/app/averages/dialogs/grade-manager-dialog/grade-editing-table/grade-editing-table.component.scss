@@ -1,4 +1,4 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 @use 'styles/elements/table-style' as *;
 
 @include input-table;
@@ -18,6 +18,6 @@ table {
    border-radius: 0.5rem;
 
    &:focus {
-      outline: 2px solid colors.$primary-main;
+      outline: variables.$input-focus-outline;
    }
 }

@@ -1,7 +1,7 @@
-@use 'styles/variables' as colors;
-@use 'styles/elements/displayer' as *;
+@use 'styles/variables';
+@use 'styles/elements/displayer';
 
-@include displayer-style;
+@include displayer.displayer-style;
 
 .year-averages-container {
    display: flex;
@@ -26,11 +26,11 @@
       .alternative-arrow {
          position: relative;
          top: -0.15rem;
-         color: colors.$alternative-font-color;
+         color: variables.$alternative-font-color;
       }
 
       .no-data-icon {
-         color: colors.$disabled;
+         color: variables.$disabled;
       }
    }
 }

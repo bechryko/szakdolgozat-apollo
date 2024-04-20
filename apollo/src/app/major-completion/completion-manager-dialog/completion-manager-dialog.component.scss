@@ -1,9 +1,9 @@
-@use 'styles/variables' as colors;
-@use 'styles/elements/table-style' as *;
-@use 'styles/elements/dialog' as *;
+@use 'styles/variables';
+@use 'styles/elements/table-style';
+@use 'styles/elements/dialog';
 
 .completion-manager-dialog-container {
-   @include dialog-container(large);
+   @include dialog.dialog-container(large);
 
    ::ng-deep .mdc-evolution-chip-set__chips {
       align-items: center;
@@ -32,7 +32,7 @@
 }
 
 .completion-group-input-table-container {
-   @include input-table;
+   @include table-style.input-table;
    width: 57rem;
    
    & + .input-table-footer {
@@ -46,7 +46,7 @@
       border-radius: 0.5rem;
    
       &:focus {
-         outline: 2px solid colors.$primary-main;
+         outline: variables.$input-focus-outline;
       }
    }
 }
