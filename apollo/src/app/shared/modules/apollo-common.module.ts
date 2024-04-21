@@ -5,11 +5,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { NgLetModule } from 'ng-let';
+import { ApolloButtonComponent } from '../components/button/button.component';
 
 const includedModules = [
    TranslocoPipe,
    NgLetModule,
    CommonModule,
+   ApolloButtonComponent,
    MatButtonModule,
    MatIconModule,
    MatTooltipModule

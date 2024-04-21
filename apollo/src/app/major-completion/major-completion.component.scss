@@ -75,7 +75,7 @@ h4, .main-label {
    padding-left: 1rem;
    transition: background-color 0.3s;
 
-   &:has(button:hover) {
+   &:has(apo-button:hover) {
       background-color: colors.$primary-lighter-background;
    }
 

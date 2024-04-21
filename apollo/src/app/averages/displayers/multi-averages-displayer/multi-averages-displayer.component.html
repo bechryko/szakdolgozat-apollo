@@ -1,10 +1,9 @@
 <div>
    <h3>{{ title }}</h3>
    @if(yearDisplay) {
-      <button mat-raised-button
-         class="alternatives-button"
-         color="accent"
-         (click)="onSetAlternatives()">{{ "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL" | transloco }}</button>
+      <apo-button class="alternatives-button"
+         apoRole="openDialog"
+         (click)="onSetAlternatives()">{{ "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL" | transloco }}</apo-button>
    }
    <p class="weighted-average-container">
       {{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() | displayValue }}

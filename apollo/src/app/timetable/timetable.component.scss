@@ -1,4 +1,4 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 
 .timetable-container {
    display: grid;
@@ -7,7 +7,7 @@
    width: 100%;
    height: 100%;
    text-align: center;
-   background-color: colors.$primary-background;
+   background-color: variables.$primary-background;
    overflow-y: auto;
    overflow-x: hidden;
    position: relative;
@@ -28,7 +28,7 @@
    display: grid;
 
    h3 {
-      border-left: 1px solid colors.$primary-text;
+      border-left: 1px solid variables.$primary-text;
       font-size: 1.4rem;
    }
 }
@@ -38,7 +38,7 @@
    height: 100%;
 
    h3 {
-      border-top: 1px solid colors.$primary-text;
+      border-top: 1px solid variables.$primary-text;
       font-size: 1.4rem;
       height: 7.5dvh;
       margin: 0;

@@ -15,11 +15,9 @@
          [alternativeGrades]="alternativeSecondSemesterGrades"></apo-alternatives-editing-table>
    </div>
    <div class="actions">
-   <button mat-raised-button
-      color="primary"
-      (click)="save()">{{ "GENERAL_BUTTON_LABELS.SAVE_AND_CLOSE" | transloco }}</button>
-   <button mat-raised-button
-      color="accent"
-      (click)="reset()">{{ "AVERAGES.ALTERNATIVE_GRADES_DIALOG.RESET_LABEL" | transloco }}</button>
+   <apo-button apoRole="save"
+      (click)="save()">{{ "GENERAL_BUTTON_LABELS.SAVE_AND_CLOSE" | transloco }}</apo-button>
+   <apo-button apoRole="reset"
+      (click)="reset()">{{ "AVERAGES.ALTERNATIVE_GRADES_DIALOG.RESET_LABEL" | transloco }}</apo-button>
    </div>
 </div>

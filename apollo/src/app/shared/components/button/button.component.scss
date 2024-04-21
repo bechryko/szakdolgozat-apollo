@@ -1,0 +1,60 @@
+@use 'styles/variables';
+
+:host {
+   display: inline-block;
+   height: 2.25rem;
+
+   &:has(.apollo-fab-button) {
+      height: 3.5rem;
+   }
+}
+
+.apollo-button {
+   height: 100%;
+   width: 100%;
+   font-size: variables.$input-font-size;
+   padding: variables.$input-padding;
+   border: none;
+   border-radius: variables.$input-border-radius;
+   box-shadow: variables.$input-shadow;
+   transition: background-color variables.$input-hover-transition-time ease-in-out;
+
+   &:not(:disabled) {
+      user-select: none;
+      cursor: pointer;
+   
+      &.primary {
+         background: variables.$primary-input-background;
+         color: variables.$primary-input-color;
+   
+         &:hover {
+            background: variables.$primary-input-hover-background;
+         }
+      }
+   
+      &.accent {
+         background: variables.$accent-input-background;
+         color: variables.$accent-input-color;
+         border: variables.$accent-input-border;
+   
+         &:hover {
+            background: variables.$accent-input-hover-background;
+         }
+      }
+   
+      &.warn {
+         background: variables.$warn-input-background;
+         color: variables.$warn-input-color;
+         border: variables.$warn-input-border;
+   
+         &:hover {
+            background: variables.$warn-input-hover-background;
+         }
+      }
+   }
+
+   &:disabled {
+      background: variables.$disabled-input-background;
+      color: variables.$disabled-input-color;
+   }
+}

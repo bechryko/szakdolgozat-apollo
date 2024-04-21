@@ -12,8 +12,7 @@
          type="password"
          formControlName="password">
    </mat-form-field>
-   <button mat-raised-button
-      color="primary"
+   <apo-button apoRole="navigation"
       (click)="onLogin()"
-      [disabled]="isFormInvalid$ | async">{{ "AUTH.LOGIN_FORM.SUBMIT_BUTTON_LABEL" | transloco }}</button>
+      [disabled]="isFormInvalid$ | async">{{ "AUTH.LOGIN_FORM.SUBMIT_BUTTON_LABEL" | transloco }}</apo-button>
 </form>

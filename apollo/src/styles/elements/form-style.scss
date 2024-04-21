@@ -1,0 +1,20 @@
+@use './section';
+
+@mixin auth-form {
+   :host {
+      @include section.general-section;
+      min-width: 30rem;
+   }
+
+   .auth-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+
+      apo-button {
+         width: 75%;
+         margin-bottom: 2rem;
+      }
+   }
+}

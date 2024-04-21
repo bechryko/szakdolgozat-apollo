@@ -25,8 +25,7 @@
          type="password"
          formControlName="confirmPassword">
    </mat-form-field>
-   <button mat-raised-button
-      color="primary"
+   <apo-button apoRole="accept"
       (click)="onRegister()"
-      [disabled]="isFormInvalid$ | async">{{ "AUTH.REGISTER_FORM.SUBMIT_BUTTON_LABEL" | transloco }}</button>
+      [disabled]="isFormInvalid$ | async">{{ "AUTH.REGISTER_FORM.SUBMIT_BUTTON_LABEL" | transloco }}</apo-button>
 </form>

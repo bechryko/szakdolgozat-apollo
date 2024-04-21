@@ -1,10 +1,9 @@
 @if(averages()) {
    @if((isUserLoggedOut$ | async) && averages()!.length > 0) {
-      <button mat-fab class="floating-button"
-         color="warn"
-         (click)="onDeleteGuestData()">
-         <mat-icon>delete</mat-icon>
-      </button>
+      <apo-button class="floating-button"
+         apoRole="delete"
+         [isFab]="true"
+         (click)="onDeleteGuestData()">delete</apo-button>
    }
    <apo-multi-averages-displayer
       [title]="'AVERAGES.DISPLAY.TITLE.CUMULATED' | transloco"
@@ -12,9 +11,10 @@
       [yearData]="averages()!"></apo-multi-averages-displayer>
    <div class="actions">
       @if(selectedYear()) {
-         <button mat-raised-button
-            color="primary"
-            (click)="toggleViewMode()">{{ "AVERAGES.VIEW_MODE_TOGGLE_BUTTON." + (singleYearViewMode() ? "MULTIPLE" : "SINGLE") + "_LABEL" | transloco }}</button>
+         <apo-button [apoRole]="undefined"
+            (click)="toggleViewMode()">
+            {{ "AVERAGES.VIEW_MODE_TOGGLE_BUTTON." + (singleYearViewMode() ? "MULTIPLE" : "SINGLE") + "_LABEL" | transloco }}
+         </apo-button>
          <mat-form-field [class.invisible]="!singleYearViewMode()">
             <mat-label>{{ "AVERAGES.YEAR_SELECTION_LABEL" | transloco }}</mat-label>
             <mat-select [value]="selectedYear()" (valueChange)="selectYear($event)">
@@ -24,10 +24,9 @@
             </mat-select>
          </mat-form-field>
       }
-      <button mat-raised-button
-         color="primary"
-         [disabled]="averages()!.length === 0"
-         (click)="manageGrades()">{{ "AVERAGES.MANAGE_GRADES_LABEL" | transloco }}</button>
+      <apo-button [disabled]="averages()!.length === 0"
+         apoRole="openDialog"
+         (click)="manageGrades()">{{ "AVERAGES.MANAGE_GRADES_LABEL" | transloco }}</apo-button>
    </div>
    <ng-container *ngLet="singleYearViewMode() ? [ selectedYear()! ] : averages() as years">
       @for(year of years; track -$index) {

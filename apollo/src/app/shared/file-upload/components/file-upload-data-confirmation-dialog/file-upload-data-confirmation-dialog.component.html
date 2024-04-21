@@ -15,11 +15,9 @@
       <mat-row *matRowDef="let row; columns: dataKeys"></mat-row>
    </mat-table>
    <div class="actions">
-      <button mat-raised-button
-         color="primary"
-         (click)="accept()">{{ "GENERAL_DIALOG.ACCEPT" | transloco }}</button>
-      <button mat-raised-button
-         color="warn"
-         (click)="reject()">{{ "FILE_UPLOAD_DIALOG.REJECT" | transloco }}</button>
+      <apo-button apoRole="accept"
+         (click)="accept()">{{ "GENERAL_DIALOG.ACCEPT" | transloco }}</apo-button>
+      <apo-button apoRole="cancel"
+         (click)="reject()">{{ "FILE_UPLOAD_DIALOG.REJECT" | transloco }}</apo-button>
    </div>
 </div>

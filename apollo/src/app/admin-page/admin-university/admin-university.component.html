@@ -1,13 +1,11 @@
 <div class="admin-university-container" *ngIf="university() as university">
    <h2>{{ university.name | multiLanguage }}</h2>
    <div class="actions">
-      <button mat-raised-button
-         class="back-button"
-         color="accent"
-         (click)="back()">{{ "GENERAL_BUTTON_LABELS.BACK" | transloco }}</button>
-      <button mat-raised-button
-         color="primary"
-         (click)="saveAll()">{{ "ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_ALL_LABEL" | transloco }}</button>
+      <apo-button class="back-button"
+         apoRole="cancel"
+         (click)="back()">{{ "GENERAL_BUTTON_LABELS.BACK" | transloco }}</apo-button>
+      <apo-button apoRole="save"
+         (click)="saveAll()">{{ "ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_ALL_LABEL" | transloco }}</apo-button>
    </div>
    <mat-tab-group class="tabs">
       <mat-tab [label]="'ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_LIST_LABEL' | transloco">
@@ -56,13 +54,11 @@
                      </mat-checkbox>
                   </div>
                   <div class="actions">
-                     <button mat-raised-button
-                        color="warn"
-                        (click)="deleteSubject(selectedSubject)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</button>
-                     <button mat-raised-button
-                        class="save-button"
-                        color="primary"
-                        (click)="saveSubject(selectedSubject)">{{ "GENERAL_BUTTON_LABELS.SAVE" | transloco }}</button>
+                     <apo-button apoRole="delete"
+                        (click)="deleteSubject(selectedSubject)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</apo-button>
+                     <apo-button class="save-button"
+                        apoRole="save"
+                        (click)="saveSubject(selectedSubject)">{{ "GENERAL_BUTTON_LABELS.SAVE" | transloco }}</apo-button>
                   </div>
                } @else {
                   <p>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.SUBJECT_DETAILS.NO_DATA" | transloco }}</p>
@@ -81,10 +77,9 @@
                         (click)="selectMajor(major)">{{ major.name }}</div>
                   }
                   <div class="actions">
-                     <button mat-raised-button
-                        class="add-button"
-                        color="accent"
-                        (click)="addMajor()">{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.ADD_BUTTON_LABEL" | transloco }}</button>
+                     <apo-button class="add-button"
+                        apoRole="add"
+                        (click)="addMajor()">{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.ADD_BUTTON_LABEL" | transloco }}</apo-button>
                   </div>
                }
             </div>
@@ -118,19 +113,18 @@
                         [(ngModel)]="selectedMajor.stateScholarshipRequiredAverage">
                   </mat-form-field>
                   <div class="actions">
-                     <button mat-raised-button
-                        color="warn"
-                        (click)="deleteMajor(selectedMajor)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</button>
-                     <button mat-raised-button
-                        class="save-button"
-                        color="primary"
-                        (click)="saveMajor(selectedMajor)">{{ "GENERAL_BUTTON_LABELS.SAVE" | transloco }}</button>
+                     <apo-button apoRole="delete"
+                        (click)="deleteMajor(selectedMajor)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</apo-button>
+                     <apo-button class="save-button"
+                        apoRole="save"
+                        (click)="saveMajor(selectedMajor)">{{ "GENERAL_BUTTON_LABELS.SAVE" | transloco }}</apo-button>
                   </div>
                   <div class="actions">
-                     <button mat-raised-button
-                        class="add-button"
-                        color="accent"
-                        (click)="openMajorDetails(selectedMajor)">{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.DETAILS_BUTTON_LABEL" | transloco }}</button>
+                     <apo-button class="add-button"
+                        apoRole="navigation"
+                        (click)="openMajorDetails(selectedMajor)">
+                        {{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.DETAILS_BUTTON_LABEL" | transloco }}
+                     </apo-button>
                   </div>
                } @else {
                   <p>{{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.NO_DATA" | transloco }}</p>

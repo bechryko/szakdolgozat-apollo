@@ -18,7 +18,7 @@ import { AuthFormsUtils } from '../../utils';
       ReactiveFormsModule
    ],
    templateUrl: './login.component.html',
-   styleUrl: '../../styles/auth-forms.scss',
+   styleUrl: './login.component.scss',
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {

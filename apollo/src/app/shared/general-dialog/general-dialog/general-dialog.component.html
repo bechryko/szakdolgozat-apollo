@@ -3,14 +3,12 @@
    <p>{{ data.content | transloco }}</p>
    <div class="actions">
       @if(data.accept) {
-         <button mat-raised-button
-            color="primary"
-            (click)="close(true)">{{ data.accept | transloco }}</button>
+         <apo-button apoRole="accept"
+            (click)="close(true)">{{ data.accept | transloco }}</apo-button>
       }
       @if(data.cancel) {
-         <button mat-raised-button
-            color="accent"
-            (click)="close(false)">{{ data.cancel | transloco }}</button>
+         <apo-button apoRole="cancel"
+            (click)="close(false)">{{ data.cancel | transloco }}</apo-button>
       }
    </div>
 </div>

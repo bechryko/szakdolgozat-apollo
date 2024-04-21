@@ -9,9 +9,8 @@
             }
          </mat-select>
       </mat-form-field>
-      <button mat-raised-button
-         color="primary"
-         (click)="addYear()">{{ "AVERAGES.GRADE_MANAGER_DIALOG.YEAR_ADD_LABEL" | transloco }}</button>
+      <apo-button apoRole="add"
+         (click)="addYear()">{{ "AVERAGES.GRADE_MANAGER_DIALOG.YEAR_ADD_LABEL" | transloco }}</apo-button>
    </div>
    <div class="semester-tables">
       <apo-grade-editing-table
@@ -23,7 +22,6 @@
          [universitySubjects]="universitySubjects()"
          [grades]="selectedYear()!.secondSemesterGrades"></apo-grade-editing-table>
    </div>
-   <button mat-raised-button
-      color="primary"
-      (click)="save()">{{ "GENERAL_BUTTON_LABELS.SAVE_AND_CLOSE" | transloco }}</button>
+   <apo-button apoRole="save"
+      (click)="save()">{{ "GENERAL_BUTTON_LABELS.SAVE_AND_CLOSE" | transloco }}</apo-button>
 </div>

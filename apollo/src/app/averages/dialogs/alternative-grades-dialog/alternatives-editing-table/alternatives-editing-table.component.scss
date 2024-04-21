@@ -1,7 +1,6 @@
-@use 'styles/variables' as colors;
-@use 'styles/elements/table-style' as *;
+@use 'styles/elements/table-style';
 
-@include input-table;
+@include table-style.input-table;
 
 td {
    &.changed {

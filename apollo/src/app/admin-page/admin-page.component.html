@@ -61,25 +61,23 @@
                </mat-table>
                <div class="mat-mdc-table">
                   <div class="input-table-footer">
-                     <button mat-raised-button
-                        color="accent"
-                        (click)="addFaculty(university)">{{ "INPUT_TABLE.ADD_BUTTON_LABEL" | transloco }}</button>
+                     <apo-button apoRole="add"
+                        (click)="addFaculty(university)">{{ "INPUT_TABLE.ADD_BUTTON_LABEL" | transloco }}</apo-button>
                   </div>
                </div>
             </div>
             <div class="actions">
-               <button mat-raised-button
-                  color="primary"
-                  (click)="showUniversityDetails(university)">{{ "ADMINISTRATION.UNIVERSITY.SHOW_DETAILS_LABEL" | transloco }}</button>
-               <button mat-raised-button
-                  color="primary"
-                  (click)="saveChanges()">{{ "ADMINISTRATION.UNIVERSITY.SAVE_LABEL" | transloco }}</button>
+               <apo-button apoRole="navigation"
+                  (click)="showUniversityDetails(university)">
+                  {{ "ADMINISTRATION.UNIVERSITY.SHOW_DETAILS_LABEL" | transloco }}
+               </apo-button>
+               <apo-button apoRole="save"
+                  (click)="saveChanges()">{{ "ADMINISTRATION.UNIVERSITY.SAVE_LABEL" | transloco }}</apo-button>
             </div>
          </mat-expansion-panel>
       }
-      <button mat-raised-button
-         class="add-university-button"
-         color="accent"
-         (click)="addUniversity()">{{ "ADMINISTRATION.UNIVERSITY_ADD_BUTTON_LABEL" | transloco }}</button>
+      <apo-button class="add-university-button"
+         apoRole="add"
+         (click)="addUniversity()">{{ "ADMINISTRATION.UNIVERSITY_ADD_BUTTON_LABEL" | transloco }}</apo-button>
    </div>
 }

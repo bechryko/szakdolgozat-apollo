@@ -21,13 +21,11 @@
                </mat-select>
             </mat-form-field>
             <p>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_ADD_ALERT" | transloco }}</p>
-            <button mat-raised-button
-               color="primary"
-               (click)="addSemester()">{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_ADD_LABEL" | transloco }}</button>
+            <apo-button apoRole="add"
+               (click)="addSemester()">{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_ADD_LABEL" | transloco }}</apo-button>
             <p>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_DELETE_ALERT" | transloco }}</p>
-            <button mat-raised-button
-               color="warn"
-               (click)="deleteSemester()">{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_DELETE_LABEL" | transloco }}</button>
+            <apo-button apoRole="delete"
+               (click)="deleteSemester()">{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_DELETE_LABEL" | transloco }}</apo-button>
          </mat-tab>
          <mat-tab [label]="'TIMETABLE.SETTINGS_DIALOG.CATEGORY_SETTINGS.LABEL' | transloco">
             <form class="settings" [formGroup]="categoryForm()">
@@ -52,16 +50,15 @@
                         <mat-checkbox formControlName="temporary">
                            {{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_SETTINGS.TEMPORARY" | transloco }}
                         </mat-checkbox><br>
-                        <button mat-raised-button class="unit-delete-button"
-                           color="warn"
-                           (click)="deleteCategory($index)">{{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_SETTINGS.DELETE" | transloco }}</button>
+                        <apo-button class="unit-delete-button"
+                           apoRole="delete"
+                           (click)="deleteCategory($index)">{{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_SETTINGS.DELETE" | transloco }}</apo-button>
                      </div>
                   }
                </ng-container>
             </form>
-            <button mat-raised-button
-               color="primary"
-               (click)="addCategory()">{{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_ADD_LABEL" | transloco }}</button>
+            <apo-button apoRole="add"
+               (click)="addCategory()">{{ "TIMETABLE.SETTINGS_DIALOG.CATEGORY_ADD_LABEL" | transloco }}</apo-button>
          </mat-tab>
          <mat-tab [label]="'TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.LABEL' | transloco">
             <form class="settings" [formGroup]="activityForm()">
@@ -118,25 +115,26 @@
                            </mat-select>
                         </mat-form-field><br>
                         <div class="actions">
-                           <button mat-raised-button
-                              color="warn"
-                              (click)="deleteActivity($index)">{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.DELETE" | transloco }}</button>
-                           <button mat-raised-button
-                              color="primary"
-                              (click)="duplicateActivity($index)">{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.DUPLICATE" | transloco }}</button>
+                           <apo-button apoRole="delete"
+                              (click)="deleteActivity($index)">
+                              {{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.DELETE" | transloco }}
+                           </apo-button>
+                           <apo-button apoRole="add"
+                              (click)="duplicateActivity($index)">
+                              {{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.DUPLICATE" | transloco }}
+                           </apo-button>
                         </div>
                      </div>
                   }
                </ng-container>
             </form>
-            <button mat-raised-button
-               color="primary"
-               (click)="addActivity()">{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_ADD_LABEL" | transloco }}</button>
+            <apo-button apoRole="add"
+               (click)="addActivity()">{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_ADD_LABEL" | transloco }}</apo-button>
          </mat-tab>
       </mat-tab-group>
-      <button mat-raised-button  class="close-button"
-         color="accent"
-         (click)="save()">{{ "TIMETABLE.SETTINGS_DIALOG.CLOSE" | transloco }}</button>
+      <apo-button class="close-button"
+         apoRole="save"
+         (click)="save()">{{ "TIMETABLE.SETTINGS_DIALOG.CLOSE" | transloco }}</apo-button>
    } @else {
       <p>{{ "TIMETABLE.SETTINGS_DIALOG.SEMESTER_SELECT_ALERT" | transloco }}</p>
       <mat-form-field>

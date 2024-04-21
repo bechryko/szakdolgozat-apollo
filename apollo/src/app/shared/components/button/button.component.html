@@ -1,0 +1,21 @@
+@if(!isFab()) {
+   <button class="apollo-button"
+      [ngClass]="color()"
+      [disabled]="disabled()">
+      <ng-template [ngTemplateOutlet]="content"></ng-template>
+   </button>
+} @else {
+   <button class="apollo-fab-button"
+      mat-fab
+      disableRipple
+      [color]="color()"
+      [disabled]="disabled()">
+      <mat-icon>
+      <ng-template [ngTemplateOutlet]="content"></ng-template>
+      </mat-icon>
+   </button>
+}
+
+<ng-template #content>
+   <ng-content></ng-content>
+</ng-template>

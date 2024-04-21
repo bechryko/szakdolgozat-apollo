@@ -1,5 +1,24 @@
 @use './colors';
 
+$header-color: colors.$primary-main;
+
 $border-color: colors.$primary-darker;
+
+$primary-input-background: colors.$primary-main;
+$primary-input-hover-background: colors.$primary-lighter;
+$primary-input-color: colors.$primary-text;
+
+$accent-input-background: colors.$accent-background;
+$accent-input-hover-background: colors.$accent-lighter;
+$accent-input-color: colors.$primary-text;
+$accent-input-border-color: colors.$accent-highlight;
+
+$warn-input-background: colors.$warn-background;
+$warn-input-hover-background: colors.$warn-background-darker;
+$warn-input-color: colors.$warn-text;
+$warn-input-border-color: colors.$warn;
+
+$disabled-input-background: colors.$disabled;
+$disabled-input-color: colors.$primary-text;
 
 $input-highlight-color: colors.$primary-main;

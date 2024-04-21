@@ -1,7 +1,7 @@
-@use 'styles/elements/dialog' as *;
+@use 'styles/elements/dialog';
 
 .general-dialog-container {
-   @include dialog-container(small);
+   @include dialog.dialog-container(small);
 }
 
 .actions {

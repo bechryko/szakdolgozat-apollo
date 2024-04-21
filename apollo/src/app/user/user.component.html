@@ -4,9 +4,8 @@
          <apo-user-settings [user]="user"
             (saveChanges)="onSaveUserSettings($event)"></apo-user-settings>
          <div class="actions">
-            <button mat-raised-button
-               color="accent"
-               (click)="onLogout()">{{ "AUTH.LOGOUT_BUTTON_LABEL" | transloco }}</button>
+            <apo-button apoRole="cancel"
+               (click)="onLogout()">{{ "AUTH.LOGOUT_BUTTON_LABEL" | transloco }}</apo-button>
          </div>
       </div>
    } @else {

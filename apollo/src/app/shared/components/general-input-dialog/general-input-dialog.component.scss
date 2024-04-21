@@ -1,7 +1,7 @@
-@use 'styles/elements/dialog' as *;
+@use 'styles/elements/dialog';
 
 .general-input-dialog-container {
-   @include dialog-container(small);
+   @include dialog.dialog-container(small);
    gap: 1.5rem;
 
    h2 {

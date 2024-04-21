@@ -96,9 +96,8 @@
                         <mat-option [value]="subject">{{ subject.name }} ({{ subject.code }})</mat-option>
                      }
                   </mat-select>
-                  <button mat-raised-button
-                     color="accent"
-                     (click)="addCompletion()">{{ "MAJOR_COMPLETION.MANAGER_DIALOG.ADD_COMPLETION_LABEL" | transloco }}</button>
+                  <apo-button apoRole="add"
+                     (click)="addCompletion()">{{ "MAJOR_COMPLETION.MANAGER_DIALOG.ADD_COMPLETION_LABEL" | transloco }}</apo-button>
                   <!-- <apo-file-upload
                      [parserFn]="fileParserFn"
                      (fileDataChange)="fileUpload($event, grades)"
@@ -108,7 +107,6 @@
          </div>
       }
    </div>
-   <button mat-raised-button
-      color="primary"
-      (click)="save()">{{ "GENERAL_BUTTON_LABELS.SAVE_AND_CLOSE" | transloco }}</button>
+   <apo-button apoRole="save"
+      (click)="save()">{{ "GENERAL_BUTTON_LABELS.SAVE_AND_CLOSE" | transloco }}</apo-button>
 </div>

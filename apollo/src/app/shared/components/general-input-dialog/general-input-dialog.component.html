@@ -9,7 +9,6 @@
          [type]="data.inputType"
          [(ngModel)]="outputValue">
    </mat-form-field>
-   <button mat-raised-button
-      color="primary"
-      (click)="submit()">{{ data.submitLabel | transloco }}</button>
+   <apo-button apoRole="accept"
+      (click)="submit()">{{ data.submitLabel | transloco }}</apo-button>
 </div>

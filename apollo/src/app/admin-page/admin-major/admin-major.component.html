@@ -2,13 +2,11 @@
    <h2 class="title">{{ major.name }}</h2>
    <h3 class="title">{{ university()!.name | multiLanguage }}</h3>
    <div class="actions">
-      <button mat-raised-button
-         class="back-button"
-         color="accent"
-         (click)="back()">{{ "GENERAL_BUTTON_LABELS.BACK" | transloco }}</button>
-      <button mat-raised-button
-         color="primary"
-         (click)="saveMajor()">{{ "ADMINISTRATION.MAJOR_DETAILS.SAVE_MAJOR_LABEL" | transloco }}</button>
+      <apo-button class="back-button"
+         apoRole="cancel"
+         (click)="back()">{{ "GENERAL_BUTTON_LABELS.BACK" | transloco }}</apo-button>
+      <apo-button apoRole="save"
+         (click)="saveMajor()">{{ "ADMINISTRATION.MAJOR_DETAILS.SAVE_MAJOR_LABEL" | transloco }}</apo-button>
    </div>
    <mat-tab-group class="tabs">
       <mat-tab [label]="'ADMINISTRATION.MAJOR_DETAILS.SUBJECT_GROUPS_LABEL' | transloco">
@@ -74,9 +72,10 @@
                         [(ngModel)]="selectedSubject.suggestedSemester">
                   </mat-form-field>
                   <div class="actions">
-                     <button mat-raised-button
-                        color="warn"
-                        (click)="deleteGroupSubject(selectedSubject, selectedUniversityMajorSubjectGroup()!)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</button>
+                     <apo-button apoRole="delete"
+                        (click)="deleteGroupSubject(selectedSubject, selectedUniversityMajorSubjectGroup()!)">
+                        {{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}
+                     </apo-button>
                   </div>
                } @else {
                   <div class="no-data">
@@ -183,10 +182,11 @@
                            }
                         </mat-select>
                      </mat-form-field>
-                     <button mat-raised-button
-                        color="accent"
+                     <apo-button apoRole="add"
                         [disabled]="!selectedSubject()"
-                        (click)="addSubjectToGroup(selectedSubGroup)">{{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUBJECT_ADD_LABEL" | transloco }}</button>
+                        (click)="addSubjectToGroup(selectedSubGroup)">
+                        {{ "ADMINISTRATION.MAJOR_DETAILS.SPECIALIZATIONS.SUBJECT_ADD_LABEL" | transloco }}
+                     </apo-button>
                   </div>
                } @else {
                   <p>{{ "ADMINISTRATION.MAJOR_DETAILS.NO_SPECIALIZATION_DATA" | transloco }}</p>
@@ -203,10 +203,11 @@
                      (click)="selectScholarshipYear(scholarshipYear)">{{ scholarshipYear.name }}</div>
                }
                <div class="actions">
-                  <button mat-raised-button
-                     class="add-button"
-                     color="accent"
-                     (click)="addScholarshipYear()">{{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.ADD_BUTTON_LABEL" | transloco }}</button>
+                  <apo-button class="add-button"
+                     apoRole="add"
+                     (click)="addScholarshipYear()">
+                     {{ "ADMINISTRATION.MAJOR_DETAILS.SCHOLARSHIPS.ADD_BUTTON_LABEL" | transloco }}
+                  </apo-button>
                </div>
             </div>
             <div class="details-container"
@@ -219,9 +220,8 @@
                         [(ngModel)]="selectedYear.name">
                   </mat-form-field>
                   <div class="actions">
-                     <button mat-raised-button
-                        color="warn"
-                        (click)="deleteScholarshipYear(selectedYear)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</button>
+                     <apo-button apoRole="delete"
+                        (click)="deleteScholarshipYear(selectedYear)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</apo-button>
                   </div>
                   <mat-divider class="divider"></mat-divider>
                   <div class="scholarship-data-container">

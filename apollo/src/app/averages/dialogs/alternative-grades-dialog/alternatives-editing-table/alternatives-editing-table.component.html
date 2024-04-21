@@ -59,9 +59,8 @@
    </table>
    <div class="mat-mdc-table">
       <div class="input-table-footer">
-         <button mat-raised-button
-            color="accent"
-            (click)="addGrade(alternativeGrades)">{{ "AVERAGES.DIALOGS.GRADE_ADD_LABEL" | transloco }}</button>
+         <apo-button apoRole="add"
+            (click)="addGrade(alternativeGrades)">{{ "AVERAGES.DIALOGS.GRADE_ADD_LABEL" | transloco }}</apo-button>
       </div>
    </div>
 </div>

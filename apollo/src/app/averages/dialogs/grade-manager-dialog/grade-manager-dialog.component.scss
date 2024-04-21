@@ -1,8 +1,7 @@
-@use 'styles/variables' as colors;
-@use 'styles/elements/dialog' as *;
+@use 'styles/elements/dialog';
 
 .grade-manager-dialog-container {
-   @include dialog-container(medium);
+   @include dialog.dialog-container(medium);
 }
 
 .semester-tables {
