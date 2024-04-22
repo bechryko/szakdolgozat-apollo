@@ -1,7 +1,7 @@
 @use 'styles/variables';
 
 .ngx-spinner-overlay {
-   backdrop-filter: blur(0.5rem);
+   backdrop-filter: variables.$loading-overlay-backdrop-filter;
 
    & > div:not(.loading-text) {
       color: variables.$loading-indicator-color !important;
