@@ -1,4 +1,4 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 @use 'styles/elements/section';
 
 h2 {
@@ -42,7 +42,7 @@ h4, .main-label {
 
 .completion-group, .specialization-group {
    margin-left: 1rem;
-   border-left: 0.375rem solid colors.$primary-main;
+   border-left: 0.375rem solid variables.$major-completions-group-indicator-color;
 
    h5 {
       font-size: 1.5rem;
@@ -76,7 +76,7 @@ h4, .main-label {
    transition: background-color 0.3s;
 
    &:has(apo-button:hover) {
-      background-color: colors.$primary-lighter-background;
+      background-color: variables.$major-completions-hovered-row-background;
    }
 
    p {
@@ -86,7 +86,7 @@ h4, .main-label {
 
 .mat-expansion-panel {
    @include section.section-border;
-   background-color: colors.$background-color;
+   background-color: variables.$background-color;
    margin-bottom: 1rem;
    box-shadow: none !important;
 
@@ -96,12 +96,12 @@ h4, .main-label {
 }
 
 ::ng-deep .mat-expansion-indicator::after {
-   color: colors.$primary-darker !important;
+   color: variables.$font-color !important;
 }
 
 .specialization-group .specialization-subgroup-container {
    margin-left: 1.5rem;
-   border-left: 0.375rem solid colors.$primary-lighter;
+   border-left: 0.375rem solid variables.$major-completions-group-indicator-color;
 }
 
 .all-complete {
@@ -111,5 +111,5 @@ h4, .main-label {
 .check-icon {
    position: relative;
    top: 0.3rem;
-   color: colors.$success;
+   color: variables.$success-icon-color;
 }

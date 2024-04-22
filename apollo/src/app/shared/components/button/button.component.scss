@@ -3,6 +3,7 @@
 :host {
    display: inline-block;
    height: 2.25rem;
+   margin: variables.$input-margin;
 
    &:has(.apollo-fab-button) {
       height: 3.5rem;
@@ -13,6 +14,7 @@
    height: 100%;
    width: 100%;
    font-size: variables.$input-font-size;
+   font-weight: bold;
    padding: variables.$input-padding;
    border: none;
    border-radius: variables.$input-border-radius;

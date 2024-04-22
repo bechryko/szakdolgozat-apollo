@@ -9,7 +9,6 @@
             *ngLet="loadingOverlayConfig()! as config"
             bdColor="rgba(51,51,51,0.8)"
             size="medium"
-            color="#80CBC4"
             [type]="config.animationType"
             [fullScreen]="true">
             <p class="loading-message">{{ "LOADING_OVERLAY." + config.type | transloco }}...</p>

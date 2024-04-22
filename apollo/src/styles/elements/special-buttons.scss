@@ -4,6 +4,7 @@
    background-color: variables.$header-color;
    height: variables.$header-height;
    font-size: 1.5rem;
+   font-weight: bold;
    width: 15%;
    transition: background-color 0.3s ease-in-out;
    border-radius: 0;
@@ -12,6 +13,6 @@
    user-select: none;
 
    &.selected {
-      background-color: variables.$primary-darker;
+      background-color: variables.$selected-nav-button-color;
    }
 }

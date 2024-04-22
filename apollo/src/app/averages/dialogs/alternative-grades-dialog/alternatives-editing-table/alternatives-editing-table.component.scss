@@ -1,18 +1,19 @@
+@use 'styles/variables';
 @use 'styles/elements/table-style';
 
 @include table-style.input-table;
 
 td {
    &.changed {
-      background-color: rgb(254, 214, 140);
+      background-color: variables.$averages-alternatives-changed-cell-background;
    }
 
    &.disabled {
-      background-color: rgb(213, 213, 213);
+      background-color: variables.$averages-alternatives-disabled-cell-background;
    }
 
    &.bonus {
-      background-color: rgb(167, 255, 167);
+      background-color: variables.$averages-alternatives-bonus-cell-background;
    }
 }
 

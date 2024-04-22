@@ -1,13 +1,15 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
+@use 'styles/elements/section';
 
 .language-selection-container {
+   @include section.section-border;
    display: flex;
    justify-content: center;
    align-items: center;
    gap: 2rem;
    padding: 0.5rem 1.5rem;
    border-radius: 1rem;
-   background-color: colors.$accent-background;
+   background-color: variables.$section-background-color;
 
    p {
       display: inline-block;
@@ -21,8 +23,6 @@
 }
 
 .mat-mdc-standard-chip {
-   border: 1px solid colors.$accent-highlight;
-
    &:not(.mdc-evolution-chip--selected) {
       background-color: transparent;
    }

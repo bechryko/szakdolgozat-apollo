@@ -1,8 +1,8 @@
-@use 'styles/variables' as colors;
-@use 'styles/elements/dialog' as *;
+@use 'styles/variables';
+@use 'styles/elements/dialog';
 
 .timetable-settings-dialog-container {
-   @include dialog-container(large);
+   @include dialog.dialog-container(large);
 }
 
 .settings {
@@ -12,7 +12,7 @@
 }
 
 .settings-tile {
-   border: 1px solid colors.$primary-darker;
+   border: 1px solid variables.$border-color;
    border-radius: 1rem;
    padding: 1.5rem;
    margin-bottom: 2rem;

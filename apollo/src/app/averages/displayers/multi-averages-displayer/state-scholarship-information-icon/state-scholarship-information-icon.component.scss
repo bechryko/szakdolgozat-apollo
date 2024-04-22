@@ -1,4 +1,4 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 
 mat-icon {
    position: relative;
@@ -6,13 +6,13 @@ mat-icon {
 }
 
 .error-icon {
-   color: colors.$error;
+   color: variables.$error-icon-color;
 }
 
 .warning-icon {
-   color: colors.$warning;
+   color: variables.$warning-icon-color;
 }
 
 .check-icon {
-   color: colors.$success;
+   color: variables.$success-icon-color;
 }

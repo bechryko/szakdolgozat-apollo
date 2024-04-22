@@ -1,0 +1,18 @@
+@use 'styles/variables';
+
+body {
+   color: variables.$font-color;
+}
+
+* {
+   font-family: 'Montserrat';
+
+   &::selection {
+      background-color: variables.$text-selection-color;
+      color: variables.$font-color;
+   }
+}
+
+a {
+   color: variables.$link-color;
+}

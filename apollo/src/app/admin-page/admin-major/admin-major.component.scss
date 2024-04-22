@@ -52,28 +52,28 @@
       grid-template-columns: 1fr 1fr 1fr;
 
       .list-container:first-child .list-item {
-         border-right: 1px solid variables.$primary-darker;
+         border-right: 1px solid variables.$border-color;
       }
    }
 
    .list-container {
       height: $data-container-height;
       overflow: auto;
-      background-color: variables.$primary-background;
+      background-color: variables.$admin-sections-background;
 
       .list-item {
          padding: 0.5rem;
-         border-bottom: 1px solid variables.$primary-darker;
+         border-bottom: 1px solid variables.$border-color;
          cursor: pointer;
          user-select: none;
 
          &:hover {
-            background-color: variables.$primary-darker-background;
+            background-color: variables.$admin-sections-background-hover;
          }
 
          &.selected {
-            background-color: variables.$primary-darker;
-            color: white;
+            background-color: variables.$admin-list-selected-background;
+            color: variables.$contrast-font-color;
          }
       }
 
@@ -91,7 +91,7 @@
          .mat-expansion-panel-header {
             $expansion-panel-header-height: 4rem;
 
-            background-color: variables.$primary-lighter-background;
+            background-color: variables.$expansion-panel-header-color;
             height: $expansion-panel-header-height;
             
             h3 {
@@ -118,8 +118,6 @@
 
             .major-group-description {
                font-size: 0.9rem;
-               color: variables.$primary-darker;
-            
             }
          }
 
@@ -133,7 +131,7 @@
       height: $data-container-height;
       overflow: auto;
       padding: 1.5rem;
-      background-color: variables.$primary-background;
+      background-color: variables.$admin-sections-background;
       border: variables.$section-border;
       border-top: none;
 
@@ -184,8 +182,8 @@
             text-align: center;
 
             &.delete-button {
-               background-color: variables.$error;
-               color: white;
+               background-color: variables.$warn-input-border-color;
+               color: variables.$contrast-font-color;
                user-select: none;
                cursor: pointer;
             }
@@ -193,7 +191,6 @@
       }
 
       .add-subject-container {
-         background-color: variables.$primary-lighter-background;
          border-radius: 1.5rem;
          margin-top: 0.5rem;
          padding: 1rem;

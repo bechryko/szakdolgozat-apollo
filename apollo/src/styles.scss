@@ -1,4 +1,4 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 @use 'styles/material-override';
 @use 'styles/general';
 
@@ -45,7 +45,7 @@ html, body {
 body {
    margin: 0;
    font-family: Roboto, "Helvetica Neue", sans-serif;
-   background-color: colors.$background-color;
+   background-color: variables.$background-color;
    overflow: hidden;
 }
 
@@ -69,8 +69,4 @@ table thead {
 
 table {
    border-collapse: collapse;
-}
-
-.ngx-spinner-overlay {
-   backdrop-filter: blur(0.5rem);
 }

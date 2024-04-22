@@ -1,9 +1,8 @@
-@use 'styles/variables' as *;
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 
 .content {
    display: flex;
-   height: calc(100dvh - $header-height);
+   height: calc(100dvh - variables.$header-height);
 }
 
 apo-sidebar {
@@ -17,6 +16,6 @@ main {
    position: relative;
 
    .loading-message {
-      color: colors.$primary-lighter;
+      color: variables.$loading-message-color;
    }
 }

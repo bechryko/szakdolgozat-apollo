@@ -14,10 +14,10 @@ h2 {
    font-size: 0.75rem;
 
    .university-panel {
-      background-color: variables.$primary-background;
+      background-color: variables.$expansion-panel-content-color;
 
       .panel-header {
-         background-color: variables.$primary-darker-background;
+         background-color: variables.$expansion-panel-header-color;
       }
    }
 }
@@ -33,7 +33,7 @@ h2 {
    .language-input {
       display: inline-block;
       padding: $spacing;
-      background-color: variables.$primary-lighter-background;
+      background-color: variables.$subsection-background-color;
       border-top-left-radius: $spacing;
       border-top-right-radius: $spacing;
 

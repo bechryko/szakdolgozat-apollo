@@ -1,4 +1,4 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 
 .menu-cards {
    display: flex;
@@ -10,7 +10,7 @@
    flex: 1 1 20rem;
    
    mat-card {
-      background-color: colors.$primary-background;
+      background-color: variables.$menu-card-background;
       width: 100%;
       height: 100%;
    }

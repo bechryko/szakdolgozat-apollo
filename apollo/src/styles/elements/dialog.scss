@@ -1,4 +1,4 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 
 @mixin dialog-container($size, $flex: flex) {
    min-width: 25rem;
@@ -27,7 +27,7 @@
       @error "Invalid flex value: #{ $flex }.";
    }
 
-   background-color: colors.$primary-background;
+   background-color: variables.$dialog-background-color;
    padding: 2rem;
 
    h2 {

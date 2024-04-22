@@ -1,7 +1,7 @@
-@use 'styles/variables' as colors;
+@use 'styles/variables';
 
 .sidebar-container {
-   background-color: colors.$primary-lighter;
+   background-color: variables.$menu-color;
    display: flex;
    align-items: center;
    justify-content: center;
