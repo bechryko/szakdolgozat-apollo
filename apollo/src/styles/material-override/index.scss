@@ -1,3 +1,5 @@
 //@index('./*', f => `@forward "${f.path}";`)
 @forward "./mat-card";
+@forward "./mat-form-field";
+@forward "./material-theme";
 //@endindex

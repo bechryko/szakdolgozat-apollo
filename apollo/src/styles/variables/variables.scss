@@ -10,12 +10,13 @@ $dialog-heading-font-size: 2rem;
 $section-border: 2px solid $border-color;
 $table-border: 1px solid $border-color;
 
+$input-height: 2.5rem;
 $input-font-size: 0.9rem;
 $input-padding: 0 1rem;
 $input-border-radius: 0.5rem;
 $input-border-width: 0.2rem;
 $input-hover-transition-time: 0.2s;
-$input-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+$input-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 12px 0px rgba(0, 0, 0, 0.12);
 $input-margin: 10px;
 $accent-input-border: $input-border-width solid $accent-input-border-color;
 $warn-input-border: $input-border-width solid $warn-input-border-color;

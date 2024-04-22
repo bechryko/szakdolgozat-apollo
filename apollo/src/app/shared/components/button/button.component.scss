@@ -2,7 +2,7 @@
 
 :host {
    display: inline-block;
-   height: 2.25rem;
+   height: variables.$input-height;
    margin: variables.$input-margin;
 
    &:has(.apollo-fab-button) {
@@ -11,7 +11,7 @@
 }
 
 .apollo-button {
-   height: 100%;
+   height: variables.$input-height;
    width: 100%;
    font-size: variables.$input-font-size;
    font-weight: bold;
@@ -58,5 +58,41 @@
    &:disabled {
       background: variables.$disabled-input-background;
       color: variables.$disabled-input-color;
+   }
+}
+
+.apollo-fab-button {
+   transition: background-color variables.$input-hover-transition-time ease-in-out;
+
+   &.primary {
+      background-color: variables.$primary-input-background;
+      color: variables.$primary-input-color;
+      -webkit-tap-highlight-color: variables.$primary-input-hover-background;
+
+      &:hover {
+         background-color: variables.$primary-input-hover-background;
+      }
+   }
+
+   &.accent {
+      background-color: variables.$accent-input-background;
+      color: variables.$accent-input-color;
+      -webkit-tap-highlight-color: variables.$accent-input-hover-background;
+      border: variables.$accent-input-border;
+
+      &:hover {
+         background-color: variables.$accent-input-hover-background;
+      }
+   }
+
+   &.warn {
+      background-color: variables.$warn-input-background;
+      color: variables.$warn-input-color;
+      -webkit-tap-highlight-color: variables.$warn-input-hover-background;
+      border: variables.$warn-input-border;
+
+      &:hover {
+         background-color: variables.$warn-input-hover-background;
+      }
    }
 }

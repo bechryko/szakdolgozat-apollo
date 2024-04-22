@@ -6,6 +6,7 @@
    </button>
 } @else {
    <button class="apollo-fab-button"
+      [ngClass]="color()"
       mat-fab
       disableRipple
       [color]="color()"

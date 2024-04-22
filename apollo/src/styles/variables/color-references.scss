@@ -47,6 +47,9 @@ $disabled-input-background: colors.$disabled;
 $disabled-input-color: sass-color.adjust(colors.$disabled, $lightness: -30%);
 
 $input-highlight-color: colors.$highlight;
+$form-field-label-color: colors.$font-color;
+
+$tabs-active-indicator-color: colors.$primary;
 
 $error-icon-color: colors.$warn;
 $warning-icon-color: sass-color.adjust(colors.$accent, $lightness: -20%);
