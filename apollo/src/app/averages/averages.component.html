@@ -1,3 +1,4 @@
+<h2>{{ "AVERAGES.TITLE" | transloco }}</h2>
 @if(averages()) {
    @if((isUserLoggedOut$ | async) && averages()!.length > 0) {
       <apo-button class="floating-button"

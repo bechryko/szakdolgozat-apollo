@@ -13,7 +13,6 @@
 .scholarship-data-container {
    @include section.section-border;
    padding: 1rem;
-   width: 32rem;
 
    p {
       margin: 0.5rem auto;
@@ -22,6 +21,10 @@
    & + & {
       margin-top: 2rem;
    }
+}
+
+.scholarship-amount-data {
+   font-weight: bold;
 }
 
 .alternative-data {
@@ -38,4 +41,9 @@
 
 .actions {
    margin-top: 2rem;
+   width: 100%;
+
+   apo-button {
+      flex-basis: 50%;
+   }
 }

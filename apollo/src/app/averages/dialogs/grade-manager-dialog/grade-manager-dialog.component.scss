@@ -2,16 +2,34 @@
 
 .grade-manager-dialog-container {
    @include dialog.dialog-container(medium);
+
+   & > :is(h2, .actions, apo-button) {
+      flex: 0;
+   }
+
+   & > apo-button {
+      width: 25%;
+      min-width: 10rem;
+   }
 }
 
 .semester-tables {
    overflow-y: auto;
-   max-height: 29.75rem;
    margin: 2rem 0;
    padding-right: 0.5rem;
+   flex: 1;
+   width: 100%;
 }
 
 apo-grade-editing-table + apo-grade-editing-table {
    display: block;
    margin-top: 2rem;
+}
+
+.actions {
+   width: 100%;
+
+   apo-button {
+      flex-basis: 13.25rem;
+   }
 }

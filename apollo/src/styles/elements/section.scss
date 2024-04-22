@@ -15,3 +15,18 @@
       text-align: left;
    }
 }
+
+@mixin borderless-section {
+   @include general-section;
+   border: none;
+   background-color: variables.$section-background-color;
+}
+
+@mixin expansion-panel-section {
+   @include section-border;
+   box-shadow: none !important;
+
+   ::ng-deep .mat-expansion-indicator::after {
+      color: variables.$font-color !important;
+   }
+}

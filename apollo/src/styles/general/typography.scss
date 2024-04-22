@@ -16,3 +16,19 @@ body {
 a {
    color: variables.$link-color;
 }
+
+th, mat-header-cell {
+   font-size: variables.$table-header-font-size;
+   font-weight: bold !important;
+   color: variables.$font-color;
+}
+
+.mat-mdc-select-panel .mdc-list-item__primary-text {
+   color: variables.$font-color;
+}
+
+h2 {
+   font-size: variables.$page-heading-font-size;
+   text-align: center;
+   margin-top: 0;
+}

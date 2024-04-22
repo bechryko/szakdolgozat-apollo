@@ -21,29 +21,38 @@
       height: 3.5rem;
       font-size: variables.$section-heading-font-size;
    }
+
+   th, td, input {
+      color: variables.$font-color;
+   }
    
    .input-table-footer {
       display: flex;
       justify-content: space-around;
       align-items: center;
+      gap: 2rem;
       height: 3.5rem;
       border-top-color: var(--mat-table-row-item-outline-color, rgba(0, 0, 0, 0.12));
       border-top-width: var(--mat-table-row-item-outline-width, 1px);
       border-top-style: solid;
+
+      & > apo-button {
+         flex-grow: 1;
+      }
    }
    
    .table-cell-input {
       @include table-cell-input;
-      width: 2rem;
+      min-width: 3rem;
 
       &.medium-column {
          font-size: 1rem;
-         min-width: 7rem;
+         min-width: 6rem;
       }
    
       &.wide-column {
          font-size: 1rem;
-         min-width: 15rem;
+         min-width: 25rem;
          width: 90%;
       }
    }

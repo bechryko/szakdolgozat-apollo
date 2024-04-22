@@ -1,11 +1,7 @@
 @use 'styles/variables';
-@use 'styles/elements/table-style' as *;
+@use 'styles/elements/table-style';
 
-@include input-table;
-
-table {
-   width: 57rem;
-}
+@include table-style.input-table;
 
 .input-table-footer {
    justify-content: space-between;

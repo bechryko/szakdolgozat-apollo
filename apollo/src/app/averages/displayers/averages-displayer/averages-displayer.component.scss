@@ -1,3 +1,11 @@
 @use 'styles/elements/displayer';
 
-@include displayer.displayer-style;
+@include displayer.displayer-style(semester);
+
+.actions {
+   margin-top: 2rem;
+
+   & > apo-button {
+      flex-basis: 60%;
+   }
+}

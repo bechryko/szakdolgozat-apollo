@@ -39,10 +39,12 @@
          <td mat-cell *matCellDef="let idx = index" [ngClass]="alternativeGrades[idx] | cellStyle: originalGrades[idx]">
             @if(alternativeGrades[idx].bonus) {
                <button mat-flat-button
+                  class="remove-button"
                   color="warn"
                   (click)="removeGrade(alternativeGrades, idx)">{{ "INPUT_TABLE.REMOVE_BUTTON_LABEL" | transloco }}</button>
             } @else {
                <button mat-flat-button
+                  class="remove-button"
                   [color]="alternativeGrades[idx].disabled ? 'accent' : 'warn'"
                   (click)="toggleGrade(alternativeGrades, idx)">
                   @if(alternativeGrades[idx].disabled) {

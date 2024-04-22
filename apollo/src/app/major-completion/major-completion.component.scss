@@ -85,18 +85,13 @@ h4, .main-label {
 }
 
 .mat-expansion-panel {
-   @include section.section-border;
+   @include section.expansion-panel-section;
    background-color: variables.$background-color;
    margin-bottom: 1rem;
-   box-shadow: none !important;
 
    h5 {
       font-size: 1.5rem;
    }
-}
-
-::ng-deep .mat-expansion-indicator::after {
-   color: variables.$font-color !important;
 }
 
 .specialization-group .specialization-subgroup-container {

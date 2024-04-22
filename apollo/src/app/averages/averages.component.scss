@@ -3,8 +3,12 @@
    position: relative;
 }
 
-.actions > * {
-   flex-basis: 20%;
+.actions {
+   margin: 1rem 0;
+
+   & > * {
+      flex-basis: 20%;
+   }
 }
 
 fieldset {
@@ -20,4 +24,8 @@ fieldset {
    position: absolute;
    top: -1.5rem;
    right: -1.5rem;
+}
+
+apo-multi-averages-displayer + apo-multi-averages-displayer {
+   margin-top: 2rem;
 }
