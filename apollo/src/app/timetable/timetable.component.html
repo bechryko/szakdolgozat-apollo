@@ -1,7 +1,9 @@
 @if(selectedSemester()) {
    <div class="timetable-container">
       <div class="semester-name">
-         <h2 (click)="openTimetableSettings()">{{ selectedSemester()!.name }}</h2>
+         <apo-button apoRole="openDialog"
+            class="timetable-settings-button"
+            (click)="openTimetableSettings()">{{ selectedSemester()!.name }}</apo-button>
       </div>
       <div class="day-headers"
          [ngStyle]="additionalSelectedSemesterData.dayHeadersStyle()">

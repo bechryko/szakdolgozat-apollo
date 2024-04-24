@@ -18,4 +18,8 @@ main {
    .loading-message {
       color: variables.$loading-message-color;
    }
+
+   &.no-padding {
+      padding: 0;
+   }
 }

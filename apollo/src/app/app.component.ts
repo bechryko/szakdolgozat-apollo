@@ -2,6 +2,8 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, Signal } fr
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { map } from 'rxjs';
+import { RouteUrls } from './app.routes';
 import { HeaderComponent } from './shared/header';
 import { LanguageService } from './shared/languages';
 import { LoadingService } from './shared/loading';
@@ -27,7 +29,16 @@ import { SidebarComponent } from './shared/sidebar';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
+   private readonly sidebarExceptionRoutes = [
+      RouteUrls.ADMINISTRATION,
+      RouteUrls.ADMIN_MAJOR,
+      RouteUrls.ADMIN_UNIVERSITY,
+      RouteUrls.TIMETABLE
+   ];
+
    public readonly isAdminPage: Signal<boolean | undefined>;
+   public readonly enableMainPadding: Signal<boolean | undefined>;
+   public readonly isSidebarShown: Signal<boolean | undefined>;
 
    public readonly loadingOverlayConfig = this.loadingService.config;
 
@@ -39,5 +50,13 @@ export class AppComponent {
       this.languageService.setInitialLanguage();
 
       this.isAdminPage = toSignal(this.routerService.isAdminPage$);
+
+      this.enableMainPadding = toSignal(this.routerService.currentPage$.pipe(
+         map(page => page !== RouteUrls.TIMETABLE)
+      ));
+
+      this.isSidebarShown = toSignal(this.routerService.currentPage$.pipe(
+         map(page => !this.sidebarExceptionRoutes.includes(page))
+      ));
    }
 }

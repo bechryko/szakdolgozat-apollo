@@ -29,6 +29,9 @@ $averages-alternatives-bonus-cell-background: colors.$data-bonus-signal-color;
 $major-completions-hovered-row-background: colors.$accent;
 $major-completions-group-indicator-color: sass-color.adjust(colors.$highlight, $lightness: 10%);
 
+$timetable-odd-list-element-background: colors.$section-background-color;
+$timetable-even-list-element-background: sass-color.adjust(colors.$primary, $lightness: 10%);
+
 $primary-input-background: colors.$primary;
 $primary-input-hover-background: sass-color.adjust(colors.$primary, $lightness: 10%);
 $primary-input-color: colors.$font-color;

@@ -1,9 +1,10 @@
 <apo-header></apo-header>
 <div class="content">
-   @if(!isAdminPage()) {
+   @if(isSidebarShown()) {
       <apo-sidebar></apo-sidebar>
    }
-   <main [class.show-scrollbar]="isAdminPage()">
+   <main [class.show-scrollbar]="isAdminPage()"
+      [class.no-padding]="!enableMainPadding()">
       @if(loadingOverlayConfig()) {
          <ngx-spinner
             *ngLet="loadingOverlayConfig()! as config"

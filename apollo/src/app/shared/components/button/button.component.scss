@@ -4,6 +4,8 @@
    display: inline-block;
    height: variables.$input-height;
    margin: variables.$input-margin;
+   font-size: variables.$input-font-size;
+   border-radius: variables.$input-border-radius;
 
    &:has(.apollo-fab-button) {
       height: 3.5rem;
@@ -11,13 +13,13 @@
 }
 
 .apollo-button {
-   height: variables.$input-height;
+   height: inherit;
    width: 100%;
-   font-size: variables.$input-font-size;
+   font-size: inherit;
    font-weight: bold;
    padding: variables.$input-padding;
    border: none;
-   border-radius: variables.$input-border-radius;
+   border-radius: inherit;
    box-shadow: variables.$input-shadow;
    transition: background-color variables.$input-hover-transition-time ease-in-out;
 
