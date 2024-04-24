@@ -1,6 +1,6 @@
 <div class="admin-university-container" *ngIf="university() as university">
    <h2>{{ university.name | multiLanguage }}</h2>
-   <div class="actions">
+   <div class="actions close-top-spacing">
       <apo-button class="back-button"
          apoRole="cancel"
          (click)="back()">{{ "GENERAL_BUTTON_LABELS.BACK" | transloco }}</apo-button>
@@ -56,7 +56,7 @@
                   <div class="actions">
                      <apo-button apoRole="delete"
                         (click)="deleteSubject(selectedSubject)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</apo-button>
-                     <apo-button class="save-button"
+                     <apo-button class="wide-button"
                         apoRole="save"
                         (click)="saveSubject(selectedSubject)">{{ "GENERAL_BUTTON_LABELS.SAVE" | transloco }}</apo-button>
                   </div>
@@ -115,12 +115,12 @@
                   <div class="actions">
                      <apo-button apoRole="delete"
                         (click)="deleteMajor(selectedMajor)">{{ "GENERAL_BUTTON_LABELS.DELETE" | transloco }}</apo-button>
-                     <apo-button class="save-button"
+                     <apo-button class="wide-button"
                         apoRole="save"
                         (click)="saveMajor(selectedMajor)">{{ "GENERAL_BUTTON_LABELS.SAVE" | transloco }}</apo-button>
                   </div>
-                  <div class="actions">
-                     <apo-button class="add-button"
+                  <div class="actions close-top-spacing">
+                     <apo-button class="wide-button"
                         apoRole="navigation"
                         (click)="openMajorDetails(selectedMajor)">
                         {{ "ADMINISTRATION.UNIVERSITY_DETAILS.MAJOR_DETAILS.DETAILS_BUTTON_LABEL" | transloco }}

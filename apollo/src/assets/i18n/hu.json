@@ -63,7 +63,7 @@
    "AVERAGES.DISPLAY.CREDIT_SUM": "Összes kredit",
    "AVERAGES.DISPLAY.CREDIT_INDEX": "Kreditindex",
    "AVERAGES.DISPLAY.ADJUSTED_CREDIT_INDEX": "Korrigált kreditindex",
-   "AVERAGES.DISPLAY.TITLE.CUMULATED": "Összesített (kumulált/göngyölt) átlagok",
+   "AVERAGES.DISPLAY.TITLE.CUMULATED": "Összesített (göngyölt) átlagok",
    "AVERAGES.DISPLAY.CALCULATE_SCHOLARSHIP_LABEL": "Ösztöndíj kiszámítása",
    "AVERAGES.VIEW_MODE_TOGGLE_BUTTON.SINGLE_LABEL": "Egy tanév megjelenítése",
    "AVERAGES.VIEW_MODE_TOGGLE_BUTTON.MULTIPLE_LABEL": "Összes tanév megjelenítése",

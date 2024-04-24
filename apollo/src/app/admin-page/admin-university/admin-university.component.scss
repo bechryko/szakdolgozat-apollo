@@ -16,16 +16,15 @@
       width: 100%;
       justify-content: space-around;
 
+      &:not(.close-top-spacing) {
+         margin-top: 2rem;
+      }
+
       apo-button {
-         width: 20%;
+         flex-basis: 20%;
 
-         &.save-button {
-            width: 60%;
-         }
-
-         &.add-button {
-            width: 70%;
-            margin-top: 1.5rem;
+         &.wide-button {
+            flex-basis: 60%;
          }
       }
    }
@@ -40,7 +39,7 @@
    grid-template-columns: 1fr 1fr;
 
    .list-container {
-      height:  37rem;
+      height: variables.$admin-page-tab-height;
       overflow: auto;
       background-color: variables.$admin-sections-background;
 
@@ -66,7 +65,7 @@
    }
 
    .details-container {
-      height:  37rem;
+      height: variables.$admin-page-tab-height;
       overflow: auto;
       padding: 1.5rem;
       background-color: variables.$admin-sections-background;

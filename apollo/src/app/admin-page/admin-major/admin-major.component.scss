@@ -43,8 +43,6 @@
 }
 
 .major-data-container {
-   $data-container-height: 36rem;
-
    display: grid;
    grid-template-columns: 1fr 1fr;
 
@@ -57,7 +55,7 @@
    }
 
    .list-container {
-      height: $data-container-height;
+      height: variables.$admin-page-tab-height - 1rem;
       overflow: auto;
       background-color: variables.$admin-sections-background;
 
@@ -128,7 +126,7 @@
    }
 
    .details-container {
-      height: $data-container-height;
+      height: variables.$admin-page-tab-height - 1rem;
       overflow: auto;
       padding: 1.5rem;
       background-color: variables.$admin-sections-background;

@@ -16,6 +16,10 @@ h2 {
    .university-panel {
       background-color: variables.$expansion-panel-content-color;
 
+      &:not(:last-of-type) {
+         border-bottom: variables.$section-border;
+      }
+
       .panel-header {
          background-color: variables.$expansion-panel-header-color;
       }
@@ -59,15 +63,17 @@ h2 {
 }
 
 .actions {
-   display: grid;
-   grid-auto-flow: column;
-   grid-auto-columns: max-content;
-   justify-content: left;
+   display: flex;
+   justify-content: space-around;
    gap: 1rem;
    margin-top: 2rem;
 
    apo-button {
-      height: 2rem;
+      flex-basis: 30%;
+
+      &.details-button {
+         flex-basis: 50%;
+      }
    }
 }
 
