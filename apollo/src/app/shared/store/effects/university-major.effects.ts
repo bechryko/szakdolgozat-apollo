@@ -16,9 +16,9 @@ export class UniversityMajorEffects {
             this.loadingService.finishLoading(universityMajorCRUDLoadingKey);
             return universityMajorActions.saveUniversityMajorsToStore({ universityMajors });
          }),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(universityMajorCRUDLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.UNIVERSITY_MAJORS_LOAD");
             return [];
          })
       )
@@ -33,11 +33,27 @@ export class UniversityMajorEffects {
          )),
          tap(() => {
             this.loadingService.finishLoading(universityMajorCRUDLoadingKey);
-            this.snackBarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_ALL_SUCCESS", { duration: 4000 });
+            this.snackbarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_ALL_SUCCESS", { duration: 4000 });
          }),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(universityMajorCRUDLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.UNIVERSITY_MAJORS_SAVE");
+            return [];
+         })
+      )
+   );
+
+   public readonly loadSingleUniversityMajor$ = createEffect(() =>
+      this.actions$.pipe(
+         ofType(universityMajorActions.loadSingleUniversityMajor),
+         tap(() => this.loadingService.startLoading(universityMajorCRUDLoadingKey, LoadingType.LOAD)),
+         switchMap(({ majorId }) => this.universitiesFetcherService.getMajor(majorId)),
+         tap(() => this.loadingService.finishLoading(universityMajorCRUDLoadingKey)),
+         filter(Boolean),
+         map(universityMajor => universityMajorActions.saveUniversityMajorsToStore({ universityMajors: [universityMajor] })),
+         catchError(() => {
+            this.loadingService.finishLoading(universityMajorCRUDLoadingKey);
+            this.snackbarService.openError("ERROR.DATABASE.UNIVERSITY_MAJORS_LOAD");
             return [];
          })
       )
@@ -52,27 +68,11 @@ export class UniversityMajorEffects {
          )),
          tap(() => {
             this.loadingService.finishLoading(universityMajorCRUDLoadingKey);
-            this.snackBarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_SINGLE_MAJOR_SUCCESS");
+            this.snackbarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_SINGLE_MAJOR_SUCCESS");
          }),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(universityMajorCRUDLoadingKey);
-            // TODO: error handling
-            return [];
-         })
-      )
-   );
-
-   public readonly loadSingleUniversityMajor$ = createEffect(() =>
-      this.actions$.pipe(
-         ofType(universityMajorActions.loadSingleUniversityMajor),
-         tap(() => this.loadingService.startLoading(universityMajorCRUDLoadingKey, LoadingType.LOAD)),
-         switchMap(({ majorId }) => this.universitiesFetcherService.getMajor(majorId)),
-         tap(() => this.loadingService.finishLoading(universityMajorCRUDLoadingKey)),
-         filter(Boolean),
-         map(universityMajor => universityMajorActions.saveUniversityMajorsToStore({ universityMajors: [universityMajor] })),
-         catchError(error => {
-            this.loadingService.finishLoading(universityMajorCRUDLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.UNIVERSITY_MAJORS_SAVE");
             return [];
          })
       )
@@ -81,7 +81,7 @@ export class UniversityMajorEffects {
    constructor(
       private readonly actions$: Actions,
       private readonly universitiesFetcherService: UniversitiesFetcherService,
-      private readonly snackBarService: SnackBarService,
+      private readonly snackbarService: SnackBarService,
       private readonly loadingService: LoadingService
    ) { }
 }

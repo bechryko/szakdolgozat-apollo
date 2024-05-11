@@ -4,7 +4,7 @@ import { CompletionsUtils } from "@apollo/shared/utils";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { cloneDeep } from "lodash";
 import { catchError, map, switchMap, take, tap } from "rxjs";
-import { CompletionsFetcherService, CompletionsService } from "../../services";
+import { CompletionsFetcherService, CompletionsService, SnackBarService } from "../../services";
 import { userActions } from "../actions";
 import { completionsActions } from "../actions/completions.actions";
 
@@ -21,7 +21,7 @@ export class CompletionsEffects {
          }),
          catchError(() => {
             this.loadingService.finishLoading(completionsLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.COMPLETIONS_LOAD");
             return [];
          })
       )
@@ -38,7 +38,7 @@ export class CompletionsEffects {
          }),
          catchError(() => {
             this.loadingService.finishLoading(completionsLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.COMPLETIONS_SAVE");
             return [];
          })
       )
@@ -62,11 +62,6 @@ export class CompletionsEffects {
          map(completions => {
             this.loadingService.finishLoading(completionsLoadingKey);
             return completionsActions.saveCompletions({ completions });
-         }),
-         catchError(() => {
-            this.loadingService.finishLoading(completionsLoadingKey);
-            // TODO: error handling
-            return [];
          })
       )
    );
@@ -90,6 +85,7 @@ export class CompletionsEffects {
       private readonly actions$: Actions,
       private readonly completionsFetcherService: CompletionsFetcherService,
       private readonly completionsService: CompletionsService,
-      private readonly loadingService: LoadingService
+      private readonly loadingService: LoadingService,
+      private readonly snackbarService: SnackBarService
    ) { }
 }

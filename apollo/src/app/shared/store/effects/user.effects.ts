@@ -19,9 +19,9 @@ export class UserEffects {
             this.loadingService.finishLoading(authCRUDLoadingKey);
             return userActions.clearUserData();
          }),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(authCRUDLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.AUTH.LOGIN");
             return [];
          })
       )
@@ -32,7 +32,12 @@ export class UserEffects {
          ofType(userActions.register),
          tap(() => this.loadingService.startLoading(authCRUDLoadingKey, LoadingType.AUTHENTICATION)),
          switchMap(({ registerData }) => this.authService.registerUser(registerData.email, registerData.password).pipe(
-            switchMap(() => this.userFetcherService.saveNewUserData(registerData))
+            switchMap(() => this.userFetcherService.saveNewUserData(registerData).pipe(
+               catchError(() => {
+                  this.snackbarService.openError("ERROR.DATABASE.USER_SAVE");
+                  return [];
+               })
+            ))
          )),
          switchMap(() => {
             const averagesData = this.completionsFetcherService.getGuestStorageData();
@@ -71,8 +76,8 @@ export class UserEffects {
                      this.completionsFetcherService.clearGuestStorage();
                      this.timetableFetcherService.clearGuestStorage();
                   }),
-                  catchError(error => {
-                     // TODO: error handling
+                  catchError(() => {
+                     this.snackbarService.openError("ERROR.DATABASE.GUEST_DATA_TRANSFER");
                      return [];
                   })
                ),
@@ -83,9 +88,9 @@ export class UserEffects {
          }),
          tap(() => this.loadingService.finishLoading(authCRUDLoadingKey)),
          filter(Boolean),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(authCRUDLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.AUTH.REGISTER", { duration: 5500 });
             return [];
          })
       )
@@ -100,9 +105,9 @@ export class UserEffects {
             this.loadingService.finishLoading(userUpdateLoadingKey);
             this.snackbarService.open("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
          }),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(userUpdateLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.USER_UPDATE");
             return [];
          })
       ), { dispatch: false }
@@ -117,9 +122,9 @@ export class UserEffects {
             this.loadingService.finishLoading(authCRUDLoadingKey);
             return userActions.clearUserData();
          }),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(authCRUDLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError(Math.random() >= 0.01 ? "ERROR.AUTH.LOGOUT" : "ERROR.AUTH.LOGOUT_2");
             return [];
          })
       )

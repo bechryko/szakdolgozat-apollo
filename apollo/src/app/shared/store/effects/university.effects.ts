@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { LoadingService, LoadingType, universityCRUDLoadingKey } from "@apollo/shared/loading";
-import { UniversitiesFetcherService } from "@apollo/shared/services";
+import { SnackBarService, UniversitiesFetcherService } from "@apollo/shared/services";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, switchMap, tap } from "rxjs";
 import { universityActions } from "../actions";
@@ -15,9 +15,9 @@ export class UniversityEffects {
          this.loadingService.finishLoading(universityCRUDLoadingKey);
          return universityActions.saveUniversitiesToStore({ universities });
       }),
-      catchError(error => {
+      catchError(() => {
          this.loadingService.finishLoading(universityCRUDLoadingKey);
-         // TODO: error handling
+         this.snackbarService.openError("ERROR.DATABASE.UNIVERSITIES_LOAD");
          return [];
       })
    ));
@@ -29,9 +29,9 @@ export class UniversityEffects {
          map(() => universityActions.saveUniversitiesToStore({ universities }))
       )),
       tap(() => this.loadingService.finishLoading(universityCRUDLoadingKey)),
-      catchError(error => {
+      catchError(() => {
          this.loadingService.finishLoading(universityCRUDLoadingKey);
-         // TODO: error handling
+         this.snackbarService.openError("ERROR.DATABASE.UNIVERSITIES_SAVE");
          return [];
       })
    ));
@@ -39,6 +39,7 @@ export class UniversityEffects {
    constructor(
       private readonly actions$: Actions,
       private readonly universitiesFetcherService: UniversitiesFetcherService,
-      private readonly loadingService: LoadingService
+      private readonly loadingService: LoadingService,
+      private readonly snackbarService: SnackBarService
    ) { }
 }

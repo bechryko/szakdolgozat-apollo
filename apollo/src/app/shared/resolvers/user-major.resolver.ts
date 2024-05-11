@@ -1,6 +1,6 @@
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
-import { catchError, map, of, switchMap } from "rxjs";
+import { map, of, switchMap } from "rxjs";
 import { UniversityMajor } from "../models";
 import { UniversitiesService, UserService } from "../services";
 
@@ -15,11 +15,7 @@ export const userMajorResolver: ResolveFn<UniversityMajor | null> = () => {
          }
 
          return universitiesService.getMajor(user.major).pipe(
-            map(major => major || null),
-            catchError(() => {
-               // TODO: error handling
-               return of(null);
-            })
+            map(major => major || null)
          );
       }),
    );

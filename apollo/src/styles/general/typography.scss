@@ -1,13 +1,14 @@
 @use 'styles/variables';
 
-body {
+@mixin default-typography {
+   font-family: 'Montserrat';
    color: variables.$font-color;
 }
 
-* {
-   font-family: 'Montserrat';
+body {
+   @include default-typography;
 
-   &::selection {
+   *::selection {
       background-color: variables.$text-selection-color;
       color: variables.$font-color;
    }
@@ -31,4 +32,8 @@ h2 {
    font-size: variables.$page-heading-font-size;
    text-align: center;
    margin-top: 0;
+}
+
+button {
+   @include default-typography;
 }

@@ -15,7 +15,6 @@ export function universityResolver(route: ActivatedRouteSnapshot): Observable<Un
       filter((university): university is University => {
          if(!university) {
             location.back();
-            // TODO: error handling
          }
 
          return Boolean(university);

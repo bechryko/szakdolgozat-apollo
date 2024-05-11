@@ -42,7 +42,7 @@ export class LoadingService {
       });
    }
 
-   public startLoading(key: Symbol, type: LoadingType) { // TODO: timeout handling?
+   public startLoading(key: Symbol, type: LoadingType) {
       if(this.loadingJobConfigs.some(config => config.key === key)) {
          return;
       }

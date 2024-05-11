@@ -35,7 +35,7 @@ export const appConfig: ApplicationConfig = {
          config: {
             availableLangs: languages as any,
             defaultLang: defaultLanguage,
-            fallbackLang: fallbackLanguage, // TODO: fallbacks doesn't work
+            fallbackLang: fallbackLanguage,
             missingHandler: {
                useFallbackTranslation: true
             },

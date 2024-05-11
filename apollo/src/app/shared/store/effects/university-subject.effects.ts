@@ -16,9 +16,9 @@ export class UniversitySubjectEffects {
             this.loadingService.finishLoading(universitySubjectCRUDLoadingKey);
             return universitySubjectActions.saveUniversitySubjectsToStore({ universitySubjects });
          }),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(universitySubjectCRUDLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.UNIVERSITY_SUBJECTS_LOAD");
             return [];
          })
       )
@@ -33,11 +33,11 @@ export class UniversitySubjectEffects {
          )),
          tap(() => {
             this.loadingService.finishLoading(universitySubjectCRUDLoadingKey);
-            this.snackBarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_ALL_SUCCESS");
+            this.snackbarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_ALL_SUCCESS");
          }),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(universitySubjectCRUDLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.UNIVERSITY_SUBJECTS_SAVE");
             return [];
          })
       )
@@ -52,11 +52,11 @@ export class UniversitySubjectEffects {
          )),
          tap(() => {
             this.loadingService.finishLoading(universitySubjectCRUDLoadingKey);
-            this.snackBarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_SINGLE_SUBJECT_SUCCESS");
+            this.snackbarService.open("ADMINISTRATION.UNIVERSITY_DETAILS.SAVE_SINGLE_SUBJECT_SUCCESS");
          }),
-         catchError(error => {
+         catchError(() => {
             this.loadingService.finishLoading(universitySubjectCRUDLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.UNIVERSITY_SUBJECTS_SAVE");
             return [];
          })
       )
@@ -65,7 +65,7 @@ export class UniversitySubjectEffects {
    constructor(
       private readonly actions$: Actions,
       private readonly universitiesFetcherService: UniversitiesFetcherService,
-      private readonly snackBarService: SnackBarService,
+      private readonly snackbarService: SnackBarService,
       private readonly loadingService: LoadingService
    ) { }
 }

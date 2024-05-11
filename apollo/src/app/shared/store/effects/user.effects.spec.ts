@@ -83,7 +83,7 @@ describe('UserEffects', () => {
             },
             {
                provide: SnackBarService,
-               useValue: jasmine.createSpyObj('SnackBarService', ['open'])
+               useValue: jasmine.createSpyObj('SnackBarService', ['open', 'openError'])
             },
             {
                provide: GeneralDialogService,
@@ -126,9 +126,29 @@ describe('UserEffects', () => {
 
          expect(effects.login$).toBeObservable(expected);
       });
+
+      it("should notify the user with a snackbar message if login fails", () => {
+         authService.signInUser.and.returnValue(cold('#'));
+         actions$ = cold('a', { a: userActions.login({ loginData }) });
+
+         expect(effects.login$).toBeObservable(cold('|'));
+         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.AUTH.LOGIN");
+      });
    });
 
    describe('register$', () => {
+      const completion = {
+         id: 'testId',
+         name: 'testYearName',
+         owner: 'testOwner'
+      } as UniversityCompletionYear;
+      
+      const semester = {
+         id: 'testId',
+         name: 'testSemesterName',
+         owner: 'testOwner'
+      } as Semester;
+
       it("should register a new user", () => {
          actions$ = cold('a', { a: userActions.register({ registerData }) });
 
@@ -147,8 +167,8 @@ describe('UserEffects', () => {
       });
 
       it("should open dialog with correct content if there is saved guest data on the averages page", () => {
-         actions$ = cold('a', { a: userActions.register({ registerData }) });
          completionsFetcherService.getGuestStorageData.and.returnValue([{} as UniversityCompletionYear]);
+         actions$ = cold('a', { a: userActions.register({ registerData }) });
 
          effects.register$.subscribe();
          getTestScheduler().flush();
@@ -162,8 +182,8 @@ describe('UserEffects', () => {
       });
 
       it("should open dialog with correct content if there is saved guest data on the timetable page", () => {
-         actions$ = cold('a', { a: userActions.register({ registerData }) });
          timetableFetcherService.getGuestStorageData.and.returnValue([{} as Semester]);
+         actions$ = cold('a', { a: userActions.register({ registerData }) });
 
          effects.register$.subscribe();
          getTestScheduler().flush();
@@ -177,9 +197,9 @@ describe('UserEffects', () => {
       });
 
       it("should open dialog with correct content if there is saved guest data on the averages page and the timetable page", () => {
-         actions$ = cold('a', { a: userActions.register({ registerData }) });
          completionsFetcherService.getGuestStorageData.and.returnValue([{} as UniversityCompletionYear]);
          timetableFetcherService.getGuestStorageData.and.returnValue([{} as Semester]);
+         actions$ = cold('a', { a: userActions.register({ registerData }) });
 
          effects.register$.subscribe();
          getTestScheduler().flush();
@@ -193,20 +213,10 @@ describe('UserEffects', () => {
       });
 
       it("should clear guest data and save it for the newly created user if the user accepts the dialog", () => {
-         actions$ = cold('a', { a: userActions.register({ registerData }) });
-         const completion = {
-            id: 'testId',
-            name: 'testYearName',
-            owner: 'testOwner'
-         } as UniversityCompletionYear;
          completionsFetcherService.getGuestStorageData.and.returnValue([completion]);
-         const semester = {
-            id: 'testId',
-            name: 'testSemesterName',
-            owner: 'testOwner'
-         } as Semester;
          timetableFetcherService.getGuestStorageData.and.returnValue([semester]);
          generalDialog.openDialog.and.returnValue(of(true));
+         actions$ = cold('a', { a: userActions.register({ registerData }) });
 
          effects.register$.subscribe();
          getTestScheduler().flush();
@@ -218,15 +228,53 @@ describe('UserEffects', () => {
       });
 
       it(`should dispatch ${ userActions.clearUserData.type } action if the user rejects the dialog, without clearing guest data and saving it for the newly created user`, () => {
-         actions$ = cold('a', { a: userActions.register({ registerData }) });
          generalDialog.openDialog.and.returnValue(of(false));
-   
+         actions$ = cold('a', { a: userActions.register({ registerData }) });
+         
          expect(effects.register$).toBeObservable(cold('b', { b: userActions.clearUserData() }));
          
          expect(completionsFetcherService.saveCompletions).not.toHaveBeenCalled();
          expect(timetableFetcherService.saveSemesters).not.toHaveBeenCalled();
          expect(completionsFetcherService.clearGuestStorage).not.toHaveBeenCalled();
          expect(timetableFetcherService.clearGuestStorage).not.toHaveBeenCalled();
+      });
+
+      it("should open an error snackbar if the registration fails", () => {
+         authService.registerUser.and.returnValue(cold('#'));
+         actions$ = cold('a', { a: userActions.register({ registerData }) });
+
+         expect(effects.register$).toBeObservable(cold('|'));
+         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.AUTH.REGISTER", jasmine.any(Object));
+      });
+
+      it("should open an error snackbar if the new user data saving fails", () => {
+         userFetcherService.saveNewUserData.and.returnValue(cold('#'));
+         actions$ = cold('a', { a: userActions.register({ registerData }) });
+
+         expect(effects.register$).toBeObservable(cold(''));
+         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.USER_SAVE");
+      });
+
+      it("should open an error snackbar if the completions saving fails", () => {
+         completionsFetcherService.getGuestStorageData.and.returnValue([completion]);
+         timetableFetcherService.getGuestStorageData.and.returnValue([semester]);
+         generalDialog.openDialog.and.returnValue(of(true));
+         completionsFetcherService.saveCompletions.and.returnValue(cold('#'));
+         actions$ = cold('a', { a: userActions.register({ registerData }) });
+
+         expect(effects.register$).toBeObservable(cold(''));
+         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.GUEST_DATA_TRANSFER");
+      });
+
+      it("should open an error snackbar if the timetable saving fails", () => {
+         completionsFetcherService.getGuestStorageData.and.returnValue([completion]);
+         timetableFetcherService.getGuestStorageData.and.returnValue([semester]);
+         generalDialog.openDialog.and.returnValue(of(true));
+         timetableFetcherService.saveSemesters.and.returnValue(cold('#'));
+         actions$ = cold('a', { a: userActions.register({ registerData }) });
+
+         expect(effects.register$).toBeObservable(cold(''));
+         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.GUEST_DATA_TRANSFER");
       });
    });
 
@@ -240,13 +288,21 @@ describe('UserEffects', () => {
          expect(userFetcherService.updateUserData).toHaveBeenCalledWith(user);
       });
 
-      it("should notify the user with a snackbar message", () => {
+      it("should notify the user with a snackbar message about the successful update", () => {
          actions$ = cold('a', { a: userActions.updateUserProfile({ user }) });
 
          effects.updateUserProfile$.subscribe();
          getTestScheduler().flush();
 
-         expect(snackbar.open).toHaveBeenCalled();
+         expect(snackbar.open).toHaveBeenCalledOnceWith("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
+      });
+
+      it("should open an error snackbar if the user data update fails", () => {
+         userFetcherService.updateUserData.and.returnValue(cold('#'));
+         actions$ = cold('a', { a: userActions.updateUserProfile({ user }) });
+
+         expect(effects.updateUserProfile$).toBeObservable(cold('|'));
+         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.USER_UPDATE");
       });
    });
 
@@ -266,6 +322,14 @@ describe('UserEffects', () => {
          const expected = cold('b', { b: userActions.clearUserData() });
 
          expect(effects.logout$).toBeObservable(expected);
+      });
+
+      it("should open an error snackbar if the logout fails", () => {
+         authService.signOutUser.and.returnValue(cold('#'));
+         actions$ = cold('a', { a: userActions.logout() });
+
+         expect(effects.logout$).toBeObservable(cold('|'));
+         expect(snackbar.openError).toHaveBeenCalledOnceWith(jasmine.any(String));
       });
    });
 });

@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { LoadingService, LoadingType, timetableLoadingKey } from "@apollo/shared/loading";
+import { SnackBarService } from "@apollo/shared/services";
 import { userActions } from "@apollo/shared/store";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, switchMap, tap } from "rxjs";
@@ -22,9 +23,9 @@ export class TimetableEffects {
                }
             });
          }),
-         catchError(errorKey => {
+         catchError(() => {
             this.loadingService.finishLoading(timetableLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.TIMETABLE_LOAD");
             return [];
          })
       )
@@ -35,15 +36,15 @@ export class TimetableEffects {
          ofType(timetableActions.updateTimetable),
          tap(() => this.loadingService.startLoading(timetableLoadingKey, LoadingType.SAVE)),
          switchMap(({ newState }) => this.timetableFetcherService.saveSemesters(newState.semesters!).pipe(
-            map(_ => newState)
+            map(() => {
+               this.loadingService.finishLoading(timetableLoadingKey);
+               this.snackbarService.open("TIMETABLE.SAVE_SUCCESS");
+               return timetableActions.saveTimetableToStore({ newState });
+            }),
          )),
-         map(newState => {
+         catchError(() => {
             this.loadingService.finishLoading(timetableLoadingKey);
-            return timetableActions.saveTimetableToStore({ newState });
-         }),
-         catchError(errorKey => {
-            this.loadingService.finishLoading(timetableLoadingKey);
-            // TODO: error handling
+            this.snackbarService.openError("ERROR.DATABASE.TIMETABLE_SAVE");
             return [];
          })
       )
@@ -67,6 +68,7 @@ export class TimetableEffects {
    constructor(
       private readonly actions$: Actions,
       private readonly timetableFetcherService: TimetableFetcherService,
-      private readonly loadingService: LoadingService
+      private readonly loadingService: LoadingService,
+      private readonly snackbarService: SnackBarService
    ) { }
 }
