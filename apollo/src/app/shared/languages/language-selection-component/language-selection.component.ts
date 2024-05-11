@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
-import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
+import { MatSelectModule } from '@angular/material/select';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { languages } from '../constants/languages';
+import { Language } from '../models';
 import { LanguageService } from '../services/language.service';
 
 @Component({
@@ -9,32 +10,24 @@ import { LanguageService } from '../services/language.service';
    standalone: true,
    imports: [
       ApolloCommonModule,
-      MatChipsModule
+      MatSelectModule
    ],
    templateUrl: './language-selection.component.html',
-   styleUrl: './language-selection.component.scss',
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LanguageSelectionComponent {
-   @Output() public readonly selectLanguage = new EventEmitter<string>();
+   @Output() public readonly selectLanguage = new EventEmitter<Language>();
    public readonly availableLanguages = languages;
-   public selectedLanguage: string;
+   public previousLanguage: Language;
 
    constructor(
       private readonly languageService: LanguageService
    ) {
-      this.selectedLanguage = languageService.getLanguage();
+      this.previousLanguage = this.languageService.getLanguage();
    }
 
-   public onSelectLanguage(event: MatChipListboxChange): void {
-      const language = event.value;
-      if(!language) {
-         event.source.value = this.selectedLanguage;
-         return;
-      }
-
-      this.selectedLanguage = language;
-      this.languageService.setLanguage(language);
-      this.selectLanguage.emit(language);
+   public onSelectLanguage(lang: Language): void {
+      this.languageService.setLanguage(lang);
+      this.selectLanguage.emit(lang);
    }
 }

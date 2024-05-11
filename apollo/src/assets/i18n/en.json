@@ -122,6 +122,8 @@
    "AUTH.GUEST_DATA_TRANSFER_DIALOG.REJECT": "Start with clear data",
    "PROFILE.SETTINGS.TITLE": "Profile settings",
    "PROFILE.SETTINGS.USERNAME_LABEL": "Username",
+   "PROFILE.SETTINGS.GENERAL_SETTINGS.TITLE": "General",
+   "PROFILE.SETTINGS.GENERAL_SETTINGS.DESCRIPTION": "Settings about your account and the application's appearance.",
    "PROFILE.SETTINGS.STUDY_SETTINGS.TITLE": "Studies",
    "PROFILE.SETTINGS.STUDY_SETTINGS.DESCRIPTION": "Setting your studies allows you to choose your university's courses for the averages and timetable planner pages, and also grants access to the major completions page.",
    "PROFILE.SETTINGS.STUDY_SETTINGS.UNIVERSITY_LABEL": "University",

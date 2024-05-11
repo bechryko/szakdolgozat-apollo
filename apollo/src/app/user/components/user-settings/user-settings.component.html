@@ -1,19 +1,24 @@
 <form class="user-settings-container settings-container" [formGroup]="userSettingsForm">
    <h2>{{ "PROFILE.SETTINGS.TITLE" | transloco }}</h2>
-   <mat-form-field>
-      <mat-label>{{ "PROFILE.SETTINGS.USERNAME_LABEL" | transloco }}</mat-label>
-      <input matInput formControlName="username">
-   </mat-form-field>
-   <apo-language-selection (selectLanguage)="onSelectLanguage($event)"></apo-language-selection>
-   <mat-expansion-panel>
-      <mat-expansion-panel-header class="expansion-panel-title">
-         <mat-panel-title>
+   <div class="settings-container row">
+      <div class="settings-section">
+         <div class="settings-section-header">
+            <h3>{{ "PROFILE.SETTINGS.GENERAL_SETTINGS.TITLE" | transloco }}</h3>
+            <p>{{ "PROFILE.SETTINGS.GENERAL_SETTINGS.DESCRIPTION" | transloco }}</p>
+         </div>
+         <mat-form-field class="setting">
+            <mat-label>{{ "PROFILE.SETTINGS.USERNAME_LABEL" | transloco }}</mat-label>
+            <input matInput formControlName="username">
+         </mat-form-field>
+         <apo-language-selection class="setting"
+            (selectLanguage)="onSelectLanguage($event)"></apo-language-selection>
+      </div>
+      <div class="settings-section">
+         <div class="settings-section-header">
             <h3>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.TITLE" | transloco }}</h3>
-         </mat-panel-title>
-         <mat-panel-description>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.DESCRIPTION" | transloco }}</mat-panel-description>
-      </mat-expansion-panel-header>
-      <div class="settings-container row">
-         <mat-form-field>
+            <p>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.DESCRIPTION" | transloco }}</p>
+         </div>
+         <mat-form-field class="setting">
             <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.UNIVERSITY_LABEL" | transloco }}</mat-label>
             <mat-select formControlName="university"
                (valueChange)="onSelectUniversity($event)">
@@ -23,7 +28,7 @@
                }
             </mat-select>
          </mat-form-field>
-         <mat-form-field>
+         <mat-form-field class="setting">
             <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.FACULTY_LABEL" | transloco }}</mat-label>
             <mat-select formControlName="faculty"
                [value]="selectedFaculty()"
@@ -36,7 +41,7 @@
                }
             </mat-select>
          </mat-form-field>
-         <mat-form-field>
+         <mat-form-field class="setting">
             <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.MAJOR_LABEL" | transloco }}</mat-label>
             <mat-select formControlName="major">
                <mat-option [value]="undefined">{{ "GENERAL_LABELS.NOT_SELECTED" | transloco }}</mat-option>
@@ -46,9 +51,13 @@
             </mat-select>
          </mat-form-field>
       </div>
-   </mat-expansion-panel>
+   </div>
    <div class="actions">
+      <apo-button apoRole="cancel"
+         class="logout-button"
+         (click)="onLogout()">{{ "AUTH.LOGOUT_BUTTON_LABEL" | transloco }}</apo-button>
       <apo-button apoRole="save"
+         class="save-button"
          (click)="onSave()">{{ "PROFILE.SETTINGS.SAVE_BUTTON_LABEL" | transloco }}</apo-button>
    </div>
 </form>

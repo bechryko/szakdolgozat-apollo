@@ -2,10 +2,6 @@
 @use 'styles/elements/section';
 
 .settings-container {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   gap: 2rem;
    padding: 1rem;
 
    &.row {
@@ -14,23 +10,42 @@
    }
 }
 
-.user-settings-container {
-   @include section.general-section;
-   margin-bottom: 3rem;
-}
+.settings-section {
+   @include section.borderless-section;
+   width: 100%;
+   margin-bottom: 2rem;
 
-.expansion-panel-title {
-   height: 6rem !important;
+   .settings-section-header {
+      display: flex;
+      margin-bottom: 2rem;
 
-   h3 {
-      font-size: 2rem;
+      > * {
+         margin: 0;
+         flex-basis: 50%;
+      }
+      
+      h3 {
+         font-size: 2rem;
+      }
+   }
+
+   .setting + .setting {
+      margin-left: 1rem;
    }
 }
 
-.mat-expansion-panel {
-   background-color: variables.$expansion-panel-content-color;
+.actions {
+   justify-content: space-around;
+
+   .logout-button {
+      flex-basis: 20%;
+   }
+
+   .save-button {
+      flex-basis: 40%;
+   }
 }
 
-.actions {
-   justify-content: space-between;
+mat-form-field {
+   margin-bottom: -1.25rem;
 }

@@ -42,6 +42,7 @@ export class UserSettingsComponent implements OnInit {
 
    @Input() public user!: ApolloUser;
    @Output() public readonly saveChanges = new EventEmitter<ApolloUser>();
+   @Output() public readonly logout = new EventEmitter<void>();
    public userSettingsForm!: FormGroup;
    public selectedLanguage?: string;
 
@@ -131,5 +132,9 @@ export class UserSettingsComponent implements OnInit {
       }
 
       this.saveChanges.emit(deleteNullish(newUser));
+   }
+
+   public onLogout(): void {
+      this.logout.emit();
    }
 }

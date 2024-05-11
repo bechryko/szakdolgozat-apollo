@@ -3,7 +3,7 @@
 
 $text-selection-color: sass-color.adjust(colors.$highlight, $lightness: 10%);
 
-$dialog-background-color: sass-color.adjust(colors.$section-background-color, $lightness: 10%);
+$dialog-background-color: sass-color.adjust(colors.$section-background-color, $lightness: 15%);
 $subsection-background-color: sass-color.adjust(colors.$section-background-color, $lightness: 7.5%);
 
 $header-color: colors.$menu-color;

@@ -1,10 +1,9 @@
-<div class="language-selection-container">
-   <p>{{ "LANGUAGE_SELECTION.LABEL" | transloco }}:</p>
-   <mat-chip-listbox class="selection"
-      [value]="selectedLanguage"
-      (change)="onSelectLanguage($event)">
+<mat-form-field>
+   <mat-label>{{ "LANGUAGE_SELECTION.LABEL" | transloco }}</mat-label>
+   <mat-select [value]="previousLanguage"
+      (valueChange)="onSelectLanguage($event)">
       @for(language of availableLanguages; track $index) {
-         <mat-chip-option color="accent" [value]="language">{{ ("LANGUAGES." + language.toLocaleUpperCase()) | transloco }}</mat-chip-option>
+         <mat-option [value]="language">{{ ("LANGUAGES." + language.toLocaleUpperCase()) | transloco }}</mat-option>
       }
-   </mat-chip-listbox>
-</div>
+   </mat-select>
+</mat-form-field>

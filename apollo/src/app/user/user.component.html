@@ -2,11 +2,8 @@
    @if(user) {
       <div class="user-informations">
          <apo-user-settings [user]="user"
-            (saveChanges)="onSaveUserSettings($event)"></apo-user-settings>
-         <div class="actions">
-            <apo-button apoRole="cancel"
-               (click)="onLogout()">{{ "AUTH.LOGOUT_BUTTON_LABEL" | transloco }}</apo-button>
-         </div>
+            (saveChanges)="onSaveUserSettings($event)"
+            (logout)="onLogout()"></apo-user-settings>
       </div>
    } @else {
       <div class="language-selection-wrapper">
