@@ -1,0 +1,31 @@
+@use 'styles/variables';
+@use 'styles/elements/section';
+
+@mixin displayer-style($type: total) {
+   :host {
+      @if($type == semester) {
+         @include section.borderless-section;
+      } @else if($type == total) {
+         @include section.general-section;
+      } @else {
+         @error "Invalid type value: #{$type}";
+      }
+      display: block;
+   }
+   
+   p {
+      height: 1.25rem;
+   }
+   
+   .alternative-data {
+      display: inline-block;
+      color: variables.$alternative-font-color;
+      height: 1.25rem;
+   
+      mat-icon {
+         height: 1rem;
+         position: relative;
+         top: -0.15rem;
+      }
+   }
+}

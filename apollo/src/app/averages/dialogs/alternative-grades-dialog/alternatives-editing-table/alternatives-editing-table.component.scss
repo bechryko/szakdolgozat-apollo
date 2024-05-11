@@ -1,22 +1,30 @@
-@use 'styles/colors';
-@use 'styles/table-style';
+@use 'styles/variables';
+@use 'styles/elements/table-style';
 
-@include table-style.inputTable;
+@include table-style.input-table;
 
 td {
    &.changed {
-      background-color: rgb(254, 214, 140);
+      background-color: variables.$averages-alternatives-changed-cell-background;
    }
 
    &.disabled {
-      background-color: rgb(213, 213, 213);
+      background-color: variables.$averages-alternatives-disabled-cell-background;
    }
 
    &.bonus {
-      background-color: rgb(167, 255, 167);
+      background-color: variables.$averages-alternatives-bonus-cell-background;
    }
 }
 
 .table-cell-input {
    background-color: transparent;
+}
+
+.wide-column {
+   min-width: 25rem;
+}
+
+.remove-button {
+   width: 15rem;
 }

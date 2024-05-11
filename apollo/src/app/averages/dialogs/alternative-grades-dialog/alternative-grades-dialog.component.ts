@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AlternativeGrade } from '@apollo/averages/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { AlternativeGradesDialogData, AlternativeGradesDialogOutputData } from './alternative-grades-dialog-data';
 import { AlternativesEditingTableComponent } from './alternatives-editing-table/alternatives-editing-table.component';
 
@@ -35,6 +35,11 @@ export class AlternativeGradesDialogComponent {
    }
 
    public save(): void {
+      if(isEqual(this.alternativeFirstSemesterGrades, this.data.originalFirstSemesterGrades) && isEqual(this.alternativeSecondSemesterGrades, this.data.originalSecondSemesterGrades)) {
+         this.dialogRef.close({});
+         return;
+      }
+
       this.dialogRef.close({
          alternativeFirstSemesterGrades: this.alternativeFirstSemesterGrades!.map(grade => ({
             ...grade,

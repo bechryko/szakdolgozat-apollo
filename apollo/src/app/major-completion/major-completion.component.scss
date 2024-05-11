@@ -1,4 +1,5 @@
-@use 'styles/colors';
+@use 'styles/variables';
+@use 'styles/elements/section';
 
 h2 {
    text-align: center;
@@ -35,15 +36,13 @@ h4, .main-label {
 }
 
 .major-completion-data {
-   border: 2px solid colors.$primary-darker;
-   border-radius: 1rem;
-   padding: 1rem;
+   @include section.general-section;
    margin-bottom: 3rem;
 }
 
 .completion-group, .specialization-group {
    margin-left: 1rem;
-   border-left: 0.375rem solid colors.$primary-main;
+   border-left: 0.375rem solid variables.$major-completions-group-indicator-color;
 
    h5 {
       font-size: 1.5rem;
@@ -76,8 +75,8 @@ h4, .main-label {
    padding-left: 1rem;
    transition: background-color 0.3s;
 
-   &:has(button:hover) {
-      background-color: colors.$primary-lighter-background;
+   &:has(apo-button:hover) {
+      background-color: variables.$major-completions-hovered-row-background;
    }
 
    p {
@@ -86,32 +85,26 @@ h4, .main-label {
 }
 
 .mat-expansion-panel {
-   background-color: colors.$background-color;
-   border: 2px solid colors.$primary-darker;
-   border-radius: 1rem;
+   @include section.expansion-panel-section;
+   background-color: variables.$background-color;
    margin-bottom: 1rem;
-   box-shadow: none !important;
 
    h5 {
       font-size: 1.5rem;
    }
 }
 
-::ng-deep .mat-expansion-indicator::after {
-   color: colors.$primary-darker !important;
-}
-
 .specialization-group .specialization-subgroup-container {
    margin-left: 1.5rem;
-   border-left: 0.375rem solid colors.$primary-lighter;
+   border-left: 0.375rem solid variables.$major-completions-group-indicator-color;
 }
 
 .all-complete {
-   text-align: center;
+   margin-left: 1.25rem;
 }
 
 .check-icon {
    position: relative;
    top: 0.3rem;
-   color: colors.$success;
+   color: variables.$success-icon-color;
 }

@@ -1,29 +1,12 @@
-@use 'styles/colors';
+@use 'styles/elements/dialog';
 
 .alternative-grades-dialog-container {
-   height: 80vh;
-   background-color: colors.$primary-background;
-   padding: 2.5rem;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-
-   h2 {
-      text-align: center;
-   }
-}
-
-.actions {
-   display: flex;
-   gap: 3rem;
-   align-items: center;
-   justify-content: center;
+   @include dialog.dialog-container(medium);
 }
 
 .semester-tables {
    overflow-y: auto;
-   max-height: 29.75rem;
-   margin: 2rem 0;
+   margin-bottom: 2rem;
    padding-right: 0.5rem;
 }
 

@@ -6,21 +6,17 @@
    </div>
    <nav>
       @for(menuItemKey of menuItemKeys$ | async; track $index) {
-         <button mat-button
-            disableRipple
-            [class.selected]="menuItemKey === selecteMenu"
+         <button [class.selected]="menuItemKey === selecteMenu"
             (click)="selectMenuItem(menuItemKey)">{{ routeUrlToTranslationKeyMap[menuItemKey] | transloco }}</button>
       }
    </nav>
-   <button mat-fab
-      color="accent"
+   <apo-button apoRole="navigation"
+      [isFab]="true"
       (click)="selectMenuItem(routeUrls.USER)">
-      <mat-icon class="profile-icon">
-         @if(isUserLoggedIn$ | async) {
-            account_circle
-         } @else {
-            login
-         }
-      </mat-icon>
-   </button>
+      @if(isUserLoggedIn$ | async) {
+         account_circle
+      } @else {
+         login
+      }
+   </apo-button>
 </div>

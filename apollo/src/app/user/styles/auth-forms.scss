@@ -1,8 +1,7 @@
-@use 'styles/colors';
+@use 'styles/elements/section';
 
 :host {
-   border: 2px solid colors.$primary-darker;
-   border-radius: 1rem;
+   @include section.general-section;
    min-width: 30rem;
 }
 

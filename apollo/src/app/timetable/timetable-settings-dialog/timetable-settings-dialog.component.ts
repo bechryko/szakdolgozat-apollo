@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { numberize } from '@apollo/shared/functions';
+import { leadingZeros, numberize } from '@apollo/shared/functions';
 import { GeneralDialogService } from '@apollo/shared/general-dialog';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { SnackBarService } from '@apollo/shared/services';
@@ -202,6 +202,10 @@ export class TimetableSettingsDialogComponent {
 
       this.updateData();
       this.dialogRef.close(this.data);
+   }
+
+   public minuteLeadingZeros(minute: number): string {
+      return leadingZeros(minute, 2);
    }
 
    private updateData(): void {

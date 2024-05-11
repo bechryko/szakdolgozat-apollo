@@ -35,6 +35,7 @@ export class MultiAveragesDisplayerComponent { // TODO: add diagrams
    public readonly creditIndex: Signal<number>;
    public readonly adjustedCreditIndex: Signal<number>;
 
+   public readonly areAlternativesSet: Signal<boolean>;
    private readonly alternativeYears: Signal<GradesCompletionYear[]>;
    private readonly alternativesCollected: Signal<AlternativeGrade[]>;
    public readonly alternativeWeightedAverage: Signal<number | null>;
@@ -53,6 +54,9 @@ export class MultiAveragesDisplayerComponent { // TODO: add diagrams
       this.creditIndex = computed(() => AverageCalculatorUtils.calculateCreditIndexForMultipleYears(this.years()));
       this.adjustedCreditIndex = computed(() => AverageCalculatorUtils.calculateAdjustedCreditIndexForMultipleYears(this.years()));
 
+      this.areAlternativesSet = computed(() => this.years().some(
+         year => year.alternativeGrades?.firstSemester?.length || year.alternativeGrades?.secondSemester?.length
+      ));
       this.alternativeYears = computed(() => {
          return this.years().map(year => {
             const firstSemesterGrades = year.alternativeGrades?.firstSemester

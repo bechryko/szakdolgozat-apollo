@@ -1,11 +1,10 @@
+@use 'styles/elements/dialog';
+
 .general-dialog-container {
-   padding: 1.5rem;
-   box-sizing: border-box;
+   @include dialog.dialog-container(small);
 }
 
 .actions {
-   display: flex;
-   align-items: center;
    justify-content: space-around;
    margin-top: 2rem;
 }

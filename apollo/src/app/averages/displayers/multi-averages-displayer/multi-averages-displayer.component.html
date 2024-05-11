@@ -1,11 +1,11 @@
-<fieldset>
-   <legend>{{ title }}</legend>
+<div class="multi-averages-displayer-container">
    @if(yearDisplay) {
-      <button mat-raised-button
-         class="alternatives-button"
-         color="accent"
-         (click)="onSetAlternatives()">{{ "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL" | transloco }}</button>
+      <apo-button class="alternatives-button"
+         [class.alternatives-set]="areAlternativesSet()"
+         apoRole="openDialog"
+         (click)="onSetAlternatives()">{{ "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL" | transloco }}</apo-button>
    }
+   <h3>{{ title }}</h3>
    <p class="weighted-average-container">
       {{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() | displayValue }}
       @if(alternativeWeightedAverage()) {
@@ -77,4 +77,4 @@
             [isFirstSemester]="false"></apo-averages-displayer>
       </div>
    }
-</fieldset>
+</div>

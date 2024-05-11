@@ -1,15 +1,15 @@
 <apo-header></apo-header>
 <div class="content">
-   @if(!isAdminPage()) {
+   @if(isSidebarShown()) {
       <apo-sidebar></apo-sidebar>
    }
-   <main [class.show-scrollbar]="isAdminPage()">
+   <main [class.show-scrollbar]="isAdminPage()"
+      [class.no-padding]="!enableMainPadding()">
       @if(loadingOverlayConfig()) {
          <ngx-spinner
             *ngLet="loadingOverlayConfig()! as config"
             bdColor="rgba(51,51,51,0.8)"
             size="medium"
-            color="#80CBC4"
             [type]="config.animationType"
             [fullScreen]="true">
             <p class="loading-message">{{ "LOADING_OVERLAY." + config.type | transloco }}...</p>

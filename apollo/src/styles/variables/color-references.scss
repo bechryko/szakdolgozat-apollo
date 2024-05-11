@@ -1,0 +1,59 @@
+@use 'sass:color' as sass-color;
+@use './colors';
+
+$text-selection-color: sass-color.adjust(colors.$highlight, $lightness: 10%);
+
+$dialog-background-color: sass-color.adjust(colors.$section-background-color, $lightness: 15%);
+$subsection-background-color: sass-color.adjust(colors.$section-background-color, $lightness: 7.5%);
+
+$header-color: colors.$menu-color;
+$selected-nav-button-color: sass-color.adjust(colors.$highlight, $lightness: 10%);
+$loading-indicator-color: colors.$accent;
+$loading-message-color: colors.$accent;
+
+$border-color: colors.$highlight;
+
+$expansion-panel-header-color: colors.$section-background-color;
+$expansion-panel-content-color: colors.$section-background-color;
+
+$admin-sections-background: colors.$section-background-color;
+$admin-sections-background-hover: sass-color.adjust(colors.$section-background-color, $lightness: -20%);
+$admin-list-selected-background: colors.$highlight;
+
+$menu-card-background: colors.$section-background-color;
+
+$averages-alternatives-changed-cell-background: colors.$data-changed-signal-color;
+$averages-alternatives-disabled-cell-background: colors.$data-disabled-signal-color;
+$averages-alternatives-bonus-cell-background: colors.$data-bonus-signal-color;
+
+$major-completions-hovered-row-background: colors.$accent;
+$major-completions-group-indicator-color: sass-color.adjust(colors.$highlight, $lightness: 10%);
+
+$timetable-odd-list-element-background: colors.$section-background-color;
+$timetable-even-list-element-background: sass-color.adjust(colors.$primary, $lightness: 10%);
+
+$primary-input-background: colors.$primary;
+$primary-input-hover-background: sass-color.adjust(colors.$primary, $lightness: 10%);
+$primary-input-color: colors.$font-color;
+
+$accent-input-background: colors.$accent-lighter;
+$accent-input-hover-background: sass-color.adjust(colors.$accent-lighter, $lightness: 5%);
+$accent-input-color: colors.$font-color;
+$accent-input-border-color: colors.$accent;
+
+$warn-input-background: colors.$warn-background;
+$warn-input-hover-background: sass-color.adjust(colors.$warn-background, $lightness: -5%);
+$warn-input-color: colors.$font-color;
+$warn-input-border-color: colors.$warn;
+
+$disabled-input-background: colors.$disabled;
+$disabled-input-color: sass-color.adjust(colors.$disabled, $lightness: -30%);
+
+$input-highlight-color: colors.$highlight;
+$form-field-label-color: colors.$font-color;
+
+$tabs-active-indicator-color: colors.$primary;
+
+$error-icon-color: colors.$warn;
+$warning-icon-color: sass-color.adjust(colors.$accent, $lightness: -20%);
+$success-icon-color: colors.$success;

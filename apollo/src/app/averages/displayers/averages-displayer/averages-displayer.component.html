@@ -1,5 +1,5 @@
-<fieldset>
-   <legend>{{ title }}</legend>
+<div>
+   <h3>{{ title }}</h3>
    <p>
       {{ "AVERAGES.DISPLAY.WEIGHTED_AVERAGE" | transloco }}: {{ weightedAverage() | displayValue }}
       @if(alternativeWeightedAverage()) {
@@ -36,8 +36,9 @@
          </span>
       }
    </p>
-   <button mat-raised-button
-      color="primary"
-      [disabled]="!userMajor()"
-      (click)="calculateScholarship()">{{ "AVERAGES.DISPLAY.CALCULATE_SCHOLARSHIP_LABEL" | transloco }}</button>
-</fieldset>
+   <div class="actions">
+      <apo-button apoRole="openDialog"
+         [disabled]="!userMajor()"
+         (click)="calculateScholarship()">{{ "AVERAGES.DISPLAY.CALCULATE_SCHOLARSHIP_LABEL" | transloco }}</apo-button>
+   </div>
+</div>

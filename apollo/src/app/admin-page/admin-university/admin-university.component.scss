@@ -1,4 +1,4 @@
-@use 'styles/colors';
+@use 'styles/variables';
 
 .admin-university-container {
    display: flex;
@@ -14,19 +14,17 @@
 
    .actions {
       width: 100%;
-      display: flex;
       justify-content: space-around;
 
-      button {
-         width: 20%;
+      &:not(.close-top-spacing) {
+         margin-top: 2rem;
+      }
 
-         &.save-button {
-            width: 60%;
-         }
+      apo-button {
+         flex-basis: 20%;
 
-         &.add-button {
-            width: 70%;
-            margin-top: 1.5rem;
+         &.wide-button {
+            flex-basis: 60%;
          }
       }
    }
@@ -41,23 +39,23 @@
    grid-template-columns: 1fr 1fr;
 
    .list-container {
-      height:  37rem;
+      height: variables.$admin-page-tab-height;
       overflow: auto;
-      background-color: colors.$primary-background;
+      background-color: variables.$admin-sections-background;
 
       .list-item {
          padding: 0.5rem;
-         border-bottom: 1px solid colors.$primary-darker;
+         border-bottom: variables.$table-border;
          cursor: pointer;
          user-select: none;
 
          &:hover {
-            background-color: colors.$primary-darker-background;
+            background-color: variables.$admin-sections-background-hover;
          }
 
          &.selected {
-            background-color: colors.$primary-darker;
-            color: white;
+            background-color: variables.$admin-list-selected-background;
+            color: variables.$contrast-font-color;
          }
       }
 
@@ -67,13 +65,12 @@
    }
 
    .details-container {
-      height:  37rem;
+      height: variables.$admin-page-tab-height;
       overflow: auto;
       padding: 1.5rem;
-      background-color: colors.$primary-background;
-      border: 2px solid colors.$primary-darker;
+      background-color: variables.$admin-sections-background;
+      border: variables.$section-border;
       border-top: none;
-      box-sizing: border-box;
 
       mat-form-field {
          width: 100%;

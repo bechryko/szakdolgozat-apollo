@@ -1,0 +1,22 @@
+@use 'styles/variables';
+
+.mat-mdc-form-field {
+   label.mat-mdc-floating-label.mdc-floating-label, .mat-hint, input, ::placeholder {
+      color: variables.$form-field-label-color !important;
+   }
+
+   &.mat-primary :is(input, .mat-mdc-select-value-text) {
+      color: variables.$primary-input-color !important;
+      caret-color: variables.$primary-input-color !important;
+   }
+
+   &.mat-accent :is(input, .mat-mdc-select-value-text) {
+      color: variables.$accent-input-color !important;
+      caret-color: variables.$accent-input-color !important;
+   }
+
+   &.mat-warn :is(input, .mat-mdc-select-value-text) {
+      color: variables.$warn-input-color !important;
+      caret-color: variables.$warn-input-color !important;
+   }
+}

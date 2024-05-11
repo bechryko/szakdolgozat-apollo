@@ -1,45 +1,59 @@
-@use 'styles/colors';
+@use 'styles/variables';
 
-@mixin inputTable {
+@mixin table-cell-input($font-size: 1.2rem) {
+   font-size: $font-size;
+   width: 100%;
+   border: none;
+   cursor: pointer;
+   padding: 0.5rem;
+   
+   &:focus-visible {
+      outline: variables.$input-focus-outline;
+      border-radius: 0.5rem;
+   }
+}
+
+@mixin input-table {
    .input-table-header {
       display: flex;
       justify-content: space-around;
       align-items: center;
       height: 3.5rem;
-      font-size: 2rem;
+      font-size: variables.$section-heading-font-size;
+   }
+
+   th, td, input {
+      color: variables.$font-color;
    }
    
    .input-table-footer {
       display: flex;
       justify-content: space-around;
       align-items: center;
+      gap: 2rem;
       height: 3.5rem;
       border-top-color: var(--mat-table-row-item-outline-color, rgba(0, 0, 0, 0.12));
       border-top-width: var(--mat-table-row-item-outline-width, 1px);
       border-top-style: solid;
+
+      & > apo-button {
+         flex-grow: 1;
+      }
    }
    
    .table-cell-input {
-      font-size: 1.2rem;
-      width: 2rem;
-      border: none;
-      cursor: pointer;
-      padding: 0.5rem;
+      @include table-cell-input;
+      min-width: 3rem;
 
       &.medium-column {
          font-size: 1rem;
-         min-width: 7rem;
+         min-width: 6rem;
       }
    
       &.wide-column {
          font-size: 1rem;
-         min-width: 15rem;
+         min-width: 25rem;
          width: 90%;
-      }
-   
-      &:focus-visible {
-         outline: 2px solid colors.$primary-main;
-         border-radius: 0.5rem;
       }
    }
 }

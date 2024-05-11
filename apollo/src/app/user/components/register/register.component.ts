@@ -18,7 +18,7 @@ import { AuthFormsUtils } from '../../utils';
       ReactiveFormsModule
    ],
    templateUrl: './register.component.html',
-   styleUrl: '../../styles/auth-forms.scss',
+   styleUrl: './register.component.scss',
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent {

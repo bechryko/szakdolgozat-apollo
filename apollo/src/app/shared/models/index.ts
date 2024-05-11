@@ -1,5 +1,6 @@
 export { ApolloUser } from './apollo-user';
 export { ButtonDescription } from './button-description';
+export { ComponentThemeColor } from './component-theme-color.d';
 export { University } from './university';
 export { UniversityCompletionYear } from './university-completion-year';
 export { UniversityFaculty } from './university-faculty.d';

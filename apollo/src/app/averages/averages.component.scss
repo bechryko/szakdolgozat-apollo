@@ -4,12 +4,9 @@
 }
 
 .actions {
-   display: flex;
-   gap: 3rem;
-   align-items: center;
-   justify-content: center;
+   margin: 1rem 0;
 
-   > * {
+   & > * {
       flex-basis: 20%;
    }
 }
@@ -27,4 +24,8 @@ fieldset {
    position: absolute;
    top: -1.5rem;
    right: -1.5rem;
+}
+
+apo-multi-averages-displayer + apo-multi-averages-displayer {
+   margin-top: 2rem;
 }

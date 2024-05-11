@@ -1,0 +1,32 @@
+@use 'styles/variables';
+
+@mixin section-border {
+   border: variables.$section-border;
+   border-radius: 1.5rem;
+}
+
+@mixin general-section {
+   @include section-border;
+   padding: 2rem;
+
+   h3 {
+      font-size: variables.$section-heading-font-size;
+      margin-top: 0;
+      text-align: left;
+   }
+}
+
+@mixin borderless-section {
+   @include general-section;
+   border: none;
+   background-color: variables.$section-background-color;
+}
+
+@mixin expansion-panel-section {
+   @include section-border;
+   box-shadow: none !important;
+
+   ::ng-deep .mat-expansion-indicator::after {
+      color: variables.$font-color !important;
+   }
+}

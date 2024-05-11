@@ -1,10 +1,7 @@
-@use 'styles/colors';
+@use 'styles/variables';
+@use 'styles/elements/section';
 
 .settings-container {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   gap: 2rem;
    padding: 1rem;
 
    &.row {
@@ -13,27 +10,42 @@
    }
 }
 
-.user-settings-container {
-   border: 2px solid colors.$primary-darker;
-   border-radius: 1rem;
-   margin-bottom: 3rem;
-   padding: 2rem;
-}
+.settings-section {
+   @include section.borderless-section;
+   width: 100%;
+   margin-bottom: 2rem;
 
-.expansion-panel-title {
-   height: 6rem !important;
+   .settings-section-header {
+      display: flex;
+      margin-bottom: 2rem;
 
-   h3 {
-      font-size: 2rem;
+      > * {
+         margin: 0;
+         flex-basis: 50%;
+      }
+      
+      h3 {
+         font-size: 2rem;
+      }
+   }
+
+   .setting + .setting {
+      margin-left: 1rem;
    }
 }
 
-.mat-expansion-panel {
-   background-color: colors.$primary-background;
+.actions {
+   justify-content: space-around;
+
+   .logout-button {
+      flex-basis: 20%;
+   }
+
+   .save-button {
+      flex-basis: 40%;
+   }
 }
 
-.actions {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
+mat-form-field {
+   margin-bottom: -1.25rem;
 }

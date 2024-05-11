@@ -1,20 +1,18 @@
-@use 'styles/colors';
+@use 'styles/variables';
+@use 'styles/elements/dialog';
+@use 'styles/elements/section';
 
 .scholarship-calculation-dialog-container {
-   height: 80vh;
-   background-color: colors.$primary-background;
-   padding: 2.5rem;
+   @include dialog.dialog-container(small);
 
-   h2, h3 {
+   h3 {
       text-align: center;
    }
 }
 
 .scholarship-data-container {
-   border: 2px solid colors.$primary-darker;
-   border-radius: 1rem;
+   @include section.section-border;
    padding: 1rem;
-   width: 32rem;
 
    p {
       margin: 0.5rem auto;
@@ -25,9 +23,13 @@
    }
 }
 
+.scholarship-amount-data {
+   font-weight: bold;
+}
+
 .alternative-data {
    display: inline-block;
-   color: colors.$alternative-font-color;
+   color: variables.$alternative-font-color;
    height: 1.25rem;
 
    mat-icon {
@@ -39,6 +41,9 @@
 
 .actions {
    margin-top: 2rem;
-   display: flex;
-   justify-content: center;
+   width: 100%;
+
+   apo-button {
+      flex-basis: 50%;
+   }
 }

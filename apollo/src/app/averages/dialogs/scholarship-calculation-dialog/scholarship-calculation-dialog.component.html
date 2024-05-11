@@ -6,7 +6,7 @@
       @if(scholarship) {
          @if(scholarship.normal.scholarshipAmount || scholarship.alternative?.scholarshipAmount) {
             <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.DESCRIPTION" | transloco }}</p>
-            <p>
+            <p class="scholarship-amount-data">
                @if(scholarship.normal.scholarshipAmount) {
                   {{ scholarship.normal.scholarshipAmount | apoCurrency }}
                }
@@ -38,7 +38,7 @@
       @if(scholarship) {
          @if(scholarship.normal.scholarshipAmount || scholarship.alternative?.scholarshipAmount) {
             <p>{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.DESCRIPTION" | transloco }}</p>
-            <p>
+            <p class="scholarship-amount-data">
                @if(scholarship.normal.scholarshipAmount) {
                   {{ scholarship.normal.scholarshipAmount | apoCurrency }}
                }
@@ -65,8 +65,7 @@
       }
    </div>
    <div class="actions">
-      <button mat-raised-button
-         color="accent"
-         (click)="close()">{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.CLOSE_LABEL" | transloco }}</button>
+      <apo-button apoRole="cancel"
+         (click)="close()">{{ "AVERAGES.SCHOLARSHIP_CALCULATION_DIALOG.CLOSE_LABEL" | transloco }}</apo-button>
    </div>
 </div>

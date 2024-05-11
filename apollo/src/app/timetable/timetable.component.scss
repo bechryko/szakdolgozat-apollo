@@ -1,4 +1,4 @@
-@use '../../styles/colors';
+@use 'styles/variables';
 
 .timetable-container {
    display: grid;
@@ -7,7 +7,7 @@
    width: 100%;
    height: 100%;
    text-align: center;
-   background-color: colors.$primary-background;
+   background-color: transparent;
    overflow-y: auto;
    overflow-x: hidden;
    position: relative;
@@ -18,9 +18,12 @@
    justify-content: center;
    align-items: center;
 
-   h2 {
-      user-select: none;
-      cursor: pointer;
+   .timetable-settings-button {
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+      margin: 0;
+      font-size: variables.$table-header-font-size;
    }
 }
 
@@ -28,8 +31,12 @@
    display: grid;
 
    h3 {
-      border-left: 1px solid colors.$primary-text;
-      font-size: 1.4rem;
+      border-left: 1px solid variables.$border-color;
+      font-size: variables.$timetable-header-font-size;
+
+      &:first-child {
+         border-left: none;
+      }
    }
 }
 
@@ -38,10 +45,14 @@
    height: 100%;
 
    h3 {
-      border-top: 1px solid colors.$primary-text;
-      font-size: 1.4rem;
+      border-top: 1px solid variables.$border-color;
+      font-size: variables.$timetable-header-font-size;
       height: 7.5dvh;
       margin: 0;
+
+      &:first-child {
+         border-top: none;
+      }
    }
 }
 

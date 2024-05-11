@@ -32,4 +32,8 @@ export class MenuComponent {
          map(([fixedCards, shuffledCards]) => concat(fixedCards, shuffledCards))
       );
    }
+
+   public openUrl(url: string): void {
+      window.open(url, '_blank');
+   }
 }

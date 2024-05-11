@@ -1,7 +1,9 @@
 @if(selectedSemester()) {
    <div class="timetable-container">
       <div class="semester-name">
-         <h2 (click)="openTimetableSettings()">{{ selectedSemester()!.name }}</h2>
+         <apo-button apoRole="openDialog"
+            class="timetable-settings-button"
+            (click)="openTimetableSettings()">{{ selectedSemester()!.name }}</apo-button>
       </div>
       <div class="day-headers"
          [ngStyle]="additionalSelectedSemesterData.dayHeadersStyle()">
@@ -26,16 +28,15 @@
          }
       </div>
       @if(isUserLoggedOut$ | async) {
-         <button mat-fab class="floating-button"
-            color="warn"
-            (click)="deleteGuestData()">
-            <mat-icon>delete</mat-icon>
-         </button>
+         <apo-button class="floating-button"
+            apoRole="delete"
+            [isFab]="true"
+            (click)="deleteGuestData()">delete</apo-button>
       }
    </div>
 } @else {
    <p class="error">{{ "TIMETABLE.NO_SEMESTER" | transloco }}</p>
-   <button mat-raised-button class="settings-button"
-      color="accent"
-      (click)="openTimetableSettings()">{{ "TIMETABLE.SETTINGS.BUTTON" | transloco }}</button>
+   <apo-button class="settings-button"
+      apoRole="openDialog"
+      (click)="openTimetableSettings()">{{ "TIMETABLE.SETTINGS.BUTTON" | transloco }}</apo-button>
 }

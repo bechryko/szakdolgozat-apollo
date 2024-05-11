@@ -1,24 +1,12 @@
-@use 'styles/colors';
-@use 'styles/variables' as *;
+@use 'styles/variables';
+@use 'styles/elements/special-buttons';
 
 .header-container {
-   background-color: colors.$primary-main;
+   background-color: variables.$header-color;
    display: flex;
    align-items: center;
    justify-content: space-around;
-   height: $header-height;
-}
-
-@mixin menu-button {
-   height: $header-height;
-   font-size: 1.5rem;
-   width: 15%;
-   transition: background-color 0.3s ease-in-out;
-   border-radius: 0;
-
-   &.selected {
-      background-color: colors.$primary-darker;
-   }
+   height: variables.$header-height;
 }
 
 nav {
@@ -26,7 +14,7 @@ nav {
    
    button {
       flex: 1;
-      @include menu-button;
+      @include special-buttons.nav-button;
    }
 }
 
@@ -37,7 +25,7 @@ nav {
    align-items: center;
    justify-content: center;
 
-   @include menu-button;
+   @include special-buttons.nav-button;
 
    h1 {
       margin: 0;

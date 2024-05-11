@@ -1,8 +1,12 @@
-@use 'styles/colors';
-@use '../displayer-style';
+@use 'styles/variables';
+@use 'styles/elements/displayer';
+
+@include displayer.displayer-style;
 
 .year-averages-container {
    display: flex;
+   gap: 3rem;
+   margin-top: 2rem;
 
    > * {
       flex: 1;
@@ -11,6 +15,16 @@
 
 .alternatives-button {
    float: right;
+   position: relative;
+
+   &.alternatives-set::after {
+      content: "✔";
+      position: absolute;
+      font-size: 2rem;
+      color: variables.$alternative-font-color;
+      right: -1rem;
+      top: -1rem;
+   }
 }
 
 .weighted-average-container {
@@ -24,11 +38,11 @@
       .alternative-arrow {
          position: relative;
          top: -0.15rem;
-         color: colors.$alternative-font-color;
+         color: variables.$alternative-font-color;
       }
 
       .no-data-icon {
-         color: colors.$disabled;
+         color: variables.$disabled;
       }
    }
 }

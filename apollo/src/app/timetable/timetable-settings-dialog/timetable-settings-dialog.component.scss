@@ -1,71 +1,150 @@
-@use '../../../styles/colors';
+@use 'styles/variables';
+@use 'styles/elements/dialog';
+@use 'styles/elements/section';
+@use 'styles/elements/color-picker';
 
 .timetable-settings-dialog-container {
-   width: 70vw;
-   height: 70vh;
-   background-color: colors.$primary-background;
-   padding: 2.5rem;
-}
+   @include dialog.dialog-container(large);
+   width: 80vw;
 
-.settings {
-   display: flex;
-   flex-direction: column;
-   padding: 1.5rem;
-}
+   > h2 {
+      flex: 0;
+   }
 
-.settings-tile {
-   border: 1px solid colors.$primary-darker;
-   border-radius: 1rem;
-   padding: 1.5rem;
-   margin-bottom: 2rem;
+   > apo-button {
+      flex: 0;
+      width: 50%;
+   }
 
-   .category-count {
-      float: right;
+   .settings-tabs {
+      flex: 1;
+      width: 100%;
    }
 }
 
-.mat-mdc-tab-body-content {
-   padding: 1rem;
+.tab-container {
+   height: calc(100dvh - 16rem);
+   overflow-y: auto;
+   display: flex;
+   flex-direction: column;
+   padding: 2rem;
+
+   > apo-button:first-child {
+      margin-bottom: 2rem;
+   }
 }
 
-.settings-tabs {
+.semester-settings-tile {
+   @include section.general-section;
+   background-color: variables.$timetable-odd-list-element-background;
    margin-bottom: 2rem;
-   height: calc(100% - 7.5rem);
+
+   mat-form-field {
+      margin-bottom: -20px;
+   }
+}
+
+.semester-change-container {
+   @include section.general-section;
+   background-color: variables.$timetable-even-list-element-background;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   align-items: center;
+
+   .change-wrapper {
+      width: 100%;
+   }
+
+   .actions {
+      width: 100%;
+
+      .delete-button {
+         flex-basis: 20%;
+      }
+
+      .add-button {
+         flex-basis: 60%;
+      }
+   }
+}
+
+.category-settings-tile {
+   @include section.general-section;
+   margin-bottom: 2rem;
+
+   .color-picker-container {
+      width: 15rem;
+
+      input {
+         @include color-picker.color-picker-input;
+         width: inherit;
+      }
+   }
+
+   .delete-button {
+      margin: 1.5rem 0 0;
+   }
+}
+
+.activity-settings-tile {
+   @include section.general-section;
+   margin-bottom: 2rem;
+
+   > .setting-list mat-form-field {
+      flex-basis: calc((100% - 6rem) / 5);
+   }
+
+   .actions apo-button {
+      margin: 0;
+      flex-basis: 30%;
+
+      &.delete-button {
+         flex-basis: 15%;
+      }
+   }
+}
+
+.category-settings-tile, .activity-settings-tile {
+   &:nth-child(odd) {
+      background-color: variables.$timetable-odd-list-element-background;
+   }
+
+   &:nth-child(even) {
+      background-color: variables.$timetable-even-list-element-background;
+   }
+}
+
+.setting-list {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1.5rem;
+   align-items: center;
+
+   mat-form-field {
+      margin-bottom: -20px;
+   }
 }
 
 .activity-time-container {
-   $field-amount: 4;
+   @include section.general-section;
+   margin: 1.5rem 0;
 
-   display: flex;
-   justify-content: space-between;
-   flex-wrap: wrap;
-   align-items: center;
-   gap: 1rem;
-   border-radius: 1rem;
-   margin-bottom: 1.5rem;
+   .setting-list {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
 
-   mat-form-field {
-      $helper: $field-amount - 1;
-      width: calc((100% - ($field-amount - 1) * 1rem) / $field-amount);
+      mat-form-field {
+         flex-basis: calc((100% - 3rem) / 4);
+      }
    }
 
    p {
       width: 100%;
       text-align: center;
       font-size: 1.5rem;
+      margin-bottom: 0;
    }
-}
-
-mat-form-field, .color-picker-form-field {
-   width: 33%;
-   margin-bottom: 1.5rem;
-}
-
-.unit-delete-button {
-   margin-top: 2rem;
-}
-
-.close-button {
-   float: right;
-   height: 3rem;
 }

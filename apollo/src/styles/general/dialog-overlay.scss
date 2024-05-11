@@ -1,0 +1,5 @@
+@use 'styles/variables';
+
+.cdk-overlay-container .cdk-overlay-backdrop {
+   backdrop-filter: variables.$dialog-overlay-backdrop-filter;
+}

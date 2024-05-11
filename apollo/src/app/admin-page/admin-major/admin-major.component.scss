@@ -1,4 +1,4 @@
-@use 'styles/colors';
+@use 'styles/variables';
 
 .admin-major-container {
    display: flex;
@@ -21,10 +21,9 @@
 
    .actions {
       width: 100%;
-      display: flex;
       justify-content: space-around;
 
-      button {
+      apo-button {
          width: 20%;
 
          &.save-button {
@@ -44,8 +43,6 @@
 }
 
 .major-data-container {
-   $data-container-height: 36rem;
-
    display: grid;
    grid-template-columns: 1fr 1fr;
 
@@ -53,28 +50,28 @@
       grid-template-columns: 1fr 1fr 1fr;
 
       .list-container:first-child .list-item {
-         border-right: 1px solid colors.$primary-darker;
+         border-right: 1px solid variables.$border-color;
       }
    }
 
    .list-container {
-      height: $data-container-height;
+      height: variables.$admin-page-tab-height - 1rem;
       overflow: auto;
-      background-color: colors.$primary-background;
+      background-color: variables.$admin-sections-background;
 
       .list-item {
          padding: 0.5rem;
-         border-bottom: 1px solid colors.$primary-darker;
+         border-bottom: 1px solid variables.$border-color;
          cursor: pointer;
          user-select: none;
 
          &:hover {
-            background-color: colors.$primary-darker-background;
+            background-color: variables.$admin-sections-background-hover;
          }
 
          &.selected {
-            background-color: colors.$primary-darker;
-            color: white;
+            background-color: variables.$admin-list-selected-background;
+            color: variables.$contrast-font-color;
          }
       }
 
@@ -92,7 +89,7 @@
          .mat-expansion-panel-header {
             $expansion-panel-header-height: 4rem;
 
-            background-color: colors.$primary-lighter-background;
+            background-color: variables.$expansion-panel-header-color;
             height: $expansion-panel-header-height;
             
             h3 {
@@ -119,8 +116,6 @@
 
             .major-group-description {
                font-size: 0.9rem;
-               color: colors.$primary-darker;
-            
             }
          }
 
@@ -131,13 +126,12 @@
    }
 
    .details-container {
-      height: $data-container-height;
+      height: variables.$admin-page-tab-height - 1rem;
       overflow: auto;
       padding: 1.5rem;
-      background-color: colors.$primary-background;
-      border: 2px solid colors.$primary-darker;
+      background-color: variables.$admin-sections-background;
+      border: variables.$section-border;
       border-top: none;
-      box-sizing: border-box;
 
       h3 {
          margin: 0 auto 1.5rem;
@@ -161,11 +155,9 @@
          }
       }
 
-      $tableBorderStyle: 1px solid colors.$primary-darker;
-
       .scholarship-table {
          th {
-            border-bottom: $tableBorderStyle;
+            border-bottom: variables.$table-border;
          }
 
          td, th {
@@ -174,7 +166,7 @@
 
             &:first-child {
                text-align: right;
-               border-right: $tableBorderStyle;
+               border-right: variables.$table-border;
             }
          }
       }
@@ -183,13 +175,13 @@
          margin-top: 1.5rem;
 
          td, th {
-            border-bottom: $tableBorderStyle;
+            border-bottom: variables.$table-border;
             padding: 0.5rem;
             text-align: center;
 
             &.delete-button {
-               background-color: colors.$error;
-               color: white;
+               background-color: variables.$warn-input-border-color;
+               color: variables.$contrast-font-color;
                user-select: none;
                cursor: pointer;
             }
@@ -197,7 +189,6 @@
       }
 
       .add-subject-container {
-         background-color: colors.$primary-lighter-background;
          border-radius: 1.5rem;
          margin-top: 0.5rem;
          padding: 1rem;

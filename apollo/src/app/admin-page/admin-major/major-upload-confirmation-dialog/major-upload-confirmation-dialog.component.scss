@@ -1,23 +1,16 @@
-@use 'styles/colors';
+@use 'styles/variables';
+@use 'styles/elements/dialog';
 
 .major-upload-confirmation-dialog-container {
-   width: 70vw;
-   height: 70vh;
-   background-color: colors.$primary-background;
-   padding: 2.5rem;
+   @include dialog.dialog-container(medium);
    overflow-y: auto;
-
-   h2 {
-      text-align: center;
-   }
 }
 
 .actions {
-   display: flex;
    justify-content: space-around;
    margin-top: 2rem;
 
-   button {
+   apo-button {
       width: 33%;
    }
 }
@@ -28,7 +21,7 @@
 
 .mat-expansion-panel-header {
    height: fit-content !important;
-   background-color: colors.$primary-lighter-background;
+   background-color: variables.$expansion-panel-header-color;
 }
 
 ::ng-deep .mat-expansion-panel-body {
@@ -37,5 +30,5 @@
 
 .list-item {
    padding: 0.5rem;
-   border-bottom: 1px solid colors.$primary-darker;
+   border-bottom: 1px solid variables.$border-color;
 }

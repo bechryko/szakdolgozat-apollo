@@ -1,12 +1,12 @@
-@use 'styles/colors';
-@use 'styles/table-style';
-@use 'styles/media-scroller' as ms;
+@use 'styles/variables';
+@use 'styles/elements/table-style';
+@use 'styles/elements/media-scroller';
 
-@include table-style.inputTable;
+@include table-style.input-table;
 
 h2 {
    text-align: center;
-   font-size: 2rem;
+   font-size: variables.$page-heading-font-size;
    margin: 0 0 3rem;
 }
 
@@ -14,10 +14,14 @@ h2 {
    font-size: 0.75rem;
 
    .university-panel {
-      background-color: colors.$primary-background;
+      background-color: variables.$expansion-panel-content-color;
+
+      &:not(:last-of-type) {
+         border-bottom: variables.$section-border;
+      }
 
       .panel-header {
-         background-color: colors.$primary-darker-background;
+         background-color: variables.$expansion-panel-header-color;
       }
    }
 }
@@ -25,23 +29,35 @@ h2 {
 .language-inputs-container {
    $spacing: 1rem;
 
-   @include ms.media-scroller;
-   @include ms.snaps-inline;
+   @include media-scroller.media-scroller;
+   @include media-scroller.snaps-inline;
    gap: $spacing;
    margin: $spacing 0;
 
    .language-input {
       display: inline-block;
       padding: $spacing;
-      background-color: colors.$primary-lighter-background;
+      background-color: variables.$subsection-background-color;
       border-top-left-radius: $spacing;
       border-top-right-radius: $spacing;
 
       h4 {
          text-align: center;
          font-size: 0.875rem;
-         margin: 0 auto
+         margin: 0 auto;
       }
+   }
+}
+
+.main-container {
+   display: flex;
+
+   .input-table-container {
+      flex-basis: 70%;
+   }
+
+   .actions {
+      flex-basis: 30%;
    }
 }
 
@@ -55,24 +71,18 @@ h2 {
 }
 
 .table-cell input {
-   font-size: 1em;
-   width: 100%;
-   border: none;
-   cursor: pointer;
-   padding: 0.5rem;
-   
-   &:focus-visible {
-      outline: 2px solid colors.$primary-main;
-      border-radius: 0.5rem;
-   }
+   @include table-style.table-cell-input(1em);
 }
 
 .actions {
-   display: grid;
-   grid-auto-flow: column;
-   grid-auto-columns: max-content;
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
    gap: 1rem;
-   margin-top: 2rem;
+
+   apo-button {
+      width: 80%;
+   }
 }
 
 .add-university-button {

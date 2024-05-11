@@ -1,43 +1,6 @@
-@use 'styles/colors';
+@use 'styles/variables';
 @use 'styles/material-override';
-@use 'styles/color-picker';
-@use 'styles/action-buttons';
-
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
-// Plus imports for other components in your app.
-
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
-
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$apollo-primary: mat.define-palette(mat.$teal-palette);
-$apollo-accent: mat.define-palette(mat.$yellow-palette, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
-$apollo-warn: mat.define-palette(mat.$red-palette);
-
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$apollo-theme: mat.define-light-theme((
-   color: (
-      primary: $apollo-primary,
-      accent: $apollo-accent,
-      warn: $apollo-warn,
-   )
-));
-
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include mat.all-component-themes($apollo-theme);
-
-/* You can add global styles to this file, and also import other style files */
+@use 'styles/general';
 
 html, body {
    height: 100%;
@@ -45,22 +8,13 @@ html, body {
 
 body {
    margin: 0;
-   font-family: Roboto, "Helvetica Neue", sans-serif;
-   background-color: colors.$background-color;
+   font-family: 'Montserrat';
+   background-color: variables.$background-color;
    overflow: hidden;
 }
 
-p.error {
-   color: colors.$error-text;
-   font-weight: bold;
-   border: 2px solid colors.$error;
-   padding: 1rem;
-   border-radius: 0.5rem;
-   width: fit-content;
-}
-
-.actions .mat-mdc-form-field-subscript-wrapper {
-   height: 0;
+* {
+   box-sizing: border-box;
 }
 
 .invisible {
@@ -79,8 +33,4 @@ table thead {
 
 table {
    border-collapse: collapse;
-}
-
-.ngx-spinner-overlay {
-   backdrop-filter: blur(0.5rem);
 }

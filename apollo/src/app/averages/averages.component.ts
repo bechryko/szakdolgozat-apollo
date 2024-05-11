@@ -147,7 +147,7 @@ export class AveragesComponent {
             this.averagesService.saveAlternativeSemester({
                id: year.id,
                type: 'firstSemesterGrades',
-               grades: data.alternativeFirstSemesterGrades,
+               grades: data.alternativeFirstSemesterGrades ?? [],
                original: year.firstSemesterGrades
             });
          }
@@ -155,7 +155,7 @@ export class AveragesComponent {
             this.averagesService.saveAlternativeSemester({
                id: year.id,
                type: 'secondSemesterGrades',
-               grades: data.alternativeSecondSemesterGrades,
+               grades: data.alternativeSecondSemesterGrades ?? [],
                original: year.secondSemesterGrades
             });
          }
