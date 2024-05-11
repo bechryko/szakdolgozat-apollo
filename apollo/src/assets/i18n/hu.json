@@ -122,6 +122,8 @@
    "AUTH.GUEST_DATA_TRANSFER_DIALOG.REJECT": "Tiszta lappal kezdés",
    "PROFILE.SETTINGS.TITLE": "Profilbeállítások",
    "PROFILE.SETTINGS.USERNAME_LABEL": "Felhasználónév",
+   "PROFILE.SETTINGS.GENERAL_SETTINGS.TITLE": "Általános",
+   "PROFILE.SETTINGS.GENERAL_SETTINGS.DESCRIPTION": "Beállítások, ahol változtathatod a felhasználóneved, vagy testre szabhatod az alkalmazás felületét.",
    "PROFILE.SETTINGS.STUDY_SETTINGS.TITLE": "Tanulmányok",
    "PROFILE.SETTINGS.STUDY_SETTINGS.DESCRIPTION": "A tanulmányaid beállítása lehetővé teszi, hogy kiválaszd az egyetemed kurzusait a Tanulmányi átlagok és Órarendtervező oldalakon, valamint elérést biztosít a mintatantervbeli haladásod megtekintéséhez.",
    "PROFILE.SETTINGS.STUDY_SETTINGS.UNIVERSITY_LABEL": "Egyetem",
