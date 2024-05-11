@@ -66,6 +66,10 @@ export class AveragesService {
       }
 
       alternativesForYear.forEach(alternative => {
+         if(!alternative.grades.length) {
+            return;
+         }
+         
          if (alternative.type === 'firstSemesterGrades') {
             mappedYear.alternativeGrades!.firstSemester = alternative.grades;
          } else {

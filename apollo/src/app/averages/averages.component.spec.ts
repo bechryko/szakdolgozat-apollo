@@ -25,8 +25,7 @@ describe('AveragesComponent', () => {
             rating: 5,
             credit: 3
          }
-      ],
-      alternativeSecondSemesterGrades: []
+      ]
    } as AlternativeGradesDialogOutputData;
 
    function averagesServiceFactory() {
@@ -131,7 +130,7 @@ describe('AveragesComponent', () => {
          expect(component["averagesService"].saveAlternativeSemester).toHaveBeenCalledWith({
             id: year.id,
             type: 'firstSemesterGrades',
-            grades: alternativeGradesDialogOutputData.alternativeFirstSemesterGrades,
+            grades: alternativeGradesDialogOutputData.alternativeFirstSemesterGrades!,
             original: year.firstSemesterGrades
          });
       });
@@ -149,7 +148,6 @@ describe('AveragesComponent', () => {
                   credit: 3
                }
             ],
-            secondSemesterGrades: [],
             alternativeGrades: {
                firstSemester: [
                   {
@@ -160,8 +158,7 @@ describe('AveragesComponent', () => {
                      rating: 5,
                      credit: 3
                   }
-               ],
-               secondSemester: []
+               ]
             }
          
          } as any;

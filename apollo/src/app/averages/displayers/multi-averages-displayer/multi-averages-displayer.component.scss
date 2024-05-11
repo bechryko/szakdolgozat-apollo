@@ -15,6 +15,16 @@
 
 .alternatives-button {
    float: right;
+   position: relative;
+
+   &.alternatives-set::after {
+      content: "✔";
+      position: absolute;
+      font-size: 2rem;
+      color: variables.$alternative-font-color;
+      right: -1rem;
+      top: -1rem;
+   }
 }
 
 .weighted-average-container {

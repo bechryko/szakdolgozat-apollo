@@ -1,6 +1,7 @@
 <div class="multi-averages-displayer-container">
    @if(yearDisplay) {
       <apo-button class="alternatives-button"
+         [class.alternatives-set]="areAlternativesSet()"
          apoRole="openDialog"
          (click)="onSetAlternatives()">{{ "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL" | transloco }}</apo-button>
    }
