@@ -163,6 +163,10 @@ export class AveragesComponent {
    }
 
    public onDeleteGuestData(): void {
+      if(this.singleYearViewMode()) {
+         this.toggleViewMode();
+      }
+      
       this.averagesService.deleteGuestData();
    }
 
