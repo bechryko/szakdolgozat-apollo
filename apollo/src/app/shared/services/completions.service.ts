@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { cloneDeep, isEqual } from 'lodash';
-import { Observable, distinctUntilChanged, filter, map, tap } from 'rxjs';
+import { Observable, distinctUntilChanged, filter, tap } from 'rxjs';
 import { UniversityCompletionYear, UniversitySubject, UniversitySubjectCompletion } from '../models';
 import { multicast } from '../operators';
 import { completionsActions, coreFeature } from '../store';
@@ -21,8 +21,7 @@ export class CompletionsService {
                this.store.dispatch(completionsActions.loadCompletions());
             }
          }),
-         filter(completions => Boolean(completions)),
-         map(completions => completions!),
+         filter(Boolean),
          multicast(),
          distinctUntilChanged(isEqual)
       );

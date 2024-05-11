@@ -66,7 +66,7 @@ export class UserEffects {
                   switchMap(() => merge(
                      this.completionsFetcherService.saveCompletions(averagesData),
                      this.timetableFetcherService.saveSemesters(timetableData)
-                  )),
+                  ).pipe(map(() => null))),
                   tap(() => {
                      this.completionsFetcherService.clearGuestStorage();
                      this.timetableFetcherService.clearGuestStorage();
@@ -82,8 +82,7 @@ export class UserEffects {
             );
          }),
          tap(() => this.loadingService.finishLoading(authCRUDLoadingKey)),
-         filter(value => Boolean(value)),
-         map(value => value!),
+         filter(Boolean),
          catchError(error => {
             this.loadingService.finishLoading(authCRUDLoadingKey);
             // TODO: error handling
@@ -99,7 +98,7 @@ export class UserEffects {
          switchMap(({ user }) => this.userFetcherService.updateUserData(user)),
          tap(() => {
             this.loadingService.finishLoading(userUpdateLoadingKey);
-            this.snackbar.open("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
+            this.snackbarService.open("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
          }),
          catchError(error => {
             this.loadingService.finishLoading(userUpdateLoadingKey);
@@ -130,7 +129,7 @@ export class UserEffects {
       private readonly actions$: Actions,
       private readonly authService: AuthService,
       private readonly userFetcherService: UserFetcherService,
-      private readonly snackbar: SnackBarService,
+      private readonly snackbarService: SnackBarService,
       private readonly generalDialog: GeneralDialogService,
       private readonly completionsFetcherService: CompletionsFetcherService,
       private readonly timetableFetcherService: TimetableFetcherService,
