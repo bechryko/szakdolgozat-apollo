@@ -11,7 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
-import { FileUploadComponent, FileUploadDataConfirmationDialogComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
+import { ExcelParserUtils, ExportMapperUtils, FileUploadComponent, FileUploadDataConfirmationDialogComponent, ParserFunctionsWrapper, TextParserUtils } from '@apollo/shared/file-upload';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
 import { RawUniversitySubject, University, UniversityMajor, UniversityMajorSubjectGroup, UniversityMajorSubjectGroupSubject, UniversityScholarshipYear, UniversitySpecialization, UniversitySpecializationSubjectGroup, UniversitySubject } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
@@ -19,6 +19,7 @@ import { CurrencyPipe, GetSubjectsPipe } from '@apollo/shared/pipes';
 import { UniversitiesService } from '@apollo/shared/services';
 import { TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
+import { Row } from 'read-excel-file';
 import { filter, map, take } from 'rxjs';
 import { CreditSumPipe } from '../pipes';
 import { UniversityScholarshipData } from './../../shared/models/university-scholarship-year.d';
@@ -188,8 +189,8 @@ export class AdminMajorComponent {
       });
    }
 
-   public onMajorDataUpload(data: string): void {
-      const newSubjects = NeptunExportParserUtils.parseUniversitySubjects(data, this.universitySubjects());
+   public onMajorDataUpload(data: Row[]): void {
+      const newSubjects = ExportMapperUtils.mapToUniversitySubjects(data, this.universitySubjects());
       if (newSubjects.length === 0) {
          this.onMajorSubjectGroupsUpload(data);
          return;
@@ -238,8 +239,8 @@ export class AdminMajorComponent {
       });
    }
 
-   private onMajorSubjectGroupsUpload(data: string): void {
-      const subjectGroups = NeptunExportParserUtils.parseUniversityMajor(data);
+   private onMajorSubjectGroupsUpload(data: Row[]): void {
+      const subjectGroups = ExportMapperUtils.mapToUniversityMajor(data);
       this.dialog.open(MajorUploadConfirmationDialogComponent, {
          data: {
             majorGroups: subjectGroups,
@@ -280,15 +281,23 @@ export class AdminMajorComponent {
       array.splice(0, array.length, ...data);
    }
 
-   public getMajorParserFn() {
-      return (exported: string) => exported;
+   public majorParsers(): ParserFunctionsWrapper<Row[]> {
+      return {
+         txt: exported => TextParserUtils.formatUniversityMajorData(exported),
+         xlsx: exported => exported
+      };
    }
 
-   public getSpecializationsParserFn() {
-      return (exported: string) => NeptunExportParserUtils.parseSpecializationsData(exported, this.universitySubjects()!);
+   public specializationParsers(): ParserFunctionsWrapper<UniversitySpecialization[]> {
+      return {
+         txt: exported => TextParserUtils.parseSpecializationsData(exported, this.universitySubjects()!),
+         xlsx: exported => ExcelParserUtils.parseSpecializationsData(exported, this.universitySubjects()!)
+      };
    }
 
-   public getScholarshipParserFn() {
-      return (exported: string) => NeptunExportParserUtils.parseScholarshipData(exported);
+   public scholarshipParsers(): ParserFunctionsWrapper<UniversityScholarshipData[]> {
+      return {
+         txt: exported => TextParserUtils.parseScholarshipData(exported)
+      };
    }
 }

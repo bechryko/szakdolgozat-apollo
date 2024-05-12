@@ -19,7 +19,7 @@
                   }
                   <apo-file-upload
                      class="file-upload"
-                     [parserFn]="getSubjectsParserFn()"
+                     [parsers]="parsers()"
                      (fileDataChange)="onSubjectsUpload($event)"></apo-file-upload>
                }
             </div>

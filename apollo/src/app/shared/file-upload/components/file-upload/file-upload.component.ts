@@ -1,8 +1,16 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackBarService } from '@apollo/shared/services';
-import { readFile } from '../../read-file';
+import { ParserFunctionsWrapper } from '../../models';
+import { FileReadUtils } from '../../utils';
 import { FileUploadDataConfirmationDialogComponent } from '../file-upload-data-confirmation-dialog/file-upload-data-confirmation-dialog.component';
+
+function transformAcceptedExtensions(extensions: string | string[]): string {
+   if(Array.isArray(extensions)) {
+      return extensions.join(',');
+   }
+   return extensions;
+}
 
 @Component({
    selector: 'apo-file-upload',
@@ -13,8 +21,8 @@ import { FileUploadDataConfirmationDialogComponent } from '../file-upload-data-c
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadComponent<T> {
-   @Input() public parserFn!: (exported: string) => T;
-   @Input() public accept = '.txt';
+   @Input({ required: true }) public parsers!: ParserFunctionsWrapper<T>;
+   @Input({ transform: transformAcceptedExtensions }) public accept = '.txt,.xlsx';
    @Input() public resetOnUpload = true;
    @Input() public confirmationRequired = true;
    @Input() public confirmationDialogTableHeaderKeys?: string[];
@@ -29,10 +37,11 @@ export class FileUploadComponent<T> {
    public fileUpload(event: Event): void {
       const inputElement = event.target as HTMLInputElement;
       const file = inputElement.files![0];
-      readFile(file, this.parserFn).then(data => {
+      
+      FileReadUtils.readFile(file, this.parsers).then(data => {
          this.onFileUploadSuccess(data);
       }).catch((errorKey: string) => {
-         this.snackBarService.openError(errorKey);
+         this.snackBarService.openError(errorKey, { duration: 4500 });
       }).finally(() => {
          if (this.resetOnUpload) {
             inputElement.value = '';

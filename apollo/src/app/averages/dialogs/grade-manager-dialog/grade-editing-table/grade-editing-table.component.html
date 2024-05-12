@@ -59,7 +59,7 @@
          <apo-button apoRole="add"
             (click)="addGrade(grades)">{{ "AVERAGES.DIALOGS.GRADE_ADD_LABEL" | transloco }}</apo-button>
          <apo-file-upload
-            [parserFn]="fileParserFn"
+            [parsers]="parsers()"
             (fileDataChange)="fileUpload($event, grades)"
             [confirmationDialogTableHeaderKeys]="confirmationDialogTableHeaderKeys"></apo-file-upload>
       </div>

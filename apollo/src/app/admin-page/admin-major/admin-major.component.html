@@ -35,7 +35,7 @@
                   }
                   <apo-file-upload
                      class="file-upload"
-                     [parserFn]="getMajorParserFn()"
+                     [parsers]="majorParsers()"
                      (fileDataChange)="onMajorDataUpload($event)"></apo-file-upload>
                }
             </div>
@@ -95,7 +95,7 @@
                }
                <apo-file-upload
                   class="file-upload"
-                  [parserFn]="getSpecializationsParserFn()"
+                  [parsers]="specializationParsers()"
                   (fileDataChange)="onSpecializationsUpload($event)"></apo-file-upload>
             </div>
             <div class="list-container"
@@ -229,7 +229,8 @@
                         <h3>{{ "GENERAL_PHRASE.FIRST_SEMESTER" | transloco }}</h3>
                         <apo-file-upload
                            class="file-upload"
-                           [parserFn]="getScholarshipParserFn()"
+                           accept=".txt"
+                           [parsers]="scholarshipParsers()"
                            (fileDataChange)="onScholarshipUpload($event, selectedYear.firstSemester)"></apo-file-upload>
                         @if(selectedYear.firstSemester.length) {
                            <table class="scholarship-table">
@@ -256,7 +257,8 @@
                         <h3>{{ "GENERAL_PHRASE.SECOND_SEMESTER" | transloco }}</h3>
                         <apo-file-upload
                            class="file-upload"
-                           [parserFn]="getScholarshipParserFn()"
+                           accept=".txt"
+                           [parsers]="scholarshipParsers()"
                            (fileDataChange)="onScholarshipUpload($event, selectedYear.secondSemester)"></apo-file-upload>
                         @if(selectedYear.secondSemester.length) {
                            <table class="scholarship-table">

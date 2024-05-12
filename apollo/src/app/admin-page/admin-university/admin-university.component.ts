@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouteUrls } from '@apollo/app.routes';
 import { GeneralInputDialogComponent } from '@apollo/shared/components';
 import { bypassFirebaseFreePlan } from '@apollo/shared/constants';
-import { FileUploadComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
+import { ExcelParserUtils, FileUploadComponent, ParserFunctionsWrapper, TextParserUtils } from '@apollo/shared/file-upload';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
 import { RawUniversitySubject, University, UniversityMajor, UniversitySubject } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
@@ -173,7 +173,10 @@ export class AdminUniversityComponent {
       });
    }
 
-   public getSubjectsParserFn() {
-      return (exported: string) => NeptunExportParserUtils.parseUniversitySubjects(exported, this.universitySubjects());
+   public parsers(): ParserFunctionsWrapper<RawUniversitySubject[]> {
+      return {
+         txt: exported => TextParserUtils.parseUniversitySubjects(exported, this.universitySubjects()),
+         xlsx: exported => ExcelParserUtils.parseUniversitySubjects(exported, this.universitySubjects())
+      };
    }
 }

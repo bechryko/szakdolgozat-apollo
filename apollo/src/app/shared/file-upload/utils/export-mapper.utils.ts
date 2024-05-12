@@ -1,32 +1,23 @@
 import { Grade } from "@apollo/averages/models";
-import { RawUniversitySubject, UniversityMajorSubjectGroup, UniversityScholarshipData, UniversitySpecialization, UniversitySubject } from "../../models";
+import { RawUniversitySubject, UniversityMajorSubjectGroup, UniversityScholarshipData, UniversitySpecialization, UniversitySubject } from "@apollo/shared/models";
+import { Row } from "read-excel-file";
 
-interface TableSplitConfig {
-   doNotFilterEmptyCells?: boolean;
-   maxColumnNumber?: number;
-   headerRows?: number;
-}
+export class ExportMapperUtils {
+   private static readonly SPECIAL_CHARACTER_REGEXP = /[$&+,:;=?@#|'<>.^*()%!-]/;
+   private static readonly TALENT_MANAGER_KEYWORDS = ['tehetséggondozó program', 'tehetséggondozás'];
 
-export class NeptunExportParserUtils {
-   private static SPECIAL_CHARACTER_REGEXP = /[$&+,:;=?@#|'<>.^*()%!-]/;
-
-   public static parseSemesterGrades(exported: string): Grade[] {
-      const table = this.splitIntoTable(exported, {
-         doNotFilterEmptyCells: true,
-         maxColumnNumber: 8,
-         headerRows: 1
-      });
-      
+   public static mapToSemesterGrades(rows: Row[]): Grade[] {
       const grades: Grade[] = [];
-      table.forEach(row => {
+
+      rows.forEach(row => {
          if(row.length < 6) {
             return;
          }
 
-         const code = row[0];
-         const name = this.trimSpecialCharacters(row[1].split(',')[0]);
+         const code = row[0].toString();
+         const name = this.trimSpecialCharacters(row[1].toString().split(',')[0]);
          const credit = Number(row[2]);
-         const ratings = row[7].match(/(\d)/);
+         const ratings = row[7].toString().match(/(\d)/);
          if(!ratings?.length) {
             return;
          }
@@ -42,24 +33,19 @@ export class NeptunExportParserUtils {
       return grades;
    }
 
-   public static parseUniversitySubjects(exported: string, existingSubjects?: RawUniversitySubject[]): RawUniversitySubject[] {
-      const table = this.splitIntoTable(exported, {
-         doNotFilterEmptyCells: true,
-         maxColumnNumber: 52,
-         headerRows: 2
-      });
-
+   public static mapToUniversitySubjects(rows: Row[], existingSubjects?: RawUniversitySubject[]): RawUniversitySubject[] {
       const subjects: RawUniversitySubject[] = [];
-      table.forEach(row => {
-         let nameCellIndex = this.findNameCellIndexInCurriculumRow(row);
+
+      rows.forEach(row => {
+         const nameCellIndex = this.findNameCellIndexInCurriculumRow(row);
          if(nameCellIndex === -1 || !row[nameCellIndex]) {
             return;
          }
 
-         const name = row[nameCellIndex];
-         const code = row[nameCellIndex - 1];
+         const name = row[nameCellIndex].toString();
+         const code = row[nameCellIndex - 1].toString();
          const credit = Number(row[nameCellIndex + 1]);
-         const isTalentManager = name.includes('tehetséggondozó program') || name.includes('Tehetséggondozás:');
+         const isTalentManager = this.TALENT_MANAGER_KEYWORDS.some(keyword => name.toLowerCase().includes(keyword));
 
          if(!code || isNaN(credit)) {
             return;
@@ -83,16 +69,11 @@ export class NeptunExportParserUtils {
       return subjects.sort((a, b) => a.name.localeCompare(b.name));
    }
 
-   public static parseUniversityMajor(exported: string): UniversityMajorSubjectGroup[] {
-      const table = this.splitIntoTable(exported, {
-         doNotFilterEmptyCells: true,
-         maxColumnNumber: 52,
-         headerRows: 2
-      });
-
+   public static mapToUniversityMajor(rows: Row[]): UniversityMajorSubjectGroup[] {
       const groups: UniversityMajorSubjectGroup[] = [];
-      table.forEach(row => {
-         const name = row[6];
+
+      rows.forEach(row => {
+         const name = row[6].toString();
          if(!name) {
             return;
          }
@@ -104,7 +85,7 @@ export class NeptunExportParserUtils {
                return;
             }
    
-            const code = row[nameCellIndex - 1];
+            const code = row[nameCellIndex - 1].toString();
             const suggestedSemester = Number(row[nameCellIndex + 2]);
             
             existingGroup.subjects.push({ code, suggestedSemester });
@@ -124,26 +105,21 @@ export class NeptunExportParserUtils {
       return groups;
    }
 
-   public static parseSpecializationsData(exported: string, subjects: UniversitySubject[]): UniversitySpecialization[] {
-      const table = this.splitIntoTable(exported, {
-         doNotFilterEmptyCells: true,
-         maxColumnNumber: 52,
-         headerRows: 2
-      });
-
+   public static mapToSpecializations(rows: Row[], existingSubjects: UniversitySubject[]): UniversitySpecialization[] {
       const specializations: UniversitySpecialization[] = [];
-      table.forEach(row => {
-         const specializationName = row[16];
+
+      rows.forEach(row => {
+         const specializationName = row[16].toString();
          if(!specializationName || !specializationName.includes('specializáció')) {
             return;
          }
 
-         const groupName = row[26];
-         const subGroupName = row[36];
+         const groupName = row[26].toString();
+         const subGroupName = row[36].toString();
          const subjectNameCellIndex = this.findNameCellIndexInCurriculumRow(row, 5);
-         const code = row[subjectNameCellIndex - 1];
+         const code = row[subjectNameCellIndex - 1].toString();
 
-         if(!groupName || !subGroupName || !code || !subjects.find(subject => subject.code === code)) {
+         if(!groupName || !subGroupName || !code || !existingSubjects.find(subject => subject.code === code)) {
             return;
          }
 
@@ -199,16 +175,13 @@ export class NeptunExportParserUtils {
       return specializations;
    }
 
-   public static parseScholarshipData(exported: string): UniversityScholarshipData[] {
-      const table = this.splitIntoTable(exported, {
-         headerRows: 1
-      });
-
+   public static mapToScholarshipData(rows: Row[]): UniversityScholarshipData[] {
       const scholarships: UniversityScholarshipData[] = [];
-      table.forEach(row => {
+
+      rows.forEach(row => {
          const adjustedCreditIndex = Number(row[1]);
          const scholarshipAmount = Number(row[3]);
-         const peopleEligible = Number(row[4].match(/(\d+)/)?.[0]);
+         const peopleEligible = Number(row[4].toString().match(/(\d+)/)?.[0]);
 
          if(!adjustedCreditIndex || !scholarshipAmount || !peopleEligible) {
             return;
@@ -219,22 +192,7 @@ export class NeptunExportParserUtils {
 
       return scholarships;
    }
-
-   private static splitIntoTable(exported: string, config?: TableSplitConfig): string[][] {
-      const lines = exported.split('\n').slice(config?.headerRows ?? 0);
-      const table = lines.map(line => line.split('\t'));
-
-      if(Number(config?.maxColumnNumber) > 0) {
-         return table.map(row => row.slice(0, config!.maxColumnNumber));
-      }
-
-      if(config?.doNotFilterEmptyCells) {
-         return table;
-      }
-
-      return table.map(row => row.filter(cell => cell.length));
-   }
-
+   
    private static trimSpecialCharacters(str: string): string {
       while(this.SPECIAL_CHARACTER_REGEXP.test(str[0])) {
          str = str.slice(1);
@@ -244,8 +202,8 @@ export class NeptunExportParserUtils {
       }
       return str;
    }
-
-   private static findNameCellIndexInCurriculumRow(row: string[], stepSize = 10): number {
+   
+   private static findNameCellIndexInCurriculumRow(row: Row, stepSize = 10): number {
       let idx = -1;
       for(let i = 6; i < row.length; i += stepSize) {
          if(row[i]) {

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, ViewChild, WritableSignal, i
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTable, MatTableModule } from '@angular/material/table';
-import { FileUploadComponent, NeptunExportParserUtils } from '@apollo/shared/file-upload';
+import { ExcelParserUtils, FileUploadComponent, ParserFunctionsWrapper, TextParserUtils } from '@apollo/shared/file-upload';
 import { GeneralDialogService } from '@apollo/shared/general-dialog';
 import { UniversitySubject } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
@@ -91,7 +91,10 @@ export class GradeEditingTableComponent {
       });
    }
 
-   public fileParserFn(exported: string): Grade[] {
-      return NeptunExportParserUtils.parseSemesterGrades(exported);
+   public parsers(): ParserFunctionsWrapper<Grade[]> {
+      return {
+         txt: exported => TextParserUtils.parseSemesterGrades(exported),
+         xlsx: exported => ExcelParserUtils.parseSemesterGrades(exported)
+      };
    }
 }
