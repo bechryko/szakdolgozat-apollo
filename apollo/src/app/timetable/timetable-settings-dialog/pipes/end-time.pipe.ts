@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { leadingZeros, numberize } from '@apollo/shared/functions';
+import { leadingZeros } from '@apollo/shared/functions';
 import { ActivityTime } from '../../models';
 
 @Pipe({
@@ -7,9 +7,7 @@ import { ActivityTime } from '../../models';
    standalone: true
 })
 export class EndTimePipe implements PipeTransform {
-   public transform(rawTime: Record<string, string>): Record<string, any> {
-      const time = numberize<ActivityTime>(rawTime);
-
+   public transform(time: ActivityTime): Record<string, any> {
       let hour = time.startingHour;
       let minute = time.startingMinute + time.length;
 

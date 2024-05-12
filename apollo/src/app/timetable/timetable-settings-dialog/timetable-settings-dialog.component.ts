@@ -1,22 +1,21 @@
 import { ChangeDetectionStrategy, Component, Inject, Signal, WritableSignal, computed, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { leadingZeros, numberize } from '@apollo/shared/functions';
+import { leadingZeros } from '@apollo/shared/functions';
 import { GeneralDialogService } from '@apollo/shared/general-dialog';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { SnackBarService } from '@apollo/shared/services';
 import { TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { ColorPickerModule, ColorPickerService } from 'ngx-color-picker';
-import { Semester } from '../models';
+import { Activity, ActivityCategory, Semester } from '../models';
 import { TimetableState } from '../store';
 import { EndTimePipe } from './pipes';
-import { TimetableSettingsFormsUtils } from './timetable-settings-forms.utils';
 
 @Component({
    selector: 'apo-timetable-settings-dialog',
@@ -28,7 +27,6 @@ import { TimetableSettingsFormsUtils } from './timetable-settings-forms.utils';
       MatTabsModule,
       MatInputModule,
       FormsModule,
-      ReactiveFormsModule,
       ColorPickerModule,
       MatCheckboxModule,
       EndTimePipe
@@ -44,34 +42,23 @@ export class TimetableSettingsDialogComponent {
    public readonly PRESET_CATEGORY_COLORS = [];
    public readonly DAYS = Array.from({ length: 7 }, (_, i) => i + 1);
 
-   public readonly data: TimetableState;
+   public readonly data: WritableSignal<TimetableState>;
    public readonly selectedSemesterId: WritableSignal<string | undefined>;
    public readonly selectedSemester: Signal<Semester | undefined>;
    private newSemesters = 0;
 
-   public readonly semesterForm: Signal<FormGroup>;
-   public readonly categoryForm: Signal<FormGroup>;
-   public readonly activityForm: Signal<FormGroup>;
-   private readonly formUpdater: WritableSignal<boolean>; // TODO: use explicit FormArray updating instead
-
    constructor(
       private readonly dialogRef: MatDialogRef<TimetableSettingsDialogComponent>,
       @Inject(MAT_DIALOG_DATA) data: TimetableState,
-      private readonly fb: FormBuilder,
       private readonly dialog: GeneralDialogService,
       private readonly transloco: TranslocoService,
       private readonly snackbarService: SnackBarService
    ) {
-      this.data = cloneDeep(data);
+      this.data = signal(cloneDeep(data));
       this.selectedSemesterId = signal(data.selectedSemesterId);
-      this.selectedSemester = computed(() => this.data.semesters!.find(semester => semester.id === this.selectedSemesterId()));
+      this.selectedSemester = computed(() => this.data().semesters!.find(semester => semester.id === this.selectedSemesterId()));
 
-      this.formUpdater = signal(true);
-      this.semesterForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildSemesterForm(this.fb, this.selectedSemester()!)));
-      this.categoryForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildCategoryFormArray(this.fb, this.selectedSemester()!.categories)));
-      this.activityForm = computed(() => (this.formUpdater(), TimetableSettingsFormsUtils.buildActivityFormArray(this.fb, this.selectedSemester()!.activities)));
-      
-      if(!this.data.semesters!.length) {
+      if(!this.data().semesters!.length) {
          this.addSemester();
       }
    }
@@ -96,12 +83,16 @@ export class TimetableSettingsDialogComponent {
 
    public addSemester(): void {
       const id = Date.now() + "-" + this.newSemesters++;
-      this.data.semesters!.push({
+      const newSemester: Semester = {
          id,
          name: this.transloco.translate("TIMETABLE.SETTINGS_DIALOG.NEW_SEMESTER_DEFAULT_NAME"),
          owner: "",
          activities: [],
          categories: []
+      };
+      this.data.set({
+         ...this.data(),
+         semesters: [...this.data().semesters!, newSemester]
       });
       this.selectSemester(id);
    }
@@ -114,22 +105,33 @@ export class TimetableSettingsDialogComponent {
          cancel: "GENERAL_DIALOG.CANCEL"
       }).subscribe(doDelete => {
          if (doDelete) {
-            this.data.semesters = this.data.semesters!.filter(semester => semester.id !== this.selectedSemesterId());
+            this.data.set({
+               ...this.data(),
+               semesters: this.data().semesters!.filter(semester => semester.id !== this.selectedSemesterId())
+            });
             this.selectedSemesterId.set(undefined);
          }
       });
    }
 
-   public categoryNameChanged(index: number): void {
-      const newName = this.categoryForm().value.categories[index].name;
+   public categoryNameChanged(index: number, event: any): void {
+      const newName = event.target.value;
       const oldName = this.selectedSemester()!.categories[index].name;
       
-      this.updateData();
-
-      this.selectedSemester()!.activities.filter(activity => activity.categoryName === oldName).forEach(activity => {
+      const newSemester = cloneDeep(this.selectedSemester()!);
+      newSemester.activities.filter(activity => activity.categoryName === oldName).forEach(activity => {
          activity.categoryName = newName;
       });
-      this.updateForms();
+
+      newSemester.categories[index].name = newName;
+
+      this.updateSelectedSemester(newSemester);
+   }
+
+   public checkStateChanged(index: number, property: keyof ActivityCategory): void {
+      const newSemester = cloneDeep(this.selectedSemester()!);
+      (newSemester.categories[index][property] as any) = !newSemester.categories[index][property];
+      this.updateSelectedSemester(newSemester);
    }
 
    public deleteCategory(index: number): void {
@@ -140,28 +142,32 @@ export class TimetableSettingsDialogComponent {
          cancel: "GENERAL_DIALOG.CANCEL"
       }).subscribe(doDelete => {
          if (doDelete) {
-            this.updateData();
-            const deletedCategory = this.selectedSemester()!.categories.splice(index, 1)[0];
-            this.updateForms();
+            const updatedSemester = cloneDeep(this.selectedSemester()!);
+            updatedSemester.categories.splice(index, 1);
 
-            this.selectedSemester()!.activities.filter(activity => activity.categoryName === deletedCategory.name).forEach(activity => {
+            const deletedCategory = this.selectedSemester()!.categories[index];
+            updatedSemester.activities.filter(activity => activity.categoryName === deletedCategory.name).forEach(activity => {
                delete activity.categoryName;
             });
+            
+            this.updateSelectedSemester(updatedSemester);
          }
       });
    }
 
    public addCategory(): void {
-      this.updateData();
-      this.selectedSemester()!.categories.push({
+      const newCategory: ActivityCategory = {
          name: this.transloco.translate("TIMETABLE.SETTINGS_DIALOG.NEW_CATEGORY_DEFAULT_NAME"),
          color: "#FFFFFF",
          temporary: false
-      });
-      this.updateForms();
+      };
+      
+      const updatedSemester = cloneDeep(this.selectedSemester()!);
+      updatedSemester.categories.push(newCategory);
+      this.updateSelectedSemester(updatedSemester);
    }
 
-   public deleteActivity(index: number): void { // TODO: fix non-instant FormGroup deletion bug
+   public deleteActivity(index: number): void {
       this.dialog.openDialog({
          title: "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_DELETE_ALERT_DIALOG.TITLE",
          content: "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_DELETE_ALERT_DIALOG.CONTENT",
@@ -169,67 +175,79 @@ export class TimetableSettingsDialogComponent {
          cancel: "GENERAL_DIALOG.CANCEL"
       }).subscribe(doDelete => {
          if (doDelete) {
-            (this.activityForm().controls["activities"] as FormArray).removeAt(index);
-            this.activityForm().controls["activities"].markAsDirty();
-            this.updateData();
+            const updatedSemester = cloneDeep(this.selectedSemester()!);
+            updatedSemester.activities.splice(index, 1);
+            this.updateSelectedSemester(updatedSemester);
          }
       });
    }
 
    public duplicateActivity(index: number): void {
-      const activity = this.activityForm().value.activities[index];
-      (this.activityForm().controls["activities"] as FormArray).insert(index + 1, TimetableSettingsFormsUtils.buildActivityForm(this.fb, activity));
-      this.updateData();
+      const updatedSemester = cloneDeep(this.selectedSemester()!);
+      updatedSemester.activities.splice(index + 1, 0, cloneDeep(updatedSemester.activities[index]));
+      this.updateSelectedSemester(updatedSemester);
    }
 
    public addActivity(): void {
-      (this.activityForm().controls["activities"] as FormArray).push(TimetableSettingsFormsUtils.buildActivityForm(this.fb, {
+      const newActivity: Activity = {
          name: this.transloco.translate("TIMETABLE.SETTINGS_DIALOG.NEW_ACTIVITY_DEFAULT_NAME"),
          time: {
-            day: 0,
-            startingHour: 0,
+            day: 1,
+            startingHour: 8,
             startingMinute: 0,
-            length: 0
+            length: 45
          }
-      }));
+      };
+
+      const updatedSemester = cloneDeep(this.selectedSemester()!);
+      updatedSemester.activities.push(newActivity);
+      this.updateSelectedSemester(updatedSemester);
    }
 
    public save(): void {
-      if(!this.semesterForm().valid || !this.categoryForm().valid || !this.activityForm().valid) {
+      const activityWithInvalidTimes = this.checkActivityTimes(this.data().semesters!);
+      if(activityWithInvalidTimes) {
+         console.log(activityWithInvalidTimes);
          this.snackbarService.open("TIMETABLE.SETTINGS_DIALOG.SAVE_ERROR_SNACKBAR", { duration: 5000 });
          return;
       }
 
-      this.updateData();
-      this.dialogRef.close(this.data);
+      this.dialogRef.close({
+         ...this.data(),
+         selectedSemesterId: this.selectedSemesterId()
+      });
    }
 
    public minuteLeadingZeros(minute: number): string {
       return leadingZeros(minute, 2);
    }
 
-   private updateData(): void {
-      if (!this.selectedSemester()) {
-         this.selectedSemesterId.set(undefined);
-         return;
-      }
-
-      this.data.selectedSemesterId = this.selectedSemesterId();
-      this.selectedSemester()!.name = this.semesterForm().value.name;
-
-      this.selectedSemester()!.categories.forEach((category, index) => {
-         const formCategory = this.categoryForm().value.categories[index];
-         category.name = formCategory.name;
-         category.temporary = formCategory.temporary;
+   private updateSelectedSemester(semester: Semester): void {
+      const oldData = this.data();
+      this.data.set({
+         ...oldData,
+         semesters: oldData.semesters!.map(oldSemester => oldSemester.id === semester.id ? semester : oldSemester)
       });
-
-      this.selectedSemester()!.activities = this.activityForm().value.activities.map((activity: any) => ({
-         ...activity,
-         time: numberize(activity.time)
-      }));
    }
 
-   private updateForms(): void {
-      this.formUpdater.set(!this.formUpdater());
+   private checkActivityTimes(semesters: Semester[]): null | Activity {
+      for(const semester of semesters) {
+         for(const activity of semester.activities) {
+            const activityEndTime = activity.time.startingHour * 60 + activity.time.startingMinute + activity.time.length;
+            if(activityEndTime > 24 * 60) {
+               return activity;
+            }
+            if(activity.time.startingHour === 24 || activity.time.startingHour < 0) {
+               return activity;
+            }
+            if(activity.time.startingMinute < 0 || activity.time.startingMinute >= 60) {
+               return activity;
+            }
+            if(activity.time.length <= 45) { // TODO: fix length bug
+               return activity;
+            }
+         }
+      }
+      return null;
    }
 }
