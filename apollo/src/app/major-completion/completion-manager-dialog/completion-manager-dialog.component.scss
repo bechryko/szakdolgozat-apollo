@@ -4,6 +4,7 @@
 
 .completion-manager-dialog-container {
    @include dialog.dialog-container(large);
+   width: 72.5rem;
 
    ::ng-deep .mdc-evolution-chip-set__chips {
       align-items: center;
@@ -33,7 +34,8 @@
 
 .completion-group-input-table-container {
    @include table-style.input-table;
-   width: 57rem;
+   width: 70rem;
+   overflow-x: auto;
    
    & + .input-table-footer {
       justify-content: space-around;

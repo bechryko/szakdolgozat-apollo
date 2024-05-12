@@ -10,7 +10,7 @@ import { completionsActions } from "../actions/completions.actions";
 
 @Injectable()
 export class CompletionsEffects {
-   public readonly loadCompletions$ = createEffect(() => 
+   public readonly loadCompletions$ = createEffect(() =>
       this.actions$.pipe(
          ofType(completionsActions.loadCompletions),
          tap(() => this.loadingService.startLoading(completionsLoadingKey, LoadingType.LOAD)),
@@ -31,11 +31,12 @@ export class CompletionsEffects {
       this.actions$.pipe(
          ofType(completionsActions.saveCompletions),
          tap(() => this.loadingService.startLoading(completionsLoadingKey, LoadingType.SAVE)),
-         switchMap(({ completions }) => this.completionsFetcherService.saveCompletions(completions)),
-         map(() => {
-            this.loadingService.finishLoading(completionsLoadingKey);
-            return completionsActions.loadCompletions();
-         }),
+         switchMap(({ completions }) => this.completionsFetcherService.saveCompletions(completions).pipe(
+            map(() => {
+               this.loadingService.finishLoading(completionsLoadingKey);
+               return completionsActions.saveCompletionsToStore({ completions });
+            }),
+         )),
          catchError(() => {
             this.loadingService.finishLoading(completionsLoadingKey);
             this.snackbarService.openError("ERROR.DATABASE.COMPLETIONS_SAVE");

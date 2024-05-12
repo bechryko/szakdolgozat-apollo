@@ -93,11 +93,11 @@ describe('CompletionsEffects', () => {
    });
 
    describe('saveCompletions$', () => {
-      it(`should dispatch ${ completionsActions.loadCompletions.type } action`, () => {
+      it(`should dispatch ${ completionsActions.saveCompletionsToStore.type } action`, () => {
          actions$ = cold('a', { a: completionsActions.saveCompletions({ completions: userCompletions }) });
 
          expect(effects.saveCompletions$).toBeObservable(
-            cold('a', { a: completionsActions.loadCompletions() })
+            cold('a', { a: completionsActions.saveCompletionsToStore({ completions: userCompletions }) })
          );
       });
 
