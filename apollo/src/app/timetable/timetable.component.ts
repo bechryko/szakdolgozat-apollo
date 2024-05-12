@@ -1,9 +1,9 @@
-import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Signal, ViewChild, WritableSignal, computed, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, Signal, ViewChild, WritableSignal, computed, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { UserService } from '@apollo/shared/services';
-import { Observable, fromEvent, map, startWith } from 'rxjs';
+import { Observable, Subject, fromEvent, map, startWith, takeUntil } from 'rxjs';
 import { ActivityStylePipe } from './activity/activity-style.pipe';
 import { ActivityComponent } from './activity/activity.component';
 import { Interval, Semester, TimetableSizeData } from './models';
@@ -24,7 +24,7 @@ import { TimetableSplitUtils, TimetableUtils } from './utils';
    styleUrl: './timetable.component.scss',
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimetableComponent implements AfterViewChecked {
+export class TimetableComponent implements AfterViewChecked, OnDestroy {
    private readonly semesters: Signal<Semester[] | undefined>;
    private readonly selectedSemesterId: Signal<string | undefined>;
    public readonly selectedSemester: Signal<Semester | undefined>;
@@ -42,15 +42,20 @@ export class TimetableComponent implements AfterViewChecked {
    public readonly timetableAreaSize$: WritableSignal<Observable<TimetableSizeData> | undefined>;
    public readonly isUserLoggedOut$: Observable<boolean>;
 
+   private readonly ngUnsubscribe$ = new Subject<void>();
+
    constructor(
       private readonly timetableService: TimetableService,
       private readonly dialog: MatDialog,
       private readonly userService: UserService
    ) {
       this.semesters = toSignal(this.timetableService.semesters$.pipe(
+         takeUntilDestroyed(),
          map(semesters => semesters?.map(sem => TimetableSplitUtils.splitTimetable(sem)))
       ));
-      this.selectedSemesterId = toSignal(this.timetableService.selectedSemesterId$);
+      this.selectedSemesterId = toSignal(this.timetableService.selectedSemesterId$.pipe(
+         takeUntilDestroyed() as any
+      ));
       this.selectedSemester = computed(() => {
          if (!this.semesters()?.length || !this.selectedSemesterId()) {
             return undefined;
@@ -87,6 +92,7 @@ export class TimetableComponent implements AfterViewChecked {
       }
 
       this.isUserLoggedOut$ = this.userService.isUserLoggedIn$.pipe(
+         takeUntilDestroyed(),
          map(loggedIn => !loggedIn)
       );
    }
@@ -95,12 +101,18 @@ export class TimetableComponent implements AfterViewChecked {
       this.timetableAreaSize$.set(this.getTimetableAreaSize());
    }
 
+   public ngOnDestroy(): void {
+      this.ngUnsubscribe$.next();
+      this.ngUnsubscribe$.complete();
+   }
+
    private getTimetableAreaSize(): Observable<TimetableSizeData> | undefined {
       if(!this.timetableContainer) {
          return;
       }
 
       return fromEvent(globalThis, 'resize').pipe(
+         takeUntil(this.ngUnsubscribe$),
          startWith(null),
          map(_ => {
             const container = this.timetableContainer.nativeElement;

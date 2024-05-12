@@ -1,5 +1,6 @@
 import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, interval, map } from 'rxjs';
 import { ApolloCommonModule } from '../modules';
 import { TimeFormatService } from '../services';
@@ -29,7 +30,8 @@ export class SidebarComponent {
       private readonly timeFormatService: TimeFormatService
    ) {
       this.currentTime$ = interval(100).pipe(
-         map(() => this.timeFormatService.format(new Date()))
+         map(() => this.timeFormatService.format(new Date())),
+         takeUntilDestroyed()
       );
    }
 }

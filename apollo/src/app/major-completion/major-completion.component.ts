@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ActivatedRoute } from '@angular/router';
@@ -7,7 +7,7 @@ import { UniversityCompletionYear, UniversityMajor, UniversitySubject } from '@a
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { GetSubjectsPipe } from '@apollo/shared/pipes';
 import { CompletionsService } from '@apollo/shared/services';
-import { map, startWith } from 'rxjs';
+import { map, startWith, take } from 'rxjs';
 import { CompletionManagerDialogComponent } from './completion-manager-dialog';
 import { CompletionManagerDialogData } from './completion-manager-dialog/models/completion-manager-dialog-data';
 import { FilterCompletedPipe, MissingCreditsPipe } from './pipes';
@@ -37,14 +37,17 @@ export class MajorCompletionComponent {
       private readonly dialog: MatDialog
    ) {
       this.userMajor = toSignal(this.activatedRoute.data.pipe(
+         take(1),
          map(({ userMajor }) => userMajor)
       ));
 
       this.universitySubjects = toSignal(this.activatedRoute.data.pipe(
+         take(1),
          map(({ universitySubjects }) => universitySubjects)
       ));
 
       this.userCompletions = toSignal(this.completionsService.universityCompletions$.pipe(
+         takeUntilDestroyed(),
          startWith([])
       )) as Signal<UniversityCompletionYear[]>;
    }

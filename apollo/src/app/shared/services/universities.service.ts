@@ -62,7 +62,6 @@ export class UniversitiesService {
                retry();
             }
          }),
-         multicast(),
          distinctUntilChanged(isEqual)
       );
    }
@@ -87,7 +86,6 @@ export class UniversitiesService {
                retry();
             }
          }),
-         multicast(),
          distinctUntilChanged(isEqual)
       );
    }
@@ -115,7 +113,6 @@ export class UniversitiesService {
             }
             return major;
          }),
-         multicast(),
          distinctUntilChanged(isEqual)
       );
    }

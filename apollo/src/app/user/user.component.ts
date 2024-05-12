@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LanguageSelectionComponent } from '@apollo/shared/languages';
 import { ApolloUser } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
@@ -27,7 +28,9 @@ export class UserComponent {
    constructor(
       private readonly userService: UserService
    ) {
-      this.loggedInUser$ = this.userService.user$;
+      this.loggedInUser$ = this.userService.user$.pipe(
+         takeUntilDestroyed()
+      );
    }
 
    public onSaveUserSettings(user: ApolloUser): void {

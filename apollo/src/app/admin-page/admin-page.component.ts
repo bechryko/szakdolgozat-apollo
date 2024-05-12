@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -45,6 +46,7 @@ export class AdminPageComponent {
       this.universities = [];
 
       this.universities$ = this.universitiesService.universities$.pipe(
+         takeUntilDestroyed(),
          tap(universities => {
             if(!universities) {
                return;

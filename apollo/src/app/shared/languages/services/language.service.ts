@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
-import { Observable } from 'rxjs';
 import { defaultLanguage } from '../constants/default-language';
 import { Language } from '../models';
 
@@ -11,12 +10,11 @@ const STORAGE_KEY = 'apollo-language';
 })
 export class LanguageService {
    private activeLanguage!: Language;
-   public readonly activeLanguage$: Observable<Language>;
 
    constructor(
       private readonly transloco: TranslocoService
    ) {
-      this.activeLanguage$ = this.transloco.langChanges$ as Observable<Language>;
+      this.setInitialLanguage();
    }
 
    public setInitialLanguage(): void {

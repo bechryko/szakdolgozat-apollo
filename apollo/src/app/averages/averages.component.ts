@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Signal, WritableSignal, computed, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -50,6 +50,7 @@ export class AveragesComponent {
    ) {
       this.selectedYearId = signal(undefined);
       this.averages = toSignal(this.averagesService.grades$.pipe(
+         takeUntilDestroyed(),
          tap(grades => {
             if(!this.selectedYearId()) {
                this.selectedYearId.set(this.getStartingSelectedYearId(grades));
@@ -97,10 +98,12 @@ export class AveragesComponent {
       }
 
       this.isUserLoggedOut$ = this.userService.isUserLoggedIn$.pipe(
+         takeUntilDestroyed(),
          map(isLoggedIn => !isLoggedIn)
       );
 
       this.userMajor = toSignal(this.activatedRoute.data.pipe(
+         takeUntilDestroyed(),
          map(({ userMajor }) => userMajor)
       ));
    }

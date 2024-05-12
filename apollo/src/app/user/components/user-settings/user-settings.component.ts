@@ -59,8 +59,8 @@ export class UserSettingsComponent implements OnInit {
       this.majors = signal([]);
 
       this.universities = toSignal(this.universitiesService.universities$.pipe(
-         startWith([]),
-         takeUntilDestroyed()
+         takeUntilDestroyed(),
+         startWith([])
       )) as Signal<University[]>;
 
       effect(() => {

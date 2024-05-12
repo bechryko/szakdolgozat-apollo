@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Signal, WritableSignal, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,7 +18,7 @@ import { ApolloCommonModule } from '@apollo/shared/modules';
 import { RouterService, UniversitiesService } from '@apollo/shared/services';
 import { TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
-import { filter, map } from 'rxjs';
+import { filter, map, take } from 'rxjs';
 
 @Component({
    selector: 'apo-admin-university',
@@ -61,17 +61,18 @@ export class AdminUniversityComponent {
       this.selectedUniversityMajor = signal(undefined);
 
       this.university = toSignal(this.activatedRoute.data.pipe(
+         take(1),
          map(({ university }) => {
             if (university) {
                this.universitiesService.getSubjectsForUniversity(university.id).pipe(
-                  takeUntilDestroyed()
+                  take(1)
                ).subscribe(subjects => {
                   this.universitySubjects.set(cloneDeep(subjects));
                   this.selectedUniversitySubject.set(this.universitySubjects()!.find(s => s.id === this.selectedUniversitySubject()?.id));
                });
                
                this.universitiesService.getMajorsForUniversity(university.id).pipe(
-                  takeUntilDestroyed()
+                  take(1)
                ).subscribe(majors => {
                   this.universityMajors.set(cloneDeep(majors));
                   this.universityMajors()!.forEach(major => {

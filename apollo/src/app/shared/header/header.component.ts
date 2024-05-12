@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouteUrls } from '@apollo/app.routes';
 import { Observable, map, startWith } from 'rxjs';
 import { ApolloCommonModule } from '../modules';
@@ -29,9 +30,12 @@ export class HeaderComponent {
       private readonly routerService: RouterService,
       private readonly userService: UserService
    ) {
-      this.isUserLoggedIn$ = this.userService.isUserLoggedIn$;
+      this.isUserLoggedIn$ = this.userService.isUserLoggedIn$.pipe(
+         takeUntilDestroyed()
+      );
 
       this.menuItemKeys$ = this.userService.isUserAdmin$.pipe(
+         takeUntilDestroyed(),
          startWith(false),
          map(isAdmin => {
             const menuItemKeys: RouteUrls[] = [
@@ -48,7 +52,9 @@ export class HeaderComponent {
          })
       );
 
-      this.selectedMenu$ = this.routerService.currentPage$;
+      this.selectedMenu$ = this.routerService.currentPage$.pipe(
+         takeUntilDestroyed()
+      );
    }
 
    public selectMenuItem(route: RouteUrls): void {

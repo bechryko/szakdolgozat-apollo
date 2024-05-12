@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MultiLanguagePipe } from '@apollo/shared/languages';
 import { ApolloCommonModule } from '@apollo/shared/modules';
@@ -29,6 +30,7 @@ export class MenuComponent {
          this.menuCardsService.fixedCards$,
          this.menuCardsService.shuffledCards$
       ]).pipe(
+         takeUntilDestroyed(),
          map(([fixedCards, shuffledCards]) => concat(fixedCards, shuffledCards))
       );
    }

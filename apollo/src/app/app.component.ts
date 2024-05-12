@@ -1,11 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, Signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { map } from 'rxjs';
 import { RouteUrls } from './app.routes';
 import { HeaderComponent } from './shared/header';
-import { LanguageService } from './shared/languages';
 import { LoadingService } from './shared/loading';
 import { ApolloCommonModule } from './shared/modules';
 import { RouterService } from './shared/services';
@@ -43,19 +42,20 @@ export class AppComponent {
    public readonly loadingOverlayConfig = this.loadingService.config;
 
    constructor(
-      private readonly languageService: LanguageService,
       private readonly routerService: RouterService,
       private readonly loadingService: LoadingService
    ) {
-      this.languageService.setInitialLanguage();
-
-      this.isAdminPage = toSignal(this.routerService.isAdminPage$);
+      this.isAdminPage = toSignal(this.routerService.isAdminPage$.pipe(
+         takeUntilDestroyed()
+      ));
 
       this.enableMainPadding = toSignal(this.routerService.currentPage$.pipe(
+         takeUntilDestroyed(),
          map(page => page !== RouteUrls.TIMETABLE)
       ));
 
       this.isSidebarShown = toSignal(this.routerService.currentPage$.pipe(
+         takeUntilDestroyed(),
          map(page => !this.sidebarExceptionRoutes.includes(page))
       ));
    }

@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Signal, WritableSignal, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
@@ -84,7 +84,7 @@ export class AdminMajorComponent {
          map(({ university, major }) => {
             if (university) {
                this.universitiesService.getSubjectsForUniversity(university.id).pipe(
-                  takeUntilDestroyed()
+                  take(1)
                ).subscribe(subjects => {
                   this.universitySubjects.set(cloneDeep(subjects));
                });
