@@ -3,8 +3,20 @@ import { Grade, GradesCompletionYear } from "../models";
 
 export class AverageCalculatorUtils {
    public static calculateWeightedAverage(grades: Grade[]): number {
-      const totalCredits = this.sumCredits(grades);
-      const totalWeightedGrades = grades.reduce((acc, grade) => acc + (grade.rating * grade.credit), 0);
+      const totalCredits = grades.reduce((acc, grade) => {
+         if(grade.rating === 1) {
+            return acc;
+         } else {
+            return acc + grade.credit;
+         }
+      }, 0);
+      const totalWeightedGrades = grades.reduce((acc, grade) => {
+         if(grade.rating === 1) {
+            return acc;
+         } else {
+            return acc + (grade.rating * grade.credit);
+         }
+      }, 0);
       return round(totalWeightedGrades / totalCredits, 3);
    }
 
