@@ -49,7 +49,7 @@ export class MultiAveragesDisplayerComponent { // TODO: add diagrams
    constructor() {
       this.years = signal([]);
 
-      this.gradesCollected = computed(() => [ ...this.years().map(year => year.firstSemesterGrades.concat(year.secondSemesterGrades)) ].flat());
+      this.gradesCollected = computed(() => this.years().map(year => year.firstSemesterGrades.concat(year.secondSemesterGrades)).flat());
       this.weightedAverage = computed(() => AverageCalculatorUtils.calculateWeightedAverage(this.gradesCollected()));
       this.creditSum = computed(() => AverageCalculatorUtils.sumCredits(this.gradesCollected()));
       this.creditIndex = computed(() => AverageCalculatorUtils.calculateCreditIndexForMultipleYears(this.years()));
@@ -75,7 +75,7 @@ export class MultiAveragesDisplayerComponent { // TODO: add diagrams
          });
       });
       this.alternativesCollected = computed(() => {
-         return [ ...this.alternativeYears().map(year => year.firstSemesterGrades.concat(year.secondSemesterGrades)) ].flat();
+         return this.alternativeYears().map(year => year.firstSemesterGrades.concat(year.secondSemesterGrades)).flat();
       });
       this.alternativeWeightedAverage = computed(() => {
          const alternatives = this.alternativesCollected();

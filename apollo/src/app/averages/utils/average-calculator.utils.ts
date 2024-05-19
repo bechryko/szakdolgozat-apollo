@@ -5,7 +5,7 @@ export class AverageCalculatorUtils {
    public static calculateWeightedAverage(grades: Grade[]): number {
       const completedCredits = this.sumCredits(grades).completed;
       const completedWeightedGrades = grades.reduce((acc, grade) => {
-         if(grade.rating === 1) {
+         if (grade.rating === 1) {
             return acc;
          } else {
             return acc + (grade.rating * grade.credit);
@@ -21,7 +21,7 @@ export class AverageCalculatorUtils {
       };
 
       grades.forEach(grade => {
-         if(grade.rating > 1) {
+         if (grade.rating > 1) {
             creditSum.completed += grade.credit;
          }
          creditSum.registered += grade.credit;
@@ -35,8 +35,14 @@ export class AverageCalculatorUtils {
    }
 
    private static calculateUnroundedCreditIndex(grades: Grade[], semesterNumber: number): number {
-      const totalWeightedGrades = grades.reduce((acc, grade) => acc + (grade.rating * grade.credit), 0);
-      return totalWeightedGrades / (30 * semesterNumber);
+      const completedWeightedGrades = grades.reduce((acc, grade) => {
+         if (grade.rating === 1) {
+            return acc;
+         } else {
+            return acc + (grade.rating * grade.credit);
+         }
+      }, 0);
+      return completedWeightedGrades / (30 * semesterNumber);
    }
 
    public static calculateAdjustedCreditIndex(grades: Grade[], semesterNumber = 1): number {

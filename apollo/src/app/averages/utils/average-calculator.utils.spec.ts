@@ -93,9 +93,15 @@ describe('AverageCalculatorUtils', () => {
 
    describe('calculateCreditIndex', () => {
       it('should calculate credit index for a semester', () => {
+         const result = AverageCalculatorUtils.calculateCreditIndex(testGrades1);
+         
+         expect(result).toBe(1.367);
+      });
+
+      it('should avoid grades with rating 1', () => {
          const result = AverageCalculatorUtils.calculateCreditIndex(testGrades2);
          
-         expect(result).toBe(1.633);
+         expect(result).toBe(1.567);
       });
    });
 
@@ -103,7 +109,7 @@ describe('AverageCalculatorUtils', () => {
       it('should calculate adjusted credit index for a semester', () => {
          const result = AverageCalculatorUtils.calculateAdjustedCreditIndex(testGrades2);
          
-         expect(result).toBe(1.4);
+         expect(result).toBe(1.343);
       });
    });
 
@@ -117,7 +123,7 @@ describe('AverageCalculatorUtils', () => {
       it('should calculate credit index for multiple years', () => {
          const result = AverageCalculatorUtils.calculateCreditIndexForMultipleYears(testYears);
          
-         expect(result).toBe(2.575);
+         expect(result).toBe(2.533);
       });
       
       it('should calculate credit index for a single year with a missing semester', () => {
@@ -129,7 +135,7 @@ describe('AverageCalculatorUtils', () => {
       it('should calculate credit index for multiple years with missing semesters', () => {
          const result = AverageCalculatorUtils.calculateCreditIndexForMultipleYears(missingSemesterTestYears);
          
-         expect(result).toBe(2.75);
+         expect(result).toBe(2.667);
       });
    });
 
@@ -137,25 +143,25 @@ describe('AverageCalculatorUtils', () => {
       it('should calculate credit index for a single year', () => {
          const result = AverageCalculatorUtils.calculateAdjustedCreditIndexForMultipleYears([ testYears[1] ]);
          
-         expect(result).toBe(2.205);
+         expect(result).toBe(2.13);
       });
 
       it('should calculate adjusted credit index for multiple years', () => {
          const result = AverageCalculatorUtils.calculateAdjustedCreditIndexForMultipleYears(testYears);
          
-         expect(result).toBe(2.446);
+         expect(result).toBe(2.407);
       });
       
       it('should calculate credit index for a single year with a missing semester', () => {
          const result = AverageCalculatorUtils.calculateAdjustedCreditIndexForMultipleYears([ missingSemesterTestYears[1] ]);
          
-         expect(result).toBe(1.5);
+         expect(result).toBe(1.375);
       });
 
       it('should calculate adjusted credit index for multiple years with missing semesters', () => {
          const result = AverageCalculatorUtils.calculateAdjustedCreditIndexForMultipleYears(missingSemesterTestYears);
          
-         expect(result).toBe(2.475);
+         expect(result).toBe(2.4);
       });
    });
 });
