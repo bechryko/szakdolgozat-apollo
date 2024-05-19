@@ -61,7 +61,7 @@
    "AVERAGES.TITLE": "Tanulmányi átlagok",
    "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL": "Alternatív jegyek beállítása",
    "AVERAGES.DISPLAY.WEIGHTED_AVERAGE": "Súlyozott tanulmányi átlag",
-   "AVERAGES.DISPLAY.CREDIT_SUM": "Összes kredit",
+   "AVERAGES.DISPLAY.CREDIT_SUM": "Teljesített / felvett kredit",
    "AVERAGES.DISPLAY.CREDIT_INDEX": "Kreditindex",
    "AVERAGES.DISPLAY.ADJUSTED_CREDIT_INDEX": "Korrigált kreditindex",
    "AVERAGES.DISPLAY.TITLE.CUMULATED": "Összesített (göngyölt) átlagok",

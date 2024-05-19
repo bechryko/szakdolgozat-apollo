@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Signal
 import { UniversityMajor } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { DisplayValuePipe } from '@apollo/shared/pipes';
-import { AlternativeGrade, Grade, GradesCompletionYear } from '../../models';
+import { isEqual } from 'lodash';
+import { AlternativeGrade, CreditSum, Grade, GradesCompletionYear } from '../../models';
 import { AverageCalculatorUtils } from '../../utils';
 import { AveragesDisplayerComponent } from '../averages-displayer';
 import { StateScholarshipInformationIconComponent } from './state-scholarship-information-icon';
@@ -31,7 +32,7 @@ export class MultiAveragesDisplayerComponent { // TODO: add diagrams
    public readonly years: WritableSignal<GradesCompletionYear[]>;
    private readonly gradesCollected: Signal<Grade[]>;
    public readonly weightedAverage: Signal<number>;
-   public readonly creditSum: Signal<number>;
+   public readonly creditSum: Signal<CreditSum>;
    public readonly creditIndex: Signal<number>;
    public readonly adjustedCreditIndex: Signal<number>;
 
@@ -39,7 +40,7 @@ export class MultiAveragesDisplayerComponent { // TODO: add diagrams
    private readonly alternativeYears: Signal<GradesCompletionYear[]>;
    private readonly alternativesCollected: Signal<AlternativeGrade[]>;
    public readonly alternativeWeightedAverage: Signal<number | null>;
-   public readonly alternativeCreditSum: Signal<number | null>;
+   public readonly alternativeCreditSum: Signal<CreditSum | null>;
    public readonly alternativeCreditIndex: Signal<number | null>;
    public readonly alternativeAdjustedCreditIndex: Signal<number | null>;
 
@@ -90,7 +91,7 @@ export class MultiAveragesDisplayerComponent { // TODO: add diagrams
             return null;
          }
          const sum = AverageCalculatorUtils.sumCredits(alternatives);
-         return sum === this.creditSum() ? null : sum;
+         return isEqual(sum, this.creditSum()) ? null : sum;
       });
       this.alternativeCreditIndex = computed(() => {
          const alternativeYears = this.alternativeYears();

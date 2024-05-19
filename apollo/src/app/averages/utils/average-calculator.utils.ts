@@ -1,27 +1,33 @@
 import { round } from "lodash";
-import { Grade, GradesCompletionYear } from "../models";
+import { CreditSum, Grade, GradesCompletionYear } from "../models";
 
 export class AverageCalculatorUtils {
    public static calculateWeightedAverage(grades: Grade[]): number {
-      const totalCredits = grades.reduce((acc, grade) => {
-         if(grade.rating === 1) {
-            return acc;
-         } else {
-            return acc + grade.credit;
-         }
-      }, 0);
-      const totalWeightedGrades = grades.reduce((acc, grade) => {
+      const completedCredits = this.sumCredits(grades).completed;
+      const completedWeightedGrades = grades.reduce((acc, grade) => {
          if(grade.rating === 1) {
             return acc;
          } else {
             return acc + (grade.rating * grade.credit);
          }
       }, 0);
-      return round(totalWeightedGrades / totalCredits, 3);
+      return round(completedWeightedGrades / completedCredits, 3);
    }
 
-   public static sumCredits(grades: Grade[]): number {
-      return grades.reduce((acc, grade) => acc + grade.credit, 0);
+   public static sumCredits(grades: Grade[]): CreditSum {
+      const creditSum: CreditSum = {
+         completed: 0,
+         registered: 0
+      };
+
+      grades.forEach(grade => {
+         if(grade.rating > 1) {
+            creditSum.completed += grade.credit;
+         }
+         creditSum.registered += grade.credit;
+      });
+
+      return creditSum;
    }
 
    public static calculateCreditIndex(grades: Grade[], semesterNumber = 1): number {
@@ -38,9 +44,8 @@ export class AverageCalculatorUtils {
    }
 
    private static calculateAdjustmentFactor(grades: Grade[]): number {
-      const completedCredits = grades.filter(grade => grade.rating > 1).reduce((acc, grade) => acc + grade.credit, 0);
-      const totalCredits = this.sumCredits(grades);
-      return completedCredits / totalCredits;
+      const creditSum = this.sumCredits(grades);
+      return creditSum.completed / creditSum.registered;
    }
 
    public static calculateAverage(...numbers: number[]): number {

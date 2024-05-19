@@ -3,8 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { UniversityMajor } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { DisplayValuePipe } from '@apollo/shared/pipes';
+import { isEqual } from 'lodash';
 import { ScholarshipCalculationDialogComponent } from '../../dialogs';
-import { AlternativeGrade, Grade } from '../../models';
+import { AlternativeGrade, CreditSum, Grade } from '../../models';
 import { AverageCalculatorUtils } from '../../utils';
 
 @Component({
@@ -27,7 +28,7 @@ export class AveragesDisplayerComponent {
    }
    private readonly grades: WritableSignal<Grade[]>;
    public readonly weightedAverage: Signal<number>;
-   public readonly creditSum: Signal<number>;
+   public readonly creditSum: Signal<CreditSum>;
    public readonly creditIndex: Signal<number>;
    public readonly adjustedCreditIndex: Signal<number>;
 
@@ -36,7 +37,7 @@ export class AveragesDisplayerComponent {
    }
    private readonly alternatives: WritableSignal<AlternativeGrade[] | undefined>;
    public readonly alternativeWeightedAverage: Signal<number | null>;
-   public readonly alternativeCreditSum: Signal<number | null>;
+   public readonly alternativeCreditSum: Signal<CreditSum | null>;
    public readonly alternativeCreditIndex: Signal<number | null>;
    public readonly alternativeAdjustedCreditIndex: Signal<number | null>;
 
@@ -66,7 +67,7 @@ export class AveragesDisplayerComponent {
             return null;
          }
          const sum = AverageCalculatorUtils.sumCredits(alternatives);
-         return sum === this.creditSum() ? null : sum;
+         return isEqual(sum, this.creditSum()) ? null : sum;
       });
       this.alternativeCreditIndex = computed(() => {
          const alternatives = this.alternatives();

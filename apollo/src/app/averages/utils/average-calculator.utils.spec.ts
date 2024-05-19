@@ -78,10 +78,16 @@ describe('AverageCalculatorUtils', () => {
    });
 
    describe('sumCredits', () => {
-      it('should sum credits', () => {
-         const result = AverageCalculatorUtils.sumCredits(testGrades2);
+      it('should sum registered credits', () => {
+         const result = AverageCalculatorUtils.sumCredits(testGrades2).registered;
          
          expect(result).toBe(14);
+      });
+
+      it('should sum completed credits', () => {
+         const result = AverageCalculatorUtils.sumCredits(testGrades2).completed;
+         
+         expect(result).toBe(12);
       });
    });
 

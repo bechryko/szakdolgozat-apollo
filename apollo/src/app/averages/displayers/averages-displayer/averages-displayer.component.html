@@ -10,11 +10,11 @@
       }
    </p>
    <p>
-      {{ "AVERAGES.DISPLAY.CREDIT_SUM" | transloco }}: {{ creditSum() | displayValue }}
+      {{ "AVERAGES.DISPLAY.CREDIT_SUM" | transloco }}: {{ creditSum().completed| displayValue }} / {{ creditSum().registered | displayValue }}
       @if(alternativeCreditSum()) {
          <span class="alternative-data">
             <mat-icon>arrow_right_alt</mat-icon>
-            {{ alternativeCreditSum() | displayValue }}
+            {{ alternativeCreditSum()?.completed | displayValue }} / {{ alternativeCreditSum()?.registered | displayValue }}
          </span>
       }
    </p>

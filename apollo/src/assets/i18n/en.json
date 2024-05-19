@@ -61,7 +61,7 @@
    "AVERAGES.TITLE": "Study averages",
    "AVERAGES.DISPLAY.SET_ALTERNATIVES_LABEL": "Set alternative grades",
    "AVERAGES.DISPLAY.WEIGHTED_AVERAGE": "Grade-point average (GPA)",
-   "AVERAGES.DISPLAY.CREDIT_SUM": "Credit sum",
+   "AVERAGES.DISPLAY.CREDIT_SUM": "Completed / registered credits",
    "AVERAGES.DISPLAY.CREDIT_INDEX": "Credit index (Normalized GPA)",
    "AVERAGES.DISPLAY.ADJUSTED_CREDIT_INDEX": "Corrected credit index (CCI)",
    "AVERAGES.DISPLAY.TITLE.CUMULATED": "Total averages",
