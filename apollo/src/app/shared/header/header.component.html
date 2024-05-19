@@ -1,12 +1,13 @@
-<div class="header-container" *ngLet="selectedMenu$ | async as selecteMenu">
+<div class="header-container" *ngLet="selectedMenu$ | async as selectedMenu">
    <div class="title-button"
-      [class.selected]="selecteMenu === routeUrls.MENU"
+      [class.selected]="selectedMenu === routeUrls.MENU"
       (click)="selectMenuItem(routeUrls.MENU)">
+      <img src="assets/images/icon.png">
       <h1>Apollo</h1>
    </div>
    <nav>
       @for(menuItemKey of menuItemKeys$ | async; track $index) {
-         <button [class.selected]="menuItemKey === selecteMenu"
+         <button [class.selected]="menuItemKey === selectedMenu"
             (click)="selectMenuItem(menuItemKey)">{{ routeUrlToTranslationKeyMap[menuItemKey] | transloco }}</button>
       }
    </nav>

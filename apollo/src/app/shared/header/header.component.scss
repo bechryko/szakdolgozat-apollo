@@ -24,8 +24,14 @@ nav {
    display: flex;
    align-items: center;
    justify-content: center;
+   padding-right: 0.75rem;
 
    @include special-buttons.nav-button;
+   width: auto;
+
+   img {
+      height: 100%;
+   }
 
    h1 {
       margin: 0;
