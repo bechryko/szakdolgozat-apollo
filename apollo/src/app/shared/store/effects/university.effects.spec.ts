@@ -1,5 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { University, UniversityFaculty } from "@apollo/shared/models";
+import { registerCatchAndNotifyErrorOperator } from "@apollo/shared/operators/catch-and-notify-error";
 import { SnackBarService, UniversitiesFetcherService } from "@apollo/shared/services";
 import { provideMockActions } from "@ngrx/effects/testing";
 import { cold, getTestScheduler } from "jasmine-marbles";
@@ -73,6 +74,8 @@ describe('UniversityEffects', () => {
       effects = TestBed.inject(UniversityEffects);
       universitiesFetcherService = TestBed.inject(UniversitiesFetcherService) as jasmine.SpyObj<UniversitiesFetcherService>;
       snackbarService = TestBed.inject(SnackBarService) as jasmine.SpyObj<SnackBarService>;
+
+      registerCatchAndNotifyErrorOperator(jasmine.createSpyObj('LoadingService', ['finishLoading']), snackbarService);
    });
 
    describe('loadUniversities$', () => {
@@ -88,7 +91,7 @@ describe('UniversityEffects', () => {
          universitiesFetcherService.getUniversities.and.returnValue(cold('#'));
          actions$ = cold('a', { a: universityActions.loadUniversities() });
 
-         expect(effects.loadUniversities$).toBeObservable(cold('|'));
+         expect(effects.loadUniversities$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.UNIVERSITIES_LOAD");
       });
    });
@@ -115,7 +118,7 @@ describe('UniversityEffects', () => {
          universitiesFetcherService.saveUniversities.and.returnValue(cold('#'));
          actions$ = cold('a', { a: universityActions.saveUniversities({ universities }) });
 
-         expect(effects.saveUniversities$).toBeObservable(cold('|'));
+         expect(effects.saveUniversities$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.UNIVERSITIES_SAVE");
       });
    });

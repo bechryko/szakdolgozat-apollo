@@ -1,5 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { UniversityMajor } from "@apollo/shared/models";
+import { registerCatchAndNotifyErrorOperator } from "@apollo/shared/operators/catch-and-notify-error";
 import { SnackBarService, UniversitiesFetcherService } from "@apollo/shared/services";
 import { provideMockActions } from "@ngrx/effects/testing";
 import { cold, getTestScheduler } from "jasmine-marbles";
@@ -63,6 +64,8 @@ describe('UniversityMajorEffects', () => {
       effects = TestBed.inject(UniversityMajorEffects);
       universitiesFetcherService = TestBed.inject(UniversitiesFetcherService) as jasmine.SpyObj<UniversitiesFetcherService>;
       snackbarService = TestBed.inject(SnackBarService) as jasmine.SpyObj<SnackBarService>;
+
+      registerCatchAndNotifyErrorOperator(jasmine.createSpyObj('LoadingService', ['finishLoading']), snackbarService);
    });
 
    describe('loadUniversityMajors$', () => {
@@ -78,7 +81,7 @@ describe('UniversityMajorEffects', () => {
          universitiesFetcherService.getMajorsForUniversity.and.returnValue(cold('#'));
          actions$ = cold('a', { a: universityMajorActions.loadUniversityMajors({ universityId }) });
 
-         expect(effects.loadUniversityMajors$).toBeObservable(cold('|'));
+         expect(effects.loadUniversityMajors$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.UNIVERSITY_MAJORS_LOAD");
       });
    });
@@ -114,7 +117,7 @@ describe('UniversityMajorEffects', () => {
          universitiesFetcherService.saveUniversityMajors.and.returnValue(cold('#'));
          actions$ = cold('a', { a: universityMajorActions.saveUniversityMajors({ universityMajors, universityId }) });
 
-         expect(effects.saveUniversityMajors$).toBeObservable(cold('|'));
+         expect(effects.saveUniversityMajors$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.UNIVERSITY_MAJORS_SAVE");
       });
    });
@@ -141,7 +144,7 @@ describe('UniversityMajorEffects', () => {
          universitiesFetcherService.getMajor.and.returnValue(cold('#'));
          actions$ = cold('a', { a: universityMajorActions.loadSingleUniversityMajor({ majorId }) });
 
-         expect(effects.loadSingleUniversityMajor$).toBeObservable(cold('|'));
+         expect(effects.loadSingleUniversityMajor$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.UNIVERSITY_MAJORS_LOAD");
       });
    });
@@ -177,7 +180,7 @@ describe('UniversityMajorEffects', () => {
          universitiesFetcherService.saveSingleUniversityMajor.and.returnValue(cold('#'));
          actions$ = cold('a', { a: universityMajorActions.saveSingleUniversityMajor({ universityMajor: singleMajor }) });
 
-         expect(effects.saveSingleUniversityMajor$).toBeObservable(cold('|'));
+         expect(effects.saveSingleUniversityMajor$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.UNIVERSITY_MAJORS_SAVE");
       });
    });

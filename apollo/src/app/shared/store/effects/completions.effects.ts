@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { LoadingService, LoadingType, completionsLoadingKey } from "@apollo/shared/loading";
+import { catchAndNotifyError } from "@apollo/shared/operators";
 import { CompletionsUtils } from "@apollo/shared/utils";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { cloneDeep } from "lodash";
-import { catchError, map, switchMap, take, tap } from "rxjs";
-import { CompletionsFetcherService, CompletionsService, SnackBarService } from "../../services";
-import { userActions } from "../actions";
-import { completionsActions } from "../actions/completions.actions";
+import { map, switchMap, take, tap } from "rxjs";
+import { CompletionsFetcherService, CompletionsService } from "../../services";
+import { completionsActions, userActions } from "../actions";
 
 @Injectable()
 export class CompletionsEffects {
@@ -14,15 +14,12 @@ export class CompletionsEffects {
       this.actions$.pipe(
          ofType(completionsActions.loadCompletions),
          tap(() => this.loadingService.startLoading(completionsLoadingKey, LoadingType.LOAD)),
-         switchMap(() => this.completionsFetcherService.getCompletionsForCurrentUser()),
+         switchMap(() => this.completionsFetcherService.getCompletionsForCurrentUser().pipe(
+            catchAndNotifyError(completionsLoadingKey, "ERROR.DATABASE.COMPLETIONS_LOAD")
+         )),
          map(completions => {
             this.loadingService.finishLoading(completionsLoadingKey);
             return completionsActions.saveCompletionsToStore({ completions });
-         }),
-         catchError(() => {
-            this.loadingService.finishLoading(completionsLoadingKey);
-            this.snackbarService.openError("ERROR.DATABASE.COMPLETIONS_LOAD");
-            return [];
          })
       )
    );
@@ -36,12 +33,8 @@ export class CompletionsEffects {
                this.loadingService.finishLoading(completionsLoadingKey);
                return completionsActions.saveCompletionsToStore({ completions });
             }),
-         )),
-         catchError(() => {
-            this.loadingService.finishLoading(completionsLoadingKey);
-            this.snackbarService.openError("ERROR.DATABASE.COMPLETIONS_SAVE");
-            return [];
-         })
+            catchAndNotifyError(completionsLoadingKey, "ERROR.DATABASE.COMPLETIONS_SAVE")
+         ))
       )
    );
 
@@ -86,7 +79,6 @@ export class CompletionsEffects {
       private readonly actions$: Actions,
       private readonly completionsFetcherService: CompletionsFetcherService,
       private readonly completionsService: CompletionsService,
-      private readonly loadingService: LoadingService,
-      private readonly snackbarService: SnackBarService
+      private readonly loadingService: LoadingService
    ) { }
 }

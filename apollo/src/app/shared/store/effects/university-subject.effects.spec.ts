@@ -1,5 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { UniversitySubject } from "@apollo/shared/models";
+import { registerCatchAndNotifyErrorOperator } from "@apollo/shared/operators/catch-and-notify-error";
 import { SnackBarService, UniversitiesFetcherService } from "@apollo/shared/services";
 import { provideMockActions } from "@ngrx/effects/testing";
 import { cold, getTestScheduler } from "jasmine-marbles";
@@ -61,6 +62,8 @@ describe('UniversitySubjectEffects', () => {
       effects = TestBed.inject(UniversitySubjectEffects);
       universitiesFetcherService = TestBed.inject(UniversitiesFetcherService) as jasmine.SpyObj<UniversitiesFetcherService>;
       snackbarService = TestBed.inject(SnackBarService) as jasmine.SpyObj<SnackBarService>;
+
+      registerCatchAndNotifyErrorOperator(jasmine.createSpyObj('LoadingService', ['finishLoading']), snackbarService);
    });
 
    describe('loadUniversitySubjects$', () => {
@@ -76,7 +79,7 @@ describe('UniversitySubjectEffects', () => {
          universitiesFetcherService.getSubjectsForUniversity.and.returnValue(cold('#'));
          actions$ = cold('a', { a: universitySubjectActions.loadUniversitySubjects({ universityId }) });
 
-         expect(effects.loadUniversitySubjects$).toBeObservable(cold('|'));
+         expect(effects.loadUniversitySubjects$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.UNIVERSITY_SUBJECTS_LOAD");
       });
    });
@@ -112,8 +115,7 @@ describe('UniversitySubjectEffects', () => {
          universitiesFetcherService.saveUniversitySubjects.and.returnValue(cold('#'));
          actions$ = cold('a', { a: universitySubjectActions.saveUniversitySubjects({ universitySubjects, universityId }) });
 
-         expect(effects.saveUniversitySubjects$).toBeObservable(cold('|'));
-
+         expect(effects.saveUniversitySubjects$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.UNIVERSITY_SUBJECTS_SAVE");
       });
    });
@@ -153,7 +155,7 @@ describe('UniversitySubjectEffects', () => {
          const universitySubject = universitySubjects[0];
          actions$ = cold('a', { a: universitySubjectActions.saveSingleUniversitySubject({ universitySubject }) });
 
-         expect(effects.saveSingleUniversitySubject$).toBeObservable(cold('|'));
+         expect(effects.saveSingleUniversitySubject$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.UNIVERSITY_SUBJECTS_SAVE");
       });
    });

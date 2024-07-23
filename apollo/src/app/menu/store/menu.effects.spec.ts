@@ -1,4 +1,5 @@
 import { TestBed } from "@angular/core/testing";
+import { registerCatchAndNotifyErrorOperator } from "@apollo/shared/operators/catch-and-notify-error";
 import { SnackBarService } from "@apollo/shared/services";
 import { provideMockActions } from "@ngrx/effects/testing";
 import { cold } from "jasmine-marbles";
@@ -52,6 +53,8 @@ describe('MenuEffects', () => {
       effects = TestBed.inject(MenuEffects);
       menuCardFetcherService = TestBed.inject(MenuCardFetcherService) as jasmine.SpyObj<MenuCardFetcherService>;
       snackbarService = TestBed.inject(SnackBarService) as jasmine.SpyObj<SnackBarService>;
+
+      registerCatchAndNotifyErrorOperator(jasmine.createSpyObj('LoadingService', ['finishLoading']), snackbarService);
    });
 
    describe('loadCards$', () => {
@@ -68,7 +71,7 @@ describe('MenuEffects', () => {
 
          actions$ = cold('a', { a: menuActions.loadCards() });
 
-         expect(effects.loadCards$).toBeObservable(cold('|'));
+         expect(effects.loadCards$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.MENU_CARDS_LOAD");
       });
    });

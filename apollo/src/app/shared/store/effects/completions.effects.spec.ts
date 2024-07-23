@@ -1,5 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { UniversityCompletionYear, UniversitySubject } from "@apollo/shared/models";
+import { registerCatchAndNotifyErrorOperator } from "@apollo/shared/operators/catch-and-notify-error";
 import { CompletionsFetcherService, CompletionsService, SnackBarService } from "@apollo/shared/services";
 import { CompletionsUtils } from "@apollo/shared/utils";
 import { provideMockActions } from "@ngrx/effects/testing";
@@ -71,6 +72,8 @@ describe('CompletionsEffects', () => {
       effects = TestBed.inject(CompletionsEffects);
       completionsFetcherService = TestBed.inject(CompletionsFetcherService) as jasmine.SpyObj<CompletionsFetcherService>;
       snackbarService = TestBed.inject(SnackBarService) as jasmine.SpyObj<SnackBarService>;
+
+      registerCatchAndNotifyErrorOperator(jasmine.createSpyObj('LoadingService', ['finishLoading']), snackbarService);
    });
 
    describe('loadCompletions$', () => {
@@ -87,7 +90,7 @@ describe('CompletionsEffects', () => {
 
          actions$ = cold('a', { a: completionsActions.loadCompletions() });
 
-         expect(effects.loadCompletions$).toBeObservable(cold('|'));
+         expect(effects.loadCompletions$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.COMPLETIONS_LOAD");
       });
    });
@@ -115,7 +118,7 @@ describe('CompletionsEffects', () => {
 
          actions$ = cold('a', { a: completionsActions.saveCompletions({ completions: userCompletions }) });
 
-         expect(effects.saveCompletions$).toBeObservable(cold('|'));
+         expect(effects.saveCompletions$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.COMPLETIONS_SAVE");
       });
    });

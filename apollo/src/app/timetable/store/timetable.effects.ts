@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { LoadingService, LoadingType, timetableLoadingKey } from "@apollo/shared/loading";
+import { catchAndNotifyError } from "@apollo/shared/operators";
 import { SnackBarService } from "@apollo/shared/services";
 import { userActions } from "@apollo/shared/store";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, map, switchMap, tap } from "rxjs";
-import { TimetableFetcherService } from './../services/timetable-fetcher.service';
+import { map, switchMap, tap } from "rxjs";
+import { TimetableFetcherService } from './../services';
 import { timetableActions } from "./timetable.actions";
 
 @Injectable()
@@ -13,7 +14,9 @@ export class TimetableEffects {
       this.actions$.pipe(
          ofType(timetableActions.loadTimetable),
          tap(() => this.loadingService.startLoading(timetableLoadingKey, LoadingType.LOAD)),
-         switchMap(_ => this.timetableFetcherService.getSemestersForCurrentUser()),
+         switchMap(_ => this.timetableFetcherService.getSemestersForCurrentUser().pipe(
+            catchAndNotifyError(timetableLoadingKey, "ERROR.DATABASE.TIMETABLE_LOAD")
+         )),
          map(semesters => {
             this.loadingService.finishLoading(timetableLoadingKey);
             return timetableActions.saveTimetableToStore({
@@ -22,11 +25,6 @@ export class TimetableEffects {
                   selectedSemesterId: semesters.length >= 1 ? semesters[0].id : undefined
                }
             });
-         }),
-         catchError(() => {
-            this.loadingService.finishLoading(timetableLoadingKey);
-            this.snackbarService.openError("ERROR.DATABASE.TIMETABLE_LOAD");
-            return [];
          })
       )
    );
@@ -41,12 +39,8 @@ export class TimetableEffects {
                this.snackbarService.open("TIMETABLE.SAVE_SUCCESS");
                return timetableActions.saveTimetableToStore({ newState });
             }),
-         )),
-         catchError(() => {
-            this.loadingService.finishLoading(timetableLoadingKey);
-            this.snackbarService.openError("ERROR.DATABASE.TIMETABLE_SAVE");
-            return [];
-         })
+            catchAndNotifyError(timetableLoadingKey, "ERROR.DATABASE.TIMETABLE_SAVE")
+         ))
       )
    );
 

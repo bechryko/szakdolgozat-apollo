@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
 import { GeneralDialogService } from "@apollo/shared/general-dialog";
 import { LoadingService, LoadingType, authCRUDLoadingKey, userUpdateLoadingKey } from "@apollo/shared/loading";
+import { catchAndNotifyError } from "@apollo/shared/operators";
 import { CompletionsFetcherService, SnackBarService } from "@apollo/shared/services";
-import { TimetableFetcherService } from "@apollo/timetable/services/timetable-fetcher.service";
+import { TimetableFetcherService } from "@apollo/timetable/services";
 import { AuthService, UserFetcherService } from "@apollo/user/services";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, filter, map, merge, of, partition, switchMap, tap } from "rxjs";
-import { userActions } from "../actions/user.actions";
+import { filter, map, merge, of, partition, switchMap, tap } from "rxjs";
+import { userActions } from "../actions";
 
 @Injectable()
 export class UserEffects {
@@ -14,16 +15,13 @@ export class UserEffects {
       this.actions$.pipe(
          ofType(userActions.login),
          tap(() => this.loadingService.startLoading(authCRUDLoadingKey, LoadingType.AUTHENTICATION)),
-         switchMap(({ loginData }) => this.authService.signInUser(loginData.email, loginData.password)),
-         map(() => {
-            this.loadingService.finishLoading(authCRUDLoadingKey);
-            return userActions.clearUserData();
-         }),
-         catchError(() => {
-            this.loadingService.finishLoading(authCRUDLoadingKey);
-            this.snackbarService.openError("ERROR.AUTH.LOGIN");
-            return [];
-         })
+         switchMap(({ loginData }) => this.authService.signInUser(loginData.email, loginData.password).pipe(
+            map(() => {
+               this.loadingService.finishLoading(authCRUDLoadingKey);
+               return userActions.clearUserData();
+            }),
+            catchAndNotifyError(authCRUDLoadingKey, "ERROR.AUTH.LOGIN")
+         ))
       )
    );
 
@@ -33,11 +31,9 @@ export class UserEffects {
          tap(() => this.loadingService.startLoading(authCRUDLoadingKey, LoadingType.AUTHENTICATION)),
          switchMap(({ registerData }) => this.authService.registerUser(registerData.email, registerData.password).pipe(
             switchMap(() => this.userFetcherService.saveNewUserData(registerData).pipe(
-               catchError(() => {
-                  this.snackbarService.openError("ERROR.DATABASE.USER_SAVE");
-                  return [];
-               })
-            ))
+               catchAndNotifyError(authCRUDLoadingKey, "ERROR.DATABASE.USER_SAVE")
+            )),
+            catchAndNotifyError(authCRUDLoadingKey, "ERROR.AUTH.REGISTER")
          )),
          switchMap(() => {
             const averagesData = this.completionsFetcherService.getGuestStorageData();
@@ -71,14 +67,13 @@ export class UserEffects {
                   switchMap(() => merge(
                      this.completionsFetcherService.saveCompletions(averagesData),
                      this.timetableFetcherService.saveSemesters(timetableData)
-                  ).pipe(map(() => null))),
+                  ).pipe(
+                     map(() => null),
+                     catchAndNotifyError(authCRUDLoadingKey, "ERROR.DATABASE.GUEST_DATA_TRANSFER")
+                  )),
                   tap(() => {
                      this.completionsFetcherService.clearGuestStorage();
                      this.timetableFetcherService.clearGuestStorage();
-                  }),
-                  catchError(() => {
-                     this.snackbarService.openError("ERROR.DATABASE.GUEST_DATA_TRANSFER");
-                     return [];
                   })
                ),
                doNotTransferData$.pipe(
@@ -87,12 +82,7 @@ export class UserEffects {
             );
          }),
          tap(() => this.loadingService.finishLoading(authCRUDLoadingKey)),
-         filter(Boolean),
-         catchError(() => {
-            this.loadingService.finishLoading(authCRUDLoadingKey);
-            this.snackbarService.openError("ERROR.AUTH.REGISTER", { duration: 5500 });
-            return [];
-         })
+         filter(Boolean)
       )
    );
 
@@ -100,15 +90,12 @@ export class UserEffects {
       this.actions$.pipe(
          ofType(userActions.updateUserProfile),
          tap(() => this.loadingService.startLoading(userUpdateLoadingKey, LoadingType.SAVE)),
-         switchMap(({ user }) => this.userFetcherService.updateUserData(user)),
+         switchMap(({ user }) => this.userFetcherService.updateUserData(user).pipe(
+            catchAndNotifyError(userUpdateLoadingKey, "ERROR.DATABASE.USER_UPDATE")
+         )),
          tap(() => {
             this.loadingService.finishLoading(userUpdateLoadingKey);
             this.snackbarService.open("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
-         }),
-         catchError(() => {
-            this.loadingService.finishLoading(userUpdateLoadingKey);
-            this.snackbarService.openError("ERROR.DATABASE.USER_UPDATE");
-            return [];
          })
       ), { dispatch: false }
    );
@@ -117,15 +104,15 @@ export class UserEffects {
       this.actions$.pipe(
          ofType(userActions.logout),
          tap(() => this.loadingService.startLoading(authCRUDLoadingKey, LoadingType.AUTHENTICATION)),
-         switchMap(() => this.authService.signOutUser()),
+         switchMap(() => this.authService.signOutUser().pipe(
+            catchAndNotifyError(
+               authCRUDLoadingKey,
+               Math.random() >= 0.01 ? "ERROR.AUTH.LOGOUT" : "ERROR.AUTH.LOGOUT_2"
+            )
+         )),
          map(() => {
             this.loadingService.finishLoading(authCRUDLoadingKey);
             return userActions.clearUserData();
-         }),
-         catchError(() => {
-            this.loadingService.finishLoading(authCRUDLoadingKey);
-            this.snackbarService.openError(Math.random() >= 0.01 ? "ERROR.AUTH.LOGOUT" : "ERROR.AUTH.LOGOUT_2");
-            return [];
          })
       )
    );

@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { GeneralDialogService } from "@apollo/shared/general-dialog";
 import { ApolloUser, UniversityCompletionYear } from "@apollo/shared/models";
+import { registerCatchAndNotifyErrorOperator } from "@apollo/shared/operators/catch-and-notify-error";
 import { CompletionsFetcherService, SnackBarService } from "@apollo/shared/services";
 import { Semester } from "@apollo/timetable/models";
 import { TimetableFetcherService } from "@apollo/timetable/services/timetable-fetcher.service";
@@ -18,7 +19,7 @@ describe('UserEffects', () => {
    let actions$: TestColdObservable;
    let authService: jasmine.SpyObj<AuthService>;
    let userFetcherService: jasmine.SpyObj<UserFetcherService>;
-   let snackbar: jasmine.SpyObj<SnackBarService>;
+   let snackbarService: jasmine.SpyObj<SnackBarService>;
    let generalDialog: jasmine.SpyObj<GeneralDialogService>;
    let completionsFetcherService: jasmine.SpyObj<CompletionsFetcherService>;
    let timetableFetcherService: jasmine.SpyObj<TimetableFetcherService>;
@@ -103,10 +104,14 @@ describe('UserEffects', () => {
       effects = TestBed.inject(UserEffects);
       authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
       userFetcherService = TestBed.inject(UserFetcherService) as jasmine.SpyObj<UserFetcherService>;
-      snackbar = TestBed.inject(SnackBarService) as jasmine.SpyObj<SnackBarService>;
+      snackbarService = TestBed.inject(SnackBarService) as jasmine.SpyObj<SnackBarService>;
       generalDialog = TestBed.inject(GeneralDialogService) as jasmine.SpyObj<GeneralDialogService>;
       completionsFetcherService = TestBed.inject(CompletionsFetcherService) as jasmine.SpyObj<CompletionsFetcherService>;
       timetableFetcherService = TestBed.inject(TimetableFetcherService) as jasmine.SpyObj<TimetableFetcherService>;
+
+      generalDialog.openDialog.and.returnValue(of(false));
+
+      registerCatchAndNotifyErrorOperator(jasmine.createSpyObj('LoadingService', ['finishLoading']), snackbarService);
    });
 
    describe('login$', () => {
@@ -131,8 +136,8 @@ describe('UserEffects', () => {
          authService.signInUser.and.returnValue(cold('#'));
          actions$ = cold('a', { a: userActions.login({ loginData }) });
 
-         expect(effects.login$).toBeObservable(cold('|'));
-         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.AUTH.LOGIN");
+         expect(effects.login$).toBeObservable(cold(''));
+         expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.AUTH.LOGIN");
       });
    });
 
@@ -228,7 +233,6 @@ describe('UserEffects', () => {
       });
 
       it(`should dispatch ${ userActions.clearUserData.type } action if the user rejects the dialog, without clearing guest data and saving it for the newly created user`, () => {
-         generalDialog.openDialog.and.returnValue(of(false));
          actions$ = cold('a', { a: userActions.register({ registerData }) });
          
          expect(effects.register$).toBeObservable(cold('b', { b: userActions.clearUserData() }));
@@ -243,8 +247,8 @@ describe('UserEffects', () => {
          authService.registerUser.and.returnValue(cold('#'));
          actions$ = cold('a', { a: userActions.register({ registerData }) });
 
-         expect(effects.register$).toBeObservable(cold('|'));
-         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.AUTH.REGISTER", jasmine.any(Object));
+         expect(effects.register$).toBeObservable(cold(''));
+         expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.AUTH.REGISTER");
       });
 
       it("should open an error snackbar if the new user data saving fails", () => {
@@ -252,7 +256,7 @@ describe('UserEffects', () => {
          actions$ = cold('a', { a: userActions.register({ registerData }) });
 
          expect(effects.register$).toBeObservable(cold(''));
-         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.USER_SAVE");
+         expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.USER_SAVE");
       });
 
       it("should open an error snackbar if the completions saving fails", () => {
@@ -263,7 +267,7 @@ describe('UserEffects', () => {
          actions$ = cold('a', { a: userActions.register({ registerData }) });
 
          expect(effects.register$).toBeObservable(cold(''));
-         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.GUEST_DATA_TRANSFER");
+         expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.GUEST_DATA_TRANSFER");
       });
 
       it("should open an error snackbar if the timetable saving fails", () => {
@@ -274,7 +278,7 @@ describe('UserEffects', () => {
          actions$ = cold('a', { a: userActions.register({ registerData }) });
 
          expect(effects.register$).toBeObservable(cold(''));
-         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.GUEST_DATA_TRANSFER");
+         expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.GUEST_DATA_TRANSFER");
       });
    });
 
@@ -294,15 +298,15 @@ describe('UserEffects', () => {
          effects.updateUserProfile$.subscribe();
          getTestScheduler().flush();
 
-         expect(snackbar.open).toHaveBeenCalledOnceWith("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
+         expect(snackbarService.open).toHaveBeenCalledOnceWith("PROFILE.SETTINGS.SAVE_SUCCESS_MESSAGE");
       });
 
       it("should open an error snackbar if the user data update fails", () => {
          userFetcherService.updateUserData.and.returnValue(cold('#'));
          actions$ = cold('a', { a: userActions.updateUserProfile({ user }) });
 
-         expect(effects.updateUserProfile$).toBeObservable(cold('|'));
-         expect(snackbar.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.USER_UPDATE");
+         expect(effects.updateUserProfile$).toBeObservable(cold(''));
+         expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.USER_UPDATE");
       });
    });
 
@@ -328,8 +332,8 @@ describe('UserEffects', () => {
          authService.signOutUser.and.returnValue(cold('#'));
          actions$ = cold('a', { a: userActions.logout() });
 
-         expect(effects.logout$).toBeObservable(cold('|'));
-         expect(snackbar.openError).toHaveBeenCalledOnceWith(jasmine.any(String));
+         expect(effects.logout$).toBeObservable(cold(''));
+         expect(snackbarService.openError).toHaveBeenCalledOnceWith(jasmine.any(String));
       });
    });
 });

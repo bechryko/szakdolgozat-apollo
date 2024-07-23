@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
+import { registerCatchAndNotifyErrorOperator } from '@apollo/shared/operators/catch-and-notify-error';
 import { SnackBarService } from '@apollo/shared/services';
 import { Semester } from "@apollo/timetable/models";
-import { TimetableFetcherService } from "@apollo/timetable/services/timetable-fetcher.service";
+import { TimetableFetcherService } from "@apollo/timetable/services";
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, getTestScheduler } from 'jasmine-marbles';
 import { TestColdObservable } from 'jasmine-marbles/src/test-observables';
@@ -59,6 +60,8 @@ describe('TimetableEffects', () => {
       effects = TestBed.inject(TimetableEffects);
       timetableFetcherService = TestBed.inject(TimetableFetcherService) as jasmine.SpyObj<TimetableFetcherService>;
       snackbarService = TestBed.inject(SnackBarService) as jasmine.SpyObj<SnackBarService>;
+
+      registerCatchAndNotifyErrorOperator(jasmine.createSpyObj('LoadingService', ['finishLoading']), snackbarService);
    });
    
    describe('loadTimetable$', () => {
@@ -78,7 +81,7 @@ describe('TimetableEffects', () => {
          timetableFetcherService.getSemestersForCurrentUser.and.returnValue(cold('#'));
          actions$ = cold('a', { a: timetableActions.loadTimetable() });
 
-         expect(effects.loadTimetable$).toBeObservable(cold('|'));
+         expect(effects.loadTimetable$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledWith('ERROR.DATABASE.TIMETABLE_LOAD');
       });
    });
@@ -118,7 +121,7 @@ describe('TimetableEffects', () => {
          } as TimetableState;
          actions$ = cold('a', { a: timetableActions.updateTimetable({ newState }) });
 
-         expect(effects.updateTimetable$).toBeObservable(cold('|'));
+         expect(effects.updateTimetable$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledWith('ERROR.DATABASE.TIMETABLE_SAVE');
       });
    });
