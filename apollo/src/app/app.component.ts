@@ -7,7 +7,8 @@ import { RouteUrls } from './app.routes';
 import { HeaderComponent } from './shared/header';
 import { LoadingService } from './shared/loading';
 import { ApolloCommonModule } from './shared/modules';
-import { RouterService } from './shared/services';
+import { registerCatchAndNotifyErrorOperator } from './shared/operators/catch-and-notify-error';
+import { RouterService, SnackBarService } from './shared/services';
 import { SidebarComponent } from './shared/sidebar';
 
 @Component({
@@ -43,8 +44,11 @@ export class AppComponent {
 
    constructor(
       private readonly routerService: RouterService,
-      private readonly loadingService: LoadingService
+      private readonly loadingService: LoadingService,
+      private readonly snackbarService: SnackBarService
    ) {
+      registerCatchAndNotifyErrorOperator(this.loadingService, this.snackbarService);
+
       this.isAdminPage = toSignal(this.routerService.isAdminPage$.pipe(
          takeUntilDestroyed()
       ));

@@ -1,3 +1,2 @@
-//@index('./*.ts', (f, _) => `export { ${ _.camelCase(f.name) } } from '${f.path}';`)
+export { catchAndNotifyError } from './catch-and-notify-error';
 export { multicast } from './multicast';
-//@endindex
