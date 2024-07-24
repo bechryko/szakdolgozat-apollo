@@ -30,6 +30,7 @@ export class UserService {
          map(user => user ? user.email : null),
          distinctUntilChanged(),
          switchMap(email => email ? this.userFetcherService.getUserDataChanges(email) : of(null)),
+         map(user => this.extendUserWithPossiblyMissingFields(user)),
          tap(user => {
             if(user?.selectedLanguage) {
                this.languageService.setLanguage(user.selectedLanguage);
@@ -66,5 +67,18 @@ export class UserService {
 
    public updateUser(user: ApolloUser): void {
       this.store.dispatch(userActions.updateUserProfile({ user }));
+   }
+
+   private extendUserWithPossiblyMissingFields(user: ApolloUser | null): ApolloUser | null {
+      if(!user) {
+         return null;
+      }
+
+      const updatedUser = { ...user };
+      if(!updatedUser.settings) {
+         updatedUser.settings = {};
+      }
+
+      return updatedUser;
    }
 }

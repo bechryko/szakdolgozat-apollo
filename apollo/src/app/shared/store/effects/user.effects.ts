@@ -2,11 +2,12 @@ import { Injectable } from "@angular/core";
 import { GeneralDialogService } from "@apollo/shared/general-dialog";
 import { LoadingService, LoadingType, authCRUDLoadingKey, userUpdateLoadingKey } from "@apollo/shared/loading";
 import { catchAndNotifyError } from "@apollo/shared/operators";
-import { CompletionsFetcherService, SnackBarService } from "@apollo/shared/services";
+import { CompletionsFetcherService, SnackBarService, UserService } from "@apollo/shared/services";
 import { TimetableFetcherService } from "@apollo/timetable/services";
 import { AuthService, UserFetcherService } from "@apollo/user/services";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { filter, map, merge, of, partition, switchMap, tap } from "rxjs";
+import { cloneDeep } from "lodash";
+import { filter, map, merge, of, partition, switchMap, take, tap } from "rxjs";
 import { userActions } from "../actions";
 
 @Injectable()
@@ -100,6 +101,26 @@ export class UserEffects {
       ), { dispatch: false }
    );
 
+   public readonly updateUserSetting$ = createEffect(() =>
+      this.actions$.pipe(
+         ofType(userActions.updateUserSetting),
+         switchMap(({ key, value }) => this.userService.user$.pipe(
+            take(1),
+            map(user => {
+               if (!user || user.settings[key] === value) {
+                  return null;
+               }
+
+               const updatedUser = cloneDeep(user);
+               updatedUser.settings[key] = value;
+               
+               return userActions.updateUserProfile({ user: updatedUser });
+            })
+         )),
+         filter(Boolean)
+      )
+   );
+
    public readonly logout$ = createEffect(() =>
       this.actions$.pipe(
          ofType(userActions.logout),
@@ -125,6 +146,7 @@ export class UserEffects {
       private readonly generalDialog: GeneralDialogService,
       private readonly completionsFetcherService: CompletionsFetcherService,
       private readonly timetableFetcherService: TimetableFetcherService,
-      private readonly loadingService: LoadingService
+      private readonly loadingService: LoadingService,
+      private readonly userService: UserService
    ) { }
 }

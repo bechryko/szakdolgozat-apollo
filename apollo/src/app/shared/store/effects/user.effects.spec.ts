@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { GeneralDialogService } from "@apollo/shared/general-dialog";
 import { ApolloUser, UniversityCompletionYear } from "@apollo/shared/models";
 import { registerCatchAndNotifyErrorOperator } from "@apollo/shared/operators/catch-and-notify-error";
-import { CompletionsFetcherService, SnackBarService } from "@apollo/shared/services";
+import { CompletionsFetcherService, SnackBarService, UserService } from "@apollo/shared/services";
 import { Semester } from "@apollo/timetable/models";
 import { TimetableFetcherService } from "@apollo/timetable/services/timetable-fetcher.service";
 import { LoginData, RegisterData } from "@apollo/user/models";
@@ -10,7 +10,7 @@ import { AuthService, UserFetcherService } from "@apollo/user/services";
 import { provideMockActions } from "@ngrx/effects/testing";
 import { cold, getTestScheduler } from "jasmine-marbles";
 import { TestColdObservable } from "jasmine-marbles/src/test-observables";
-import { of } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 import { userActions } from "../actions";
 import { UserEffects } from "./user.effects";
 
@@ -23,6 +23,8 @@ describe('UserEffects', () => {
    let generalDialog: jasmine.SpyObj<GeneralDialogService>;
    let completionsFetcherService: jasmine.SpyObj<CompletionsFetcherService>;
    let timetableFetcherService: jasmine.SpyObj<TimetableFetcherService>;
+
+   let user$: BehaviorSubject<ApolloUser | null>;
 
    const loginData: LoginData = {
       email: 'test@email.com',
@@ -69,7 +71,15 @@ describe('UserEffects', () => {
       return service;
    }
 
+   function userServiceFactory() {
+      return {
+         user$
+      };
+   }
+
    beforeEach(() => {
+      user$ = new BehaviorSubject<ApolloUser | null>(null);
+
       TestBed.configureTestingModule({
          providers: [
             UserEffects,
@@ -97,6 +107,10 @@ describe('UserEffects', () => {
             {
                provide: TimetableFetcherService,
                useFactory: timetableFetcherServiceFactory
+            },
+            {
+               provide: UserService,
+               useFactory: userServiceFactory
             }
          ]
       });
@@ -307,6 +321,30 @@ describe('UserEffects', () => {
 
          expect(effects.updateUserProfile$).toBeObservable(cold(''));
          expect(snackbarService.openError).toHaveBeenCalledOnceWith("ERROR.DATABASE.USER_UPDATE");
+      });
+   });
+
+   describe('updateUserSetting', () => {
+      it("should dispatch nothing if the user is not logged in", () => {
+         actions$ = cold('a', { a: userActions.updateUserSetting({ key: 'testKey' as any, value: 'testValue' }) });
+
+         expect(effects.updateUserSetting$).toBeObservable(cold(''));
+      });
+
+      it("should dispatch nothing if the setting value is the same as the current one", () => {
+         user$.next({ settings: { testKey: 'testValue' } } as any);
+         actions$ = cold('a', { a: userActions.updateUserSetting({ key: 'testKey' as any, value: 'testValue' }) });
+
+         expect(effects.updateUserSetting$).toBeObservable(cold(''));
+      });
+
+      it(`should dispatch ${ userActions.updateUserSetting.type } action if the setting value is different from the current one`, () => {
+         user$.next({ settings: { testKey: 'testValue' } } as any);
+         actions$ = cold('a', { a: userActions.updateUserSetting({ key: 'testKey' as any, value: 'newTestValue' }) });
+
+         const expected = cold('b', { b: userActions.updateUserProfile({ user: { settings: { testKey: 'newTestValue' } } as any }) });
+
+         expect(effects.updateUserSetting$).toBeObservable(expected);
       });
    });
 

@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { LoadingService, LoadingType, timetableLoadingKey } from "@apollo/shared/loading";
 import { catchAndNotifyError } from "@apollo/shared/operators";
-import { SnackBarService } from "@apollo/shared/services";
+import { SnackBarService, UserService } from "@apollo/shared/services";
 import { userActions } from "@apollo/shared/store";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { map, switchMap, tap } from "rxjs";
+import { map, switchMap, take, tap } from "rxjs";
 import { TimetableFetcherService } from './../services';
 import { timetableActions } from "./timetable.actions";
 
@@ -17,15 +17,17 @@ export class TimetableEffects {
          switchMap(_ => this.timetableFetcherService.getSemestersForCurrentUser().pipe(
             catchAndNotifyError(timetableLoadingKey, "ERROR.DATABASE.TIMETABLE_LOAD")
          )),
-         map(semesters => {
-            this.loadingService.finishLoading(timetableLoadingKey);
-            return timetableActions.saveTimetableToStore({
-               newState: {
-                  semesters,
-                  selectedSemesterId: semesters.length >= 1 ? semesters[0].id : undefined
-               }
-            });
-         })
+         switchMap(semesters => this.userService.user$.pipe(
+            take(1),
+            map(user => {
+               this.loadingService.finishLoading(timetableLoadingKey);
+               
+               const selectedSemesterId = user?.settings?.selectedSemesterId;
+               return timetableActions.saveTimetableToStore({
+                  newState: { semesters, selectedSemesterId }
+               });
+            })
+         ))
       )
    );
 
@@ -41,6 +43,13 @@ export class TimetableEffects {
             }),
             catchAndNotifyError(timetableLoadingKey, "ERROR.DATABASE.TIMETABLE_SAVE")
          ))
+      )
+   );
+
+   public readonly saveTimetableToStore$ = createEffect(() =>
+      this.actions$.pipe(
+         ofType(timetableActions.saveTimetableToStore),
+         map(({ newState }) => userActions.updateUserSetting({ key: "selectedSemesterId", value: newState.selectedSemesterId }))
       )
    );
 
@@ -63,6 +72,7 @@ export class TimetableEffects {
       private readonly actions$: Actions,
       private readonly timetableFetcherService: TimetableFetcherService,
       private readonly loadingService: LoadingService,
-      private readonly snackbarService: SnackBarService
+      private readonly snackbarService: SnackBarService,
+      private readonly userService: UserService
    ) { }
 }

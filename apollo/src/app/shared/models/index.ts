@@ -1,4 +1,4 @@
-export { ApolloUser } from './apollo-user';
+export { ApolloUser, ApolloUserSettings } from './apollo-user';
 export { ButtonDescription } from './button-description';
 export { ComponentThemeColor } from './component-theme-color.d';
 export { University } from './university';

@@ -8,4 +8,9 @@ export interface ApolloUser {
    university?: string;
    faculty?: number;
    major?: string;
+   settings: ApolloUserSettings;
+}
+
+export interface ApolloUserSettings {
+   selectedSemesterId?: string;
 }

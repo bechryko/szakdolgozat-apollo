@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
+import { ApolloUser } from '@apollo/shared/models';
 import { registerCatchAndNotifyErrorOperator } from '@apollo/shared/operators/catch-and-notify-error';
-import { SnackBarService } from '@apollo/shared/services';
+import { SnackBarService, UserService } from '@apollo/shared/services';
 import { Semester } from "@apollo/timetable/models";
 import { TimetableFetcherService } from "@apollo/timetable/services";
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, getTestScheduler } from 'jasmine-marbles';
 import { TestColdObservable } from 'jasmine-marbles/src/test-observables';
-import { of } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 import { timetableActions } from './timetable.actions';
 import { TimetableEffects } from "./timetable.effects";
 import { TimetableState } from './timetable.state';
@@ -16,6 +17,8 @@ describe('TimetableEffects', () => {
    let effects: TimetableEffects;
    let timetableFetcherService: jasmine.SpyObj<TimetableFetcherService>;
    let snackbarService: jasmine.SpyObj<SnackBarService>;
+
+   let user$: BehaviorSubject<ApolloUser | null>;
 
    const semesterForCurrentUser = [
       {
@@ -40,8 +43,16 @@ describe('TimetableEffects', () => {
       service.saveSemesters.and.returnValue(of(undefined));
       return service;
    }
+
+   function userServiceFactory() {
+      return {
+         user$
+      };
+   }
    
    beforeEach(() => {
+      user$ = new BehaviorSubject<ApolloUser | null>(null);
+
       TestBed.configureTestingModule({
          providers: [
             TimetableEffects,
@@ -53,6 +64,10 @@ describe('TimetableEffects', () => {
             {
                provide: SnackBarService,
                useValue: jasmine.createSpyObj('SnackBarService', ['open', 'openError']),
+            },
+            {
+               provide: UserService,
+               useFactory: userServiceFactory
             }
          ],
       });
@@ -65,12 +80,26 @@ describe('TimetableEffects', () => {
    });
    
    describe('loadTimetable$', () => {
-      it(`should dispatch ${ timetableActions.saveTimetableToStore.type }, with the semesters and the selected semester id`, () => {
+      it(`should dispatch ${ timetableActions.saveTimetableToStore.type }, with the semesters and unselected semester if the user is not logged in`, () => {
          actions$ = cold('a', { a: timetableActions.loadTimetable() });
 
          const expected = cold('b', { b: timetableActions.saveTimetableToStore({ newState: {
             semesters: semesterForCurrentUser,
-            selectedSemesterId: semesterForCurrentUser[0].id
+            selectedSemesterId: undefined
+         } }) });
+
+         expect(effects.loadTimetable$).toBeObservable(expected);
+         expect(timetableFetcherService.getSemestersForCurrentUser).toHaveBeenCalled();
+      });
+      
+      it(`should dispatch ${ timetableActions.saveTimetableToStore.type }, with the semesters and the selected semester if the user has a saved selected semester`, () => {
+         const user = { settings: { selectedSemesterId: 'testId' } } as ApolloUser;
+         user$.next(user);
+         actions$ = cold('a', { a: timetableActions.loadTimetable() });
+
+         const expected = cold('b', { b: timetableActions.saveTimetableToStore({ newState: {
+            semesters: semesterForCurrentUser,
+            selectedSemesterId: 'testId'
          } }) });
 
          expect(effects.loadTimetable$).toBeObservable(expected);
