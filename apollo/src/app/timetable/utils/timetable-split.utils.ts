@@ -35,7 +35,8 @@ export class TimetableSplitUtils {
       });
 
       sortedActivities.forEach(activity => {
-         for (; !this.isIntervalConflict(activity, ...this.getCrossingActivities(activity, activities)); activity.locationInterval!.size++);
+         const crossingActivities = this.getCrossingActivities(activity, sortedActivities);
+         for (; !this.isIntervalConflict(activity, ...crossingActivities); activity.locationInterval!.size++);
          activity.locationInterval!.size--;
       });
 
@@ -61,35 +62,44 @@ export class TimetableSplitUtils {
       }
       activity.locationInterval.split = Math.max(activity.locationInterval.split, ...childCrosses);
 
-      for (const cross of crossingActivities) {
-         this.suggestSplitValue(cross, activity.locationInterval.split, activities);
+      if (crossingActivities.every(cross => cross.locationInterval)) { // is this necessary?
+         for (const cross of crossingActivities) {
+            this.suggestSplitValue(cross, activity.locationInterval.split, crossingActivities);
+         }
       }
       return activity.locationInterval.split;
    }
 
    private static getCrossingActivities(activity: Activity, activities: Activity[]): Activity[] {
-      const startingMin = activity.time.startingHour * 60 + activity.time.startingMinute;
-      const endingMin = startingMin + activity.time.length;
-
       return activities.filter(a => {
          if (a === activity) {
             return false;
          }
-         
-         const aStartingMin = a.time.startingHour * 60 + a.time.startingMinute;
-         const aEndingMin = aStartingMin + a.time.length;
-         
-         return (aStartingMin <= startingMin && aEndingMin > startingMin) || (aStartingMin < endingMin && aEndingMin >= endingMin);
+
+         return this.startsAfterDuring(activity, a) || this.startsAfterDuring(a, activity);
       });
+   }
+
+   private static startsAfterDuring(firstActivity: Activity, secondActivity: Activity): boolean {
+      const firstStartingMin = firstActivity.time.startingHour * 60 + firstActivity.time.startingMinute;
+      const firstEndingMin = firstStartingMin + firstActivity.time.length;
+      const secondStartingMin = secondActivity.time.startingHour * 60 + secondActivity.time.startingMinute;
+
+      return (firstStartingMin <= secondStartingMin && secondStartingMin < firstEndingMin);
    }
 
    private static activitiesWhenItStarts(activity: Activity, activities: Activity[]): number {
       let number = 0;
       const activityStartingMin = activity.time.startingHour * 60 + activity.time.startingMinute;
       activities.forEach(a => {
+         if (a === activity) {
+            number++;
+            return;
+         }
+
          const startingMin = a.time.startingHour * 60 + a.time.startingMinute;
          const endingMin = startingMin + a.time.length;
-         if (startingMin <= activityStartingMin && endingMin > activityStartingMin) {
+         if (startingMin <= activityStartingMin && activityStartingMin < endingMin) {
             number++;
          }
       });
@@ -114,11 +124,12 @@ export class TimetableSplitUtils {
    }
 
    private static isIntervalConflict(activity: Activity, ...activities: Activity[]): boolean {
-      if (activity.locationInterval!.startPlace + activity.locationInterval!.size > activity.locationInterval!.split) {
+      const locationInterval = activity.locationInterval!;
+      if (locationInterval.startPlace + locationInterval.size > locationInterval.split) {
          return true;
       }
 
-      const activityOccupiedPlaces = this.getOccupiedPlaces(activity.locationInterval!);
+      const activityOccupiedPlaces = this.getOccupiedPlaces(locationInterval);
       for (const a of activities) {
          if (a === activity) {
             continue;
