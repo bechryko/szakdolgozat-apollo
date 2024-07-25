@@ -49,7 +49,7 @@
    "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_ADD_LABEL": "Tevékenység hozzáadása",
    "TIMETABLE.SETTINGS_DIALOG.NEW_ACTIVITY_DEFAULT_NAME": "Új tevékenység",
    "TIMETABLE.SETTINGS_DIALOG.CLOSE": "Mentés és bezárás",
-   "TIMETABLE.SETTINGS_DIALOG.SAVE_ERROR_SNACKBAR": "Nem menthetsz érvénytelen beállításokat!",
+   "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_TIME_ERROR_SNACKBAR": "Hibák vannak a jelenleg kiválasztott félévedhez tartozó tevékenységek időbeállításaiban! (Például: '{{activityName}}') Összesen {{numberOfErrors}} hibás tevékenységidőpontod van!",
    "TIMETABLE.SAVE_SUCCESS": "Órarend sikeresen mentve!",
    "TIMETABLE.WEEK_DAY_1": "Hétfő",
    "TIMETABLE.WEEK_DAY_2": "Kedd",

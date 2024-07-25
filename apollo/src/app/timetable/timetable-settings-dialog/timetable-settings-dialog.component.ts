@@ -9,13 +9,15 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { leadingZeros } from '@apollo/shared/functions';
 import { GeneralDialogService } from '@apollo/shared/general-dialog';
 import { ApolloCommonModule } from '@apollo/shared/modules';
+import { IncludesPipe } from '@apollo/shared/pipes';
 import { SnackBarService } from '@apollo/shared/services';
 import { TranslocoService } from '@ngneat/transloco';
 import { cloneDeep } from 'lodash';
 import { ColorPickerModule, ColorPickerService } from 'ngx-color-picker';
 import { Activity, ActivityCategory, Semester } from '../models';
 import { TimetableState } from '../store';
-import { EndTimePipe } from './pipes';
+import { EndTimePipe, GetActivityTimeErrorsPipe } from './pipes';
+import { TimetableValidationUtils } from './utils';
 
 @Component({
    selector: 'apo-timetable-settings-dialog',
@@ -29,7 +31,9 @@ import { EndTimePipe } from './pipes';
       FormsModule,
       ColorPickerModule,
       MatCheckboxModule,
-      EndTimePipe
+      EndTimePipe,
+      GetActivityTimeErrorsPipe,
+      IncludesPipe
    ],
    providers: [
       ColorPickerService
@@ -58,13 +62,13 @@ export class TimetableSettingsDialogComponent {
       this.selectedSemesterId = signal(data.selectedSemesterId);
       this.selectedSemester = computed(() => this.data().semesters!.find(semester => semester.id === this.selectedSemesterId()));
 
-      if(!this.data().semesters!.length) {
+      if (!this.data().semesters!.length) {
          this.addSemester();
       }
    }
 
    public selectSemester(semesterId: string): void {
-      if(!this.selectedSemester()) {
+      if (!this.selectedSemester()) {
          this.selectedSemesterId.set(semesterId);
          return;
       }
@@ -117,7 +121,7 @@ export class TimetableSettingsDialogComponent {
    public categoryNameChanged(index: number, event: any): void {
       const newName = event.target.value;
       const oldName = this.selectedSemester()!.categories[index].name;
-      
+
       const newSemester = cloneDeep(this.selectedSemester()!);
       newSemester.activities.filter(activity => activity.categoryName === oldName).forEach(activity => {
          activity.categoryName = newName;
@@ -149,7 +153,7 @@ export class TimetableSettingsDialogComponent {
             updatedSemester.activities.filter(activity => activity.categoryName === deletedCategory.name).forEach(activity => {
                delete activity.categoryName;
             });
-            
+
             this.updateSelectedSemester(updatedSemester);
          }
       });
@@ -161,7 +165,7 @@ export class TimetableSettingsDialogComponent {
          color: "#FFFFFF",
          temporary: false
       };
-      
+
       const updatedSemester = cloneDeep(this.selectedSemester()!);
       updatedSemester.categories.push(newCategory);
       this.updateSelectedSemester(updatedSemester);
@@ -205,11 +209,16 @@ export class TimetableSettingsDialogComponent {
    }
 
    public save(): void {
-      const activityWithInvalidTimes = this.checkActivityTimes(this.data().semesters!);
-      if(activityWithInvalidTimes) {
-         console.log(activityWithInvalidTimes);
-         this.snackbarService.open("TIMETABLE.SETTINGS_DIALOG.SAVE_ERROR_SNACKBAR", { duration: 5000 });
-         return;
+      const selectedSemester = this.selectedSemester();
+      if (selectedSemester) {
+         const activitiesWithErrors = selectedSemester.activities.filter(activity => TimetableValidationUtils.getActivityTimeErrors(activity.time).length > 0);
+         if (activitiesWithErrors.length) {
+            this.snackbarService.open("TIMETABLE.SETTINGS_DIALOG.ACTIVITY_TIME_ERROR_SNACKBAR", { duration: 8000 }, {
+               activityName: activitiesWithErrors[0].name,
+               numberOfErrors: activitiesWithErrors.length
+            });
+            return;
+         }
       }
 
       this.dialogRef.close({
@@ -228,26 +237,5 @@ export class TimetableSettingsDialogComponent {
          ...oldData,
          semesters: oldData.semesters!.map(oldSemester => oldSemester.id === semester.id ? semester : oldSemester)
       });
-   }
-
-   private checkActivityTimes(semesters: Semester[]): null | Activity {
-      for(const semester of semesters) {
-         for(const activity of semester.activities) {
-            const activityEndTime = activity.time.startingHour * 60 + activity.time.startingMinute + activity.time.length;
-            if(activityEndTime > 24 * 60) {
-               return activity;
-            }
-            if(activity.time.startingHour === 24 || activity.time.startingHour < 0) {
-               return activity;
-            }
-            if(activity.time.startingMinute < 0 || activity.time.startingMinute >= 60) {
-               return activity;
-            }
-            if(activity.time.length <= 45) { // TODO: fix length bug
-               return activity;
-            }
-         }
-      }
-      return null;
    }
 }

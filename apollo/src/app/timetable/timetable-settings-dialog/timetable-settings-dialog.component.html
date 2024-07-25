@@ -114,7 +114,8 @@
                            <mat-icon matSuffix>category</mat-icon>
                         </mat-form-field>
                      </div>
-                     <div class="activity-time-container">
+                     <div class="activity-time-container"
+                        *ngLet="activity.time.startingHour | getActivityTimeErrors: activity.time.startingMinute: activity.time.length as timeErrors">
                         <div class="setting-list">
                            <mat-form-field>
                               <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.DAY" | transloco }}</mat-label>
@@ -127,14 +128,23 @@
                            <mat-form-field>
                               <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.HOUR" | transloco }}</mat-label>
                               <input matInput [(ngModel)]="activity.time.startingHour" type="number">
+                              @if(timeErrors | includes: 'startingHour') {
+                                 <mat-icon class="error-icon" matSuffix>warning</mat-icon>
+                              }
                            </mat-form-field>
                            <mat-form-field>
                               <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.MINUTE" | transloco }}</mat-label>
                               <input matInput [(ngModel)]="activity.time.startingMinute" type="number">
+                              @if(timeErrors | includes: 'startingMinute') {
+                                 <mat-icon class="error-icon" matSuffix>warning</mat-icon>
+                              }
                            </mat-form-field>
                            <mat-form-field>
                               <mat-label>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.LENGTH" | transloco }}</mat-label>
                               <input matInput [(ngModel)]="activity.time.length" type="number">
+                              @if(timeErrors | includes: 'length') {
+                                 <mat-icon class="error-icon" matSuffix>warning</mat-icon>
+                              }
                            </mat-form-field>
                         </div>
                         <p>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.END" | transloco: (

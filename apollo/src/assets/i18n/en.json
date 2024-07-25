@@ -49,7 +49,7 @@
    "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_ADD_LABEL": "Add activity",
    "TIMETABLE.SETTINGS_DIALOG.NEW_ACTIVITY_DEFAULT_NAME": "New activity",
    "TIMETABLE.SETTINGS_DIALOG.CLOSE": "Close and save",
-   "TIMETABLE.SETTINGS_DIALOG.SAVE_ERROR_SNACKBAR": "You cannot save the settings with invalid values!",
+   "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_TIME_ERROR_SNACKBAR": "You have errors for activity times in the current semester, including activity '{{activityName}}'! (Total activities with errors: {{numberOfErrors}})",
    "TIMETABLE.SAVE_SUCCESS": "Timetable saved successfully!",
    "TIMETABLE.WEEK_DAY_1": "Monday",
    "TIMETABLE.WEEK_DAY_2": "Tuesday",
