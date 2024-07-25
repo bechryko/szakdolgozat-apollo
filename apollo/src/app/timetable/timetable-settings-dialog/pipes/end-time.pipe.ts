@@ -1,15 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { leadingZeros } from '@apollo/shared/functions';
-import { ActivityTime } from '../../models';
 
 @Pipe({
    name: 'endTime',
    standalone: true
 })
 export class EndTimePipe implements PipeTransform {
-   public transform(time: ActivityTime): Record<string, any> {
-      let hour = time.startingHour;
-      let minute = time.startingMinute + time.length;
+   public transform(startingHour: number, startingMinute: number, length: number): Record<string, any> {
+      let hour = startingHour;
+      let minute = startingMinute + length;
 
       while(minute >= 60) {
          hour++;

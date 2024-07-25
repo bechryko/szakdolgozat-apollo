@@ -137,7 +137,9 @@
                               <input matInput [(ngModel)]="activity.time.length" type="number">
                            </mat-form-field>
                         </div>
-                        <p>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.END" | transloco: (activity.time | endTime) }}</p>
+                        <p>{{ "TIMETABLE.SETTINGS_DIALOG.ACTIVITY_SETTINGS.TIME.END" | transloco: (
+                           activity.time.startingHour| endTime: activity.time.startingMinute: activity.time.length
+                        ) }}</p>
                      </div>
                      <div class="actions">
                         <apo-button apoRole="delete"
