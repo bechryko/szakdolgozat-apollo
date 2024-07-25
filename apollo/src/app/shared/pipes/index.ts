@@ -3,5 +3,6 @@ export { AsAnyPipe } from './as-any.pipe';
 export { CurrencyPipe } from './currency.pipe';
 export { DisplayValuePipe } from './display-value.pipe';
 export { GetSubjectsPipe } from './get-subjects.pipe';
+export { IncludesPipe } from './includes.pipe';
 export { PluckPipe } from './pluck.pipe';
 //@endindex
