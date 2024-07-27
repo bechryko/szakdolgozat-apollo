@@ -2,6 +2,7 @@ import { colors, derivedColors } from "@apollo/shared/constants";
 import { UniversitySubject } from "@apollo/shared/models";
 import { dia, shapes } from "@joint/core";
 import { MajorPlan, MajorPlanSemester } from "../../models";
+import { SubjectCondition } from "../models";
 
 export class ChartSetupUtils {
    private static readonly GRAPH_HEIGHT = 700;
@@ -24,8 +25,16 @@ export class ChartSetupUtils {
    private static readonly SUBJECT_LABEL_FONT_SIZE = 16;
    private static readonly SUBJECT_LABEL_LINE_HEIGHT = 20;
    private static readonly SUBJECT_STROKE_COLOR = colors.fontColor;
+   private static readonly SUBJECT_CONNECTION_LINE_GAP = (this.SEMESTER_WIDTH - this.SUBJECT_WIDTH) / 4;
+   private static readonly SUBJECT_CONNECTION_WIDTH = 2;
+   private static readonly SUBJECT_CONNECTION_COLOR = colors.fontColor;
 
-   public static initGraph(chartElement: HTMLElement, majorPlan: MajorPlan, translations: Record<string, string>): dia.Graph {
+   public static initGraph(
+      chartElement: HTMLElement,
+      majorPlan: MajorPlan,
+      subjectConditionMap: Record<string, SubjectCondition>,
+      translations: Record<string, string>
+   ): dia.Graph {
       const graph = new dia.Graph({}, {
          cellNamespace: shapes.standard
       });
@@ -42,6 +51,9 @@ export class ChartSetupUtils {
       const graphAreaWrapper = this.initGraphAreaWrapper(majorPlan.name);
       graphAreaWrapper.addTo(graph);
 
+      const subjectPreconditionElementMap: Record<string, dia.Element[]> = {};
+      const subjectParallelConditionElementMap: Record<string, dia.Element[]> = {};
+
       majorPlan.semesters.forEach((semester, i) => {
          const semesterColumn = this.createSemesterColumn(i);
          graphAreaWrapper.embed(semesterColumn);
@@ -55,6 +67,32 @@ export class ChartSetupUtils {
             const subjectElement = this.createElementFromSubject(subject, j, i, translations);
             semesterColumn.embed(subjectElement);
             subjectElement.addTo(graph);
+
+            subjectConditionMap[subject.code]?.next?.forEach((nextSubject) => {
+               if(!subjectPreconditionElementMap[nextSubject]) {
+                  subjectPreconditionElementMap[nextSubject] = [];
+               }
+
+               subjectPreconditionElementMap[nextSubject].push(subjectElement);
+            });
+
+            subjectConditionMap[subject.code]?.parallel?.forEach((parallelSubject) => {
+               const linkableSubjectElement = subjectParallelConditionElementMap[subject.code]?.find((element: any) => element.attributes.subjectCode === parallelSubject);
+               if(linkableSubjectElement) {
+                  this.createSubjectLink(subjectElement, linkableSubjectElement, false).addTo(graph);
+                  return;
+               }
+
+               if (!subjectParallelConditionElementMap[parallelSubject]) {
+                  subjectParallelConditionElementMap[parallelSubject] = [];
+               }
+
+               subjectParallelConditionElementMap[parallelSubject].push(subjectElement);
+            });
+
+            subjectPreconditionElementMap[subject.code]?.forEach((element) => {
+               this.createSubjectLink(element, subjectElement).addTo(graph);
+            });
          });
       });
 
@@ -149,6 +187,7 @@ export class ChartSetupUtils {
    ): shapes.standard.Rectangle {
       const text = `${subject.name}\n(${subject.credit} ${translations["credit"]})`;
       const subjectElement = new shapes.standard.Rectangle({
+         subjectCode: subject.code,
          position: {
             x: (this.SEMESTER_WIDTH - this.SUBJECT_WIDTH) / 2 + semesterIndex * this.SEMESTER_WIDTH,
             y: this.HEADER_HEIGHT + this.SEMESTER_CREDIT_SUM_SECTION_HEIGHT + this.SUBJECT_GAP + index * (this.SUBJECT_HEIGHT + this.SUBJECT_GAP)
@@ -173,5 +212,41 @@ export class ChartSetupUtils {
       });
 
       return subjectElement;
+   }
+
+   private static createSubjectLink(source: dia.Element, target: dia.Element, precondition = true): dia.Link {
+      const link = new shapes.standard.Link({
+         source,
+         target,
+         attrs: {
+            line: {
+               stroke: this.SUBJECT_CONNECTION_COLOR,
+               strokeWidth: this.SUBJECT_CONNECTION_WIDTH
+            }
+         }
+      });
+      
+      if(precondition) {
+         link.vertices([
+            {
+               x: source.position().x + this.SEMESTER_WIDTH - this.SUBJECT_CONNECTION_LINE_GAP,
+               y: source.position().y + this.SUBJECT_HEIGHT / 2
+            },
+            {
+               x: target.position().x - this.SUBJECT_CONNECTION_LINE_GAP,
+               y: target.position().y + this.SUBJECT_HEIGHT / 2
+            }
+         ]);
+      } else {
+         link.attr({
+            line: {
+               targetMarker: {
+                  d: "",
+               }
+            }
+         });
+      }
+
+      return link;
    }
 }

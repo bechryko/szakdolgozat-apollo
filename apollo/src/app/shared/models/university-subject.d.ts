@@ -9,4 +9,6 @@ export interface UniversitySubject extends RawUniversitySubject {
    id: string;
    universityId: string;
    language: string;
+   preconditions?: string[];
+   parallelConditions?: string[];
 }

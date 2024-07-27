@@ -18,12 +18,16 @@ export class MajorPlannerService {
                   {
                      id: '1',
                      name: 'Subject 1',
-                     credit: 3
+                     credit: 3,
+                     code: 'SUB1',
+                     parallelConditions: ['SUB2']
                   },
                   {
                      id: '2',
                      name: 'Subject 2',
-                     credit: 4
+                     credit: 4,
+                     code: 'SUB2',
+                     parallelConditions: ['SUB1']
                   }
                ]
             },
@@ -32,12 +36,15 @@ export class MajorPlannerService {
                   {
                      id: '3',
                      name: 'Subject 3',
-                     credit: 2
+                     credit: 2,
+                     code: 'SUB3',
+                     preconditions: ['SUB1']
                   },
                   {
                      id: '4',
                      name: 'Subject 4',
-                     credit: 3
+                     credit: 3,
+                     code: 'SUB4'
                   }
                ]
             },
@@ -46,7 +53,9 @@ export class MajorPlannerService {
                   {
                      id: '5',
                      name: 'Subject 5',
-                     credit: 8
+                     credit: 8,
+                     code: 'SUB5',
+                     preconditions: ['SUB4']
                   }
                ]
             }

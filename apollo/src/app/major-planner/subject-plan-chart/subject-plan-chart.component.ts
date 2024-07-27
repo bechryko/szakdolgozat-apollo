@@ -4,7 +4,7 @@ import { TranslocoService } from '@ngneat/transloco';
 import { isEmpty } from 'lodash';
 import { forkJoin, Observable, take } from 'rxjs';
 import { MajorPlan } from '../models';
-import { ChartSetupUtils } from './utils';
+import { ChartCalculationUtils, ChartSetupUtils } from './utils';
 
 @Component({
    selector: 'apo-subject-plan-chart',
@@ -32,9 +32,15 @@ export class SubjectPlanChartComponent {
 
       effect(() => {
          const translations = this.translations();
+         const majorPlan = this.majorPlan();
 
          if (!isEmpty(translations)) {
-            ChartSetupUtils.initGraph(this.chartAreaElement().nativeElement, this.majorPlan(), translations);
+            ChartSetupUtils.initGraph(
+               this.chartAreaElement().nativeElement,
+               majorPlan,
+               ChartCalculationUtils.getSubjectConditionMap(majorPlan),
+               translations
+            );
          }
       });
    }
