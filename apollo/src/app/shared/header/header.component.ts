@@ -41,7 +41,8 @@ export class HeaderComponent {
             const menuItemKeys: RouteUrls[] = [
                RouteUrls.AVERAGES,
                RouteUrls.MAJOR_COMPLETION,
-               RouteUrls.TIMETABLE
+               RouteUrls.TIMETABLE,
+               RouteUrls.MAJOR_PLANNER
             ];
 
             if(isAdmin) {

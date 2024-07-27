@@ -9,6 +9,7 @@ import { majorResolver, universityResolver } from './admin-page/resolvers';
 import { AveragesComponent } from './averages/averages.component';
 import { averagesFeature } from './averages/store';
 import { MajorCompletionComponent } from './major-completion/major-completion.component';
+import { MajorPlannerComponent } from './major-planner/major-planner.component';
 import { MenuComponent } from './menu/menu.component';
 import { MenuEffects, menuFeature } from './menu/store';
 import { NoAccessComponent } from './shared/components';
@@ -24,6 +25,7 @@ export enum RouteUrls {
    AVERAGES = 'averages',
    MAJOR_COMPLETION = 'major-completion',
    TIMETABLE = 'timetable',
+   MAJOR_PLANNER = 'major-planner',
    USER = 'profile',
    ADMINISTRATION = 'administration',
    ADMIN_UNIVERSITY = 'administration/university',
@@ -88,6 +90,10 @@ export const routes: Routes = [
          universitySubjects: universitySubjectsResolver
       },
       canActivate: [ loginGuard ]
+   },
+   {
+      path: RouteUrls.MAJOR_PLANNER,
+      component: MajorPlannerComponent
    },
    {
       path: RouteUrls.USER,
