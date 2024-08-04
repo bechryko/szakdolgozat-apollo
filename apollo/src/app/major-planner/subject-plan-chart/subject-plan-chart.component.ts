@@ -3,8 +3,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@ngneat/transloco';
 import { isEmpty } from 'lodash';
 import { forkJoin, Observable, take } from 'rxjs';
-import { MajorPlan } from '../models';
-import { ChartCalculationUtils, ChartSetupUtils } from './utils';
+import { MajorPlan, MajorPlannerOptions } from '../models';
+import { ChartSetupUtils } from './utils';
 
 @Component({
    selector: 'apo-subject-plan-chart',
@@ -16,7 +16,10 @@ import { ChartCalculationUtils, ChartSetupUtils } from './utils';
 })
 export class SubjectPlanChartComponent {
    public readonly majorPlan = input.required<MajorPlan>();
+   public readonly options = input.required<MajorPlannerOptions>();
+
    private readonly chartAreaElement = viewChild.required<ElementRef<HTMLElement>>('chartArea');
+
    private readonly translations: Signal<Record<string, string>>;
 
    constructor(
@@ -32,13 +35,12 @@ export class SubjectPlanChartComponent {
 
       effect(() => {
          const translations = this.translations();
-         const majorPlan = this.majorPlan();
 
          if (!isEmpty(translations)) {
             ChartSetupUtils.initGraph(
                this.chartAreaElement().nativeElement,
-               majorPlan,
-               ChartCalculationUtils.getSubjectConditionMap(majorPlan),
+               this.majorPlan(),
+               this.options(),
                translations
             );
          }

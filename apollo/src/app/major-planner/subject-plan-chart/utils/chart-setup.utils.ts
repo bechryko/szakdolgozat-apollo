@@ -1,8 +1,8 @@
 import { colors, derivedColors } from "@apollo/shared/constants";
 import { UniversitySubject } from "@apollo/shared/models";
 import { dia, shapes } from "@joint/core";
-import { MajorPlan, MajorPlanSemester } from "../../models";
-import { SubjectCondition } from "../models";
+import { MajorPlan, MajorPlannerOptions, MajorPlanSemester } from "../../models";
+import { ChartCalculationUtils } from "./chart-calculation.utils";
 
 export class ChartSetupUtils {
    private static readonly GRAPH_HEIGHT = 700;
@@ -32,9 +32,12 @@ export class ChartSetupUtils {
    public static initGraph(
       chartElement: HTMLElement,
       majorPlan: MajorPlan,
-      subjectConditionMap: Record<string, SubjectCondition>,
+      options: MajorPlannerOptions,
       translations: Record<string, string>
    ): dia.Graph {
+      const subjectConditionMap = ChartCalculationUtils.getSubjectConditionMap(majorPlan);
+      const subjectPositions = ChartCalculationUtils.calculateSubjectPositions(majorPlan, options.subjectGroupingMode, subjectConditionMap);
+
       const graph = new dia.Graph({}, {
          cellNamespace: shapes.standard
       });
@@ -59,12 +62,14 @@ export class ChartSetupUtils {
          graphAreaWrapper.embed(semesterColumn);
          semesterColumn.addTo(graph);
 
-         const semesterCreditSumSection = this.createSemesterCreditSumSection(semester, i, translations);
-         semesterColumn.embed(semesterCreditSumSection);
-         semesterCreditSumSection.addTo(graph);
+         if(options.showCredits) {
+            const semesterCreditSumSection = this.createSemesterCreditSumSection(semester, i, translations);
+            semesterColumn.embed(semesterCreditSumSection);
+            semesterCreditSumSection.addTo(graph);
+         }
 
-         semester.subjects.forEach((subject, j) => {
-            const subjectElement = this.createElementFromSubject(subject, j, i, translations);
+         semester.subjects.forEach(subject => {
+            const subjectElement = this.createElementFromSubject(subject, subjectPositions[subject.code], i, options.showCredits, translations);
             semesterColumn.embed(subjectElement);
             subjectElement.addTo(graph);
 
@@ -181,16 +186,26 @@ export class ChartSetupUtils {
 
    private static createElementFromSubject(
       subject: UniversitySubject,
-      index: number,
-      semesterIndex: number,
+      y: number,
+      x: number,
+      showCredits: boolean,
       translations: Record<string, string>
    ): shapes.standard.Rectangle {
-      const text = `${subject.name}\n(${subject.credit} ${translations["credit"]})`;
+      if(x === undefined) {
+         console.error(`Subject ${subject.code} has no position`);
+         x = 0;
+      }
+
+      let text = subject.name;
+      if(showCredits) {
+         text += `\n(${translations["credit"]}: ${subject.credit})`;
+      }
+
       const subjectElement = new shapes.standard.Rectangle({
          subjectCode: subject.code,
          position: {
-            x: (this.SEMESTER_WIDTH - this.SUBJECT_WIDTH) / 2 + semesterIndex * this.SEMESTER_WIDTH,
-            y: this.HEADER_HEIGHT + this.SEMESTER_CREDIT_SUM_SECTION_HEIGHT + this.SUBJECT_GAP + index * (this.SUBJECT_HEIGHT + this.SUBJECT_GAP)
+            x: (this.SEMESTER_WIDTH - this.SUBJECT_WIDTH) / 2 + x * this.SEMESTER_WIDTH,
+            y: this.HEADER_HEIGHT + this.SEMESTER_CREDIT_SUM_SECTION_HEIGHT + this.SUBJECT_GAP + y * (this.SUBJECT_HEIGHT + this.SUBJECT_GAP)
          },
          attrs: {
             body: {

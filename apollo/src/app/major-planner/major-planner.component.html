@@ -1,3 +1,6 @@
+<apo-parameters-section [descriptionList]="majorPlannerOptionsDescriptionList"
+   (parameterChanged)="onParameterChanged($event)"></apo-parameters-section>
 @if(majorPlan()) {
-   <apo-subject-plan-chart [majorPlan]="majorPlan()!"></apo-subject-plan-chart>
+   <apo-subject-plan-chart [majorPlan]="majorPlan()!"
+      [options]="majorPlannerOptions()"></apo-subject-plan-chart>
 }
