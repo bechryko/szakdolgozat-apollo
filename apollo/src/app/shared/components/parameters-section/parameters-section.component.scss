@@ -1,0 +1,11 @@
+@use 'styles/variables';
+
+:host {
+   display: flex;
+   gap: 0.5rem;
+   align-items: center;
+   margin-bottom: 1rem;
+   border: 1px solid variables.$parameters-section-border-color;
+   border-radius: 1.5rem;
+   padding: 0.5rem 1rem;
+}

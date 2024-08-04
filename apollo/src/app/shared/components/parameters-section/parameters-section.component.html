@@ -1,0 +1,27 @@
+@for(description of descriptionList(); track $index) {
+   @switch (description.inputType) {
+      @case ('select') {
+         <mat-form-field>
+            <mat-label>{{ description.parameterName | transloco }}</mat-label>
+            <mat-select [value]="description.startingValue"
+               (valueChange)="onParameterChanged(description.parameterKey, $event)">
+               @for(option of description.options; track $index) {
+                  <mat-option [value]="option.value">
+                     @if(option.displayValue) {
+                        {{ option.displayValue }}
+                     } @else {
+                        {{ option.displayValueTranslationKey | transloco }}
+                     }
+                  </mat-option>
+               }
+            </mat-select>
+         </mat-form-field>
+      }
+      @case ('checkbox') {
+         <mat-checkbox [checked]="description.startingValue"
+            (change)="onParameterChanged(description.parameterKey, $event.checked)">
+            {{ description.parameterName | transloco }}
+         </mat-checkbox>
+      }
+   }
+}

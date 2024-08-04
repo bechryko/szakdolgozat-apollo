@@ -32,6 +32,8 @@ $major-completions-group-indicator-color: sass-color.adjust(colors.$highlight, $
 $timetable-odd-list-element-background: colors.$section-background-color;
 $timetable-even-list-element-background: sass-color.adjust(colors.$primary, $lightness: 10%);
 
+$parameters-section-border-color: colors.$font-color;
+
 $primary-input-background: colors.$primary;
 $primary-input-hover-background: sass-color.adjust(colors.$primary, $lightness: 10%);
 $primary-input-color: colors.$font-color;
