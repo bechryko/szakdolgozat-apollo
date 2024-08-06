@@ -57,19 +57,19 @@ export class ChartSetupUtils {
       const subjectPreconditionElementMap: Record<string, dia.Element[]> = {};
       const subjectParallelConditionElementMap: Record<string, dia.Element[]> = {};
 
-      majorPlan.semesters.forEach((semester, i) => {
-         const semesterColumn = this.createSemesterColumn(i);
+      majorPlan.semesters.forEach((semester, semesterIndex) => {
+         const semesterColumn = this.createSemesterColumn(semesterIndex);
          graphAreaWrapper.embed(semesterColumn);
          semesterColumn.addTo(graph);
 
          if(options.showCredits) {
-            const semesterCreditSumSection = this.createSemesterCreditSumSection(semester, i, translations);
+            const semesterCreditSumSection = this.createSemesterCreditSumSection(semester, semesterIndex, translations);
             semesterColumn.embed(semesterCreditSumSection);
             semesterCreditSumSection.addTo(graph);
          }
 
          semester.subjects.forEach(subject => {
-            const subjectElement = this.createElementFromSubject(subject, subjectPositions[subject.code], i, options.showCredits, translations);
+            const subjectElement = this.createElementFromSubject(subject, subjectPositions[subject.code], semesterIndex, options.showCredits, translations);
             semesterColumn.embed(subjectElement);
             subjectElement.addTo(graph);
 
@@ -81,22 +81,23 @@ export class ChartSetupUtils {
                subjectPreconditionElementMap[nextSubject].push(subjectElement);
             });
 
-            subjectConditionMap[subject.code]?.parallel?.forEach((parallelSubject) => {
-               const linkableSubjectElement = subjectParallelConditionElementMap[subject.code]?.find((element: any) => element.attributes.subjectCode === parallelSubject);
+            subjectConditionMap[subject.code]?.parallel?.forEach((parallelSubjectCode) => {
+               const linkableSubjectElement = subjectParallelConditionElementMap[subject.code]?.find((element: any) => element.attributes.subjectCode === parallelSubjectCode);
                if(linkableSubjectElement) {
-                  this.createSubjectLink(subjectElement, linkableSubjectElement, false).addTo(graph);
-                  return;
+                  this.createParallelConditionLink(subjectElement, linkableSubjectElement, this.getSemesterBackgroundColor(semesterIndex)).addTo(graph);
+               }
+            });
+
+            subjectConditionMap[subject.code]?.parallelBy?.forEach((parallelBySubjectCode) => {
+               if(!subjectParallelConditionElementMap[parallelBySubjectCode]) {
+                  subjectParallelConditionElementMap[parallelBySubjectCode] = [];
                }
 
-               if (!subjectParallelConditionElementMap[parallelSubject]) {
-                  subjectParallelConditionElementMap[parallelSubject] = [];
-               }
-
-               subjectParallelConditionElementMap[parallelSubject].push(subjectElement);
+               subjectParallelConditionElementMap[parallelBySubjectCode].push(subjectElement);
             });
 
             subjectPreconditionElementMap[subject.code]?.forEach((element) => {
-               this.createSubjectLink(element, subjectElement).addTo(graph);
+               this.createPreconditionLink(element, subjectElement).addTo(graph);
             });
          });
       });
@@ -132,7 +133,6 @@ export class ChartSetupUtils {
    }
 
    private static createSemesterColumn(index: number): dia.Element {
-      const backgroundColor = index % 2 === 0 ? this.SEMESTER_EVEN_BACKGROUND_COLOR : this.SEMESTER_ODD_BACKGROUND_COLOR;
       const element = new shapes.standard.Rectangle({
          position: {
             x: index * this.SEMESTER_WIDTH,
@@ -140,7 +140,7 @@ export class ChartSetupUtils {
          },
          attrs: {
             body: {
-               fill: backgroundColor,
+               fill: this.getSemesterBackgroundColor(index),
                stroke: colors.fontColor,
                width: this.SEMESTER_WIDTH,
                height: this.GRAPH_HEIGHT - this.SEMESTER_TOP_PADDING
@@ -229,7 +229,7 @@ export class ChartSetupUtils {
       return subjectElement;
    }
 
-   private static createSubjectLink(source: dia.Element, target: dia.Element, precondition = true): dia.Link {
+   private static createPreconditionLink(source: dia.Element, target: dia.Element): dia.Link {
       const link = new shapes.standard.Link({
          source,
          target,
@@ -238,11 +238,8 @@ export class ChartSetupUtils {
                stroke: this.SUBJECT_CONNECTION_COLOR,
                strokeWidth: this.SUBJECT_CONNECTION_WIDTH
             }
-         }
-      });
-      
-      if(precondition) {
-         link.vertices([
+         },
+         vertices: [
             {
                x: source.position().x + this.SEMESTER_WIDTH - this.SUBJECT_CONNECTION_LINE_GAP,
                y: source.position().y + this.SUBJECT_HEIGHT / 2
@@ -251,17 +248,31 @@ export class ChartSetupUtils {
                x: target.position().x - this.SUBJECT_CONNECTION_LINE_GAP,
                y: target.position().y + this.SUBJECT_HEIGHT / 2
             }
-         ]);
-      } else {
-         link.attr({
-            line: {
-               targetMarker: {
-                  d: "",
-               }
-            }
-         });
-      }
+         ]
+      });
 
       return link;
+   }
+
+   private static createParallelConditionLink(source: dia.Element, target: dia.Element, semesterBackgroundColor: string): dia.Link {
+      const link = new shapes.standard.Link({
+         source,
+         target,
+         attrs: {
+            line: {
+               stroke: this.SUBJECT_CONNECTION_COLOR,
+               strokeWidth: this.SUBJECT_CONNECTION_WIDTH,
+               targetMarker: {
+                  fill: semesterBackgroundColor
+               }
+            }
+         }
+      });
+
+      return link;
+   }
+
+   private static getSemesterBackgroundColor(index: number): string {
+      return index % 2 === 0 ? this.SEMESTER_EVEN_BACKGROUND_COLOR : this.SEMESTER_ODD_BACKGROUND_COLOR
    }
 }

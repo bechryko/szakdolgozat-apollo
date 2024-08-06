@@ -5,14 +5,17 @@ import { SubjectCondition } from "../models";
 export class ChartCalculationUtils {
    public static getSubjectConditionMap(majorPlan: MajorPlan): Record<string, SubjectCondition> {
       const subjectConditionMap: Record<string, SubjectCondition> = {};
-      // TODO: filter subjects with missing codes
+
       cloneDeep(majorPlan.semesters).reverse().forEach((semester) => {
          semester.subjects.forEach((subject) => {
-            if (!subjectConditionMap[subject.code]) {
-               this.createEmptyCondition(subjectConditionMap, subject.code);
+            if(!subject.code) {
+               return;
             }
 
             subject?.preconditions?.forEach((precondition) => {
+               if (!subjectConditionMap[subject.code]) {
+                  this.createEmptyCondition(subjectConditionMap, subject.code);
+               }
                if (!subjectConditionMap[precondition]) {
                   this.createEmptyCondition(subjectConditionMap, precondition);
                }
@@ -22,11 +25,15 @@ export class ChartCalculationUtils {
             });
 
             subject?.parallelConditions?.forEach((parallelCondition) => {
+               if (!subjectConditionMap[subject.code]) {
+                  this.createEmptyCondition(subjectConditionMap, subject.code);
+               }
                if (!subjectConditionMap[parallelCondition]) {
                   this.createEmptyCondition(subjectConditionMap, parallelCondition);
                }
 
                subjectConditionMap[subject.code].parallel.push(parallelCondition);
+               subjectConditionMap[parallelCondition].parallelBy.push(subject.code);
             });
          });
       });
@@ -173,13 +180,18 @@ export class ChartCalculationUtils {
       subjectConditionMap[subjectCode].parallel.forEach((parallelSubjectCode) => {
          this.visitSubjectConditionsRecursive(parallelSubjectCode, subjectConditionMap, visitedSubjects, group);
       });
+
+      subjectConditionMap[subjectCode].parallelBy.forEach((parallelBySubjectCode) => {
+         this.visitSubjectConditionsRecursive(parallelBySubjectCode, subjectConditionMap, visitedSubjects, group);
+      });
    }
 
    private static createEmptyCondition(conditionMap: Record<string, SubjectCondition>, subjectCode: string): void {
       conditionMap[subjectCode] = {
          next: [],
          previous: [],
-         parallel: []
+         parallel: [],
+         parallelBy: []
       };
    }
 }
