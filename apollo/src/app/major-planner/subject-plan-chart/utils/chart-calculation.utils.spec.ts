@@ -1,9 +1,10 @@
 import { MajorPlan, SubjectGroupingMode } from "@apollo/major-planner/models";
 import { UniversitySubject } from "@apollo/shared/models";
 import { cloneDeep } from "lodash";
+import { ChartPositioningDescription } from "../models";
 import { ChartCalculationUtils } from "./chart-calculation.utils";
 
-fdescribe('ChartCalculationUtils', () => {
+describe('ChartCalculationUtils', () => {
    const majorPlan = {
       name: "Test Plan",
       semesters: [
@@ -94,7 +95,7 @@ fdescribe('ChartCalculationUtils', () => {
       });
    });
 
-   describe('calculateSubjectPositions', () => {
+   describe('calculateChartPositioning', () => {
       describe('should calculate strict order positioning', () => {
          it("when there are no subject conditions", () => {
             const majorPlan = {
@@ -115,13 +116,15 @@ fdescribe('ChartCalculationUtils', () => {
             } as MajorPlan;
 
             const expected = {
-               'SUB1': 0,
-               'SUB2': 1,
-               'SUB3': 0,
-               'SUB4': 1
+               subjectPositions: {
+                  'SUB1': 0,
+                  'SUB2': 1,
+                  'SUB3': 0,
+                  'SUB4': 1
+               }
             };
 
-            expect(ChartCalculationUtils.calculateSubjectPositions(
+            expect(ChartCalculationUtils.calculateChartPositioning(
                majorPlan,
                SubjectGroupingMode.STRICT_ORDER,
                ChartCalculationUtils.getSubjectConditionMap(majorPlan)
@@ -130,14 +133,16 @@ fdescribe('ChartCalculationUtils', () => {
 
          it("when there are subject conditions", () => {
             const expected = {
-               'SUB1': 0,
-               'SUB2': 1,
-               'SUB3': 0,
-               'SUB4': 1,
-               'SUB5': 0
+               subjectPositions: {
+                  'SUB1': 0,
+                  'SUB2': 1,
+                  'SUB3': 0,
+                  'SUB4': 1,
+                  'SUB5': 0
+               }
             };
 
-            expect(ChartCalculationUtils.calculateSubjectPositions(
+            expect(ChartCalculationUtils.calculateChartPositioning(
                majorPlan,
                SubjectGroupingMode.STRICT_ORDER,
                ChartCalculationUtils.getSubjectConditionMap(majorPlan)
@@ -145,17 +150,20 @@ fdescribe('ChartCalculationUtils', () => {
          });
       });
 
-      fdescribe('should calculate full grouping positioning', () => {
+      describe('should calculate full grouping positioning', () => {
          it("when there are only groups of subjects", () => {
             const expected = {
-               'SUB1': 0,
-               'SUB2': 1,
-               'SUB3': 0,
-               'SUB4': 2,
-               'SUB5': 2
-            };
+               subjectPositions: {
+                  'SUB1': 0,
+                  'SUB2': 1,
+                  'SUB3': 0,
+                  'SUB4': 2,
+                  'SUB5': 2
+               },
+               additionalHorizontalLines: [1, 2]
+            } as ChartPositioningDescription;
 
-            expect(ChartCalculationUtils.calculateSubjectPositions(
+            expect(ChartCalculationUtils.calculateChartPositioning(
                majorPlan,
                SubjectGroupingMode.FULL_GROUPING,
                ChartCalculationUtils.getSubjectConditionMap(majorPlan)
@@ -172,17 +180,67 @@ fdescribe('ChartCalculationUtils', () => {
             } as UniversitySubject);
 
             const expected = {
-               'SUB1': 0,
-               'SUB2': 1,
-               'SUB3': 0,
-               'SUB4': 2,
-               'SUB5': 2,
-               'SUB6': 3
-            };
+               subjectPositions: {
+                  'SUB1': 0,
+                  'SUB2': 1,
+                  'SUB3': 0,
+                  'SUB4': 2,
+                  'SUB5': 2,
+                  'SUB6': 3
+               },
+               additionalHorizontalLines: [1, 2]
+            } as ChartPositioningDescription;
 
-            expect(ChartCalculationUtils.calculateSubjectPositions(
+            expect(ChartCalculationUtils.calculateChartPositioning(
                majorPlanWithIndividualSubjects,
                SubjectGroupingMode.FULL_GROUPING,
+               ChartCalculationUtils.getSubjectConditionMap(majorPlanWithIndividualSubjects)
+            )).toEqual(expected);
+         });
+      });
+
+      describe('should calculate flexible positioning', () => {
+         it("when there are only groups of subjects", () => {
+            const expected = {
+               subjectPositions: {
+                  'SUB1': 0,
+                  'SUB2': 1,
+                  'SUB3': 0,
+                  'SUB4': 2,
+                  'SUB5': 2
+               }
+            } as ChartPositioningDescription;
+
+            expect(ChartCalculationUtils.calculateChartPositioning(
+               majorPlan,
+               SubjectGroupingMode.FLEXIBLE,
+               ChartCalculationUtils.getSubjectConditionMap(majorPlan)
+            )).toEqual(expected);
+         });
+
+         it("when there are groups and individual subjects", () => {
+            const majorPlanWithIndividualSubjects = cloneDeep(majorPlan);
+            majorPlanWithIndividualSubjects.semesters[2].subjects.push({
+               id: '6',
+               name: 'Subject 6',
+               credit: 1,
+               code: 'SUB6'
+            } as UniversitySubject);
+
+            const expected = {
+               subjectPositions: {
+                  'SUB1': 0,
+                  'SUB2': 1,
+                  'SUB3': 0,
+                  'SUB4': 2,
+                  'SUB5': 2,
+                  'SUB6': 0
+               }
+            } as ChartPositioningDescription;
+
+            expect(ChartCalculationUtils.calculateChartPositioning(
+               majorPlanWithIndividualSubjects,
+               SubjectGroupingMode.FLEXIBLE,
                ChartCalculationUtils.getSubjectConditionMap(majorPlanWithIndividualSubjects)
             )).toEqual(expected);
          });

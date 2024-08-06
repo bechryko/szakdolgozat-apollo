@@ -36,7 +36,7 @@ export class ChartSetupUtils {
       translations: Record<string, string>
    ): dia.Graph {
       const subjectConditionMap = ChartCalculationUtils.getSubjectConditionMap(majorPlan);
-      const subjectPositions = ChartCalculationUtils.calculateSubjectPositions(majorPlan, options.subjectGroupingMode, subjectConditionMap);
+      const chartPositioning = ChartCalculationUtils.calculateChartPositioning(majorPlan, options.subjectGroupingMode, subjectConditionMap);
 
       const graph = new dia.Graph({}, {
          cellNamespace: shapes.standard
@@ -69,7 +69,13 @@ export class ChartSetupUtils {
          }
 
          semester.subjects.forEach(subject => {
-            const subjectElement = this.createElementFromSubject(subject, subjectPositions[subject.code], semesterIndex, options.showCredits, translations);
+            const subjectElement = this.createElementFromSubject(
+               subject,
+               chartPositioning.subjectPositions[subject.code],
+               semesterIndex,
+               options.showCredits,
+               translations
+            );
             semesterColumn.embed(subjectElement);
             subjectElement.addTo(graph);
 
@@ -101,6 +107,8 @@ export class ChartSetupUtils {
             });
          });
       });
+      
+      chartPositioning.additionalHorizontalLines?.forEach(lineY => this.drawSubjectSeparatorLine(lineY, majorPlan.semesters.length).addTo(graph));
 
       return graph;
    }
@@ -270,6 +278,26 @@ export class ChartSetupUtils {
       });
 
       return link;
+   }
+
+   private static drawSubjectSeparatorLine(y: number, semesterNumber: number): dia.Element {
+      const element = new shapes.standard.Rectangle({
+         position: {
+            x: 0,
+            y: this.HEADER_HEIGHT + this.SEMESTER_CREDIT_SUM_SECTION_HEIGHT + this.SUBJECT_GAP / 2 + (y + 1) * (this.SUBJECT_HEIGHT + this.SUBJECT_GAP)
+         },
+         attrs: {
+            body: {
+               stroke: this.SUBJECT_STROKE_COLOR,
+               strokeWidth: 0.5,
+               strokeOpacity: 0.35,
+               width: this.SEMESTER_WIDTH * semesterNumber,
+               height: 1
+            }
+         }
+      });
+
+      return element;
    }
 
    private static getSemesterBackgroundColor(index: number): string {

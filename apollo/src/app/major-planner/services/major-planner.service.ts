@@ -45,6 +45,12 @@ export class MajorPlannerService {
                      name: 'Subject 4',
                      credit: 3,
                      code: 'SUB4'
+                  },
+                  {
+                     id: '6',
+                     name: 'Subject 6',
+                     credit: 5,
+                     code: 'SUB6'
                   }
                ]
             },
