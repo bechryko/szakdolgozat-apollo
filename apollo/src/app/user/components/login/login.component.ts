@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ApolloCommonModule } from '@apollo/shared/modules';
@@ -27,7 +27,7 @@ export class LoginComponent {
    public readonly isFormInvalid$: Observable<boolean>;
 
    constructor(
-      private readonly fb: FormBuilder
+      private readonly fb: NonNullableFormBuilder
    ) {
       this.loginForm = AuthFormsUtils.buildLoginForm(this.fb);
       this.isFormInvalid$ = this.loginForm.statusChanges.pipe(

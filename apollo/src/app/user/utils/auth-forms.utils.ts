@@ -1,15 +1,16 @@
-import { FormBuilder, ValidatorFn, Validators } from "@angular/forms";
+import { NonNullableFormBuilder, ValidatorFn, Validators } from "@angular/forms";
 import { ApolloUser } from "@apollo/shared/models";
+import { LoginForm, RegisterForm, UserSettingsForm } from "../models";
 
 export class AuthFormsUtils {
-   public static buildLoginForm(fb: FormBuilder) {
+   public static buildLoginForm(fb: NonNullableFormBuilder): LoginForm {
       return fb.group({
          email: ['', [ Validators.required, Validators.email ]],
          password: ['', [ Validators.required, Validators.minLength(6) ]] // TODO: enhance validation
       });
    }
 
-   public static buildRegisterForm(fb: FormBuilder) {
+   public static buildRegisterForm(fb: NonNullableFormBuilder): RegisterForm {
       return fb.group({
          email: ['', [ Validators.required, Validators.email ]],
          username: '',
@@ -27,12 +28,15 @@ export class AuthFormsUtils {
       };
    }
 
-   public static buildUserSettingsForm(fb: FormBuilder, user: ApolloUser) {
+   public static buildUserSettingsForm(fb: NonNullableFormBuilder, user: ApolloUser): UserSettingsForm {
       return fb.group({
          username: [user.username, [ Validators.required, Validators.minLength(3) ]],
-         university: user.university,
-         faculty: user.faculty,
-         major: user.major
+         studies: fb.array(user.studies.map(study => fb.group({
+            studyId: study.studyId!,
+            university: study.university,
+            faculty: study.faculty,
+            major: study.major
+         }))),
       });
    }
 }

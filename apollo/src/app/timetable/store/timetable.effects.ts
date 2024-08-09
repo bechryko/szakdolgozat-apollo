@@ -22,7 +22,7 @@ export class TimetableEffects {
             map(user => {
                this.loadingService.finishLoading(timetableLoadingKey);
                
-               const selectedSemesterId = user?.settings?.selectedSemesterId;
+               const selectedSemesterId = user?.settings?.selectedTimetableSemesterId;
                return timetableActions.saveTimetableToStore({
                   newState: { semesters, selectedSemesterId }
                });
@@ -49,7 +49,7 @@ export class TimetableEffects {
    public readonly saveTimetableToStore$ = createEffect(() =>
       this.actions$.pipe(
          ofType(timetableActions.saveTimetableToStore),
-         map(({ newState }) => userActions.updateUserSetting({ key: "selectedSemesterId", value: newState.selectedSemesterId }))
+         map(({ newState }) => userActions.updateUserSetting({ key: "selectedTimetableSemesterId", value: newState.selectedSemesterId }))
       )
    );
 

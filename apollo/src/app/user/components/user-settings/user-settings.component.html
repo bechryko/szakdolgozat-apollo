@@ -13,43 +13,53 @@
          <apo-language-selection class="setting"
             (selectLanguage)="onSelectLanguage($event)"></apo-language-selection>
       </div>
-      <div class="settings-section">
+      <div class="settings-section"
+         formArrayName="studies">
          <div class="settings-section-header">
             <h3>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.TITLE" | transloco }}</h3>
             <p>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.DESCRIPTION" | transloco }}</p>
          </div>
-         <mat-form-field class="setting">
-            <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.UNIVERSITY_LABEL" | transloco }}</mat-label>
-            <mat-select formControlName="university"
-               (valueChange)="onSelectUniversity($event)">
-               <mat-option [value]="undefined">{{ "GENERAL_LABELS.NOT_SELECTED" | transloco }}</mat-option>
-               @for(university of universities(); track $index) {
-                  <mat-option [value]="university.id">{{ university.name | multiLanguage }}</mat-option>
-               }
-            </mat-select>
-         </mat-form-field>
-         <mat-form-field class="setting">
-            <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.FACULTY_LABEL" | transloco }}</mat-label>
-            <mat-select formControlName="faculty"
-               [value]="selectedFaculty()"
-               (valueChange)="onSelectFaculty($event)">
-               <mat-option [value]="undefined">{{ "GENERAL_LABELS.NOT_SELECTED" | transloco }}</mat-option>
-               @if(selectedUniversity()) {
-                  @for(faculty of selectedUniversity()!.faculties; track $index) {
-                     <mat-option [value]="faculty.id">{{ faculty | multiLanguage }}</mat-option>
-                  }
-               }
-            </mat-select>
-         </mat-form-field>
-         <mat-form-field class="setting">
-            <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.MAJOR_LABEL" | transloco }}</mat-label>
-            <mat-select formControlName="major">
-               <mat-option [value]="undefined">{{ "GENERAL_LABELS.NOT_SELECTED" | transloco }}</mat-option>
-               @for(major of majors(); track $index) {
-                  <mat-option [value]="major.id">{{ major.name }}</mat-option>
-               }
-            </mat-select>
-         </mat-form-field>
+         @for(studyControl of userSettingsForm.controls.studies.controls; track $index) {
+            <div class="study-settings-container"
+               [formGroupName]="$index"
+               *ngLet="studyControl.value as study">
+               <apo-button apoRole="save"
+                  *ngLet="study.studyId === selectedStudyId() as isSelected"
+                  [disabled]="isSelected"
+                  (click)="onSelectStudy(study.studyId!)">
+                  {{ (isSelected ? "PROFILE.SETTINGS.STUDY_SETTINGS.SELECTED_STUDY_BUTTON_LABEL" : "PROFILE.SETTINGS.STUDY_SETTINGS.SELECT_STUDY_BUTTON_LABEL") | transloco }}
+               </apo-button>
+               <mat-form-field class="setting">
+                  <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.UNIVERSITY_LABEL" | transloco }}</mat-label>
+                  <mat-select formControlName="university"
+                     (valueChange)="onUniversityChange($event, studyControl)">
+                     <mat-option [value]="undefined">{{ "GENERAL_LABELS.NOT_SELECTED" | transloco }}</mat-option>
+                     @for(university of universities(); track $index) {
+                        <mat-option [value]="university.id">{{ university.name | multiLanguage }}</mat-option>
+                     }
+                  </mat-select>
+               </mat-form-field>
+               <mat-form-field class="setting">
+                  <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.FACULTY_LABEL" | transloco }}</mat-label>
+                  <mat-select formControlName="faculty"
+                     (valueChange)="onFacultyChange($event, studyControl)">
+                     <mat-option [value]="undefined">{{ "GENERAL_LABELS.NOT_SELECTED" | transloco }}</mat-option>
+                     @for(faculty of study | getFacultiesForStudy: universities(); track $index) {
+                        <mat-option [value]="faculty.id">{{ faculty | multiLanguage }}</mat-option>
+                     }
+                  </mat-select>
+               </mat-form-field>
+               <mat-form-field class="setting">
+                  <mat-label>{{ "PROFILE.SETTINGS.STUDY_SETTINGS.MAJOR_LABEL" | transloco }}</mat-label>
+                  <mat-select formControlName="major">
+                     <mat-option [value]="undefined">{{ "GENERAL_LABELS.NOT_SELECTED" | transloco }}</mat-option>
+                     @for(major of study | getMajorsForStudy | async; track $index) {
+                        <mat-option [value]="major.id">{{ major.name }}</mat-option>
+                     }
+                  </mat-select>
+               </mat-form-field>
+            </div>
+         }
       </div>
    </div>
    <div class="actions">

@@ -8,13 +8,13 @@ export const universitySubjectsResolver: ResolveFn<UniversitySubject[]> = () => 
    const userService = inject(UserService);
    const universitiesService = inject(UniversitiesService);
 
-   return userService.user$.pipe(
-      switchMap(user => {
-         if(!user?.university) {
+   return userService.selectedStudy$.pipe(
+      switchMap(study => {
+         if(!study?.university) {
             return of([]);
          }
 
-         return universitiesService.getSubjectsForUniversity(user.university);
+         return universitiesService.getSubjectsForUniversity(study.university);
       })
    )
 };

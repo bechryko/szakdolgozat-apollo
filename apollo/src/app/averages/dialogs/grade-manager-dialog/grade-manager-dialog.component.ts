@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, Signal, ViewChildren, WritableSignal, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,7 +11,7 @@ import { UniversitySubject } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { UniversitiesService, UserService } from '@apollo/shared/services';
 import { cloneDeep } from 'lodash';
-import { EMPTY, startWith, switchMap, take } from 'rxjs';
+import { EMPTY, switchMap, take } from 'rxjs';
 import { GradeEditingTableComponent } from './grade-editing-table/grade-editing-table.component';
 import { GradeManagerDialogData } from './grade-manager-dialog-data';
 
@@ -50,19 +50,16 @@ export class GradeManagerDialogComponent {
       this.years = signal(this.data.years);
       this.selectedYear = signal(this.data.years.find(year => year.id === this.data.selectedYearId));
 
-      this.universitySubjects = toSignal(this.userService.user$.pipe(
+      this.universitySubjects = toSignal(this.userService.selectedStudy$.pipe(
          take(1),
-         switchMap(user => {
-            if(!user?.university) {
+         switchMap(study => {
+            if(!study?.university) {
                return EMPTY;
             }
 
-            return this.universitiesService.getSubjectsForUniversity(user.university).pipe(
-               takeUntilDestroyed()
-            );
-         }),
-         startWith([])
-      )) as Signal<UniversitySubject[]>;
+            return this.universitiesService.getSubjectsForUniversity(study.university);
+         })
+      ), { initialValue: [] });
    }
 
    public selectYear(year: GradesCompletionYear): void {

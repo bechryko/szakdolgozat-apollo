@@ -1,17 +1,18 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, Signal, WritableSignal, computed, effect, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, Signal, WritableSignal, input, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { deleteNullish } from '@apollo/shared/functions';
-import { LanguageSelectionComponent, MultiLanguagePipe } from '@apollo/shared/languages';
-import { ApolloUser, University, UniversityMajor } from '@apollo/shared/models';
+import { Language, LanguageSelectionComponent, MultiLanguagePipe } from '@apollo/shared/languages';
+import { ApolloUser, University } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
 import { UniversitiesService } from '@apollo/shared/services';
-import { startWith, take } from 'rxjs';
+import { StudyFormGroup, UserSettingsForm } from '@apollo/user/models';
 import { AuthFormsUtils } from '../../utils';
+import { GetFacultiesForStudyPipe, GetMajorsForStudyPipe } from './pipes';
 
 @Component({
    selector: 'apo-user-settings',
@@ -25,7 +26,9 @@ import { AuthFormsUtils } from '../../utils';
       MatInputModule,
       MatSelectModule,
       LanguageSelectionComponent,
-      MultiLanguagePipe
+      MultiLanguagePipe,
+      GetFacultiesForStudyPipe,
+      GetMajorsForStudyPipe
    ],
    templateUrl: './user-settings.component.html',
    styleUrl: './user-settings.component.scss',
@@ -34,97 +37,71 @@ import { AuthFormsUtils } from '../../utils';
 export class UserSettingsComponent implements OnInit {
    public readonly universities: Signal<University[]>;
 
-   public readonly selectedUniversityId: WritableSignal<string | undefined>;
-   public readonly selectedUniversity: Signal<University | undefined>;
-   public readonly selectedFaculty: WritableSignal<number | undefined>;
+   public readonly selectedStudyId: WritableSignal<string | undefined>;
 
-   public readonly majors: WritableSignal<UniversityMajor[]>;
-
-   @Input() public user!: ApolloUser;
+   public readonly user = input.required<ApolloUser>();
    @Output() public readonly saveChanges = new EventEmitter<ApolloUser>();
    @Output() public readonly logout = new EventEmitter<void>();
-   public userSettingsForm!: FormGroup;
-   public selectedLanguage?: string;
+   public userSettingsForm!: UserSettingsForm;
+   public selectedLanguage?: Language;
 
    constructor(
       private readonly universitiesService: UniversitiesService,
-      private readonly formBuilder: FormBuilder
+      private readonly fb: NonNullableFormBuilder
    ) {
-      this.selectedUniversityId = signal('');
-      this.selectedUniversity = computed(() => {
-         return this.universities().find((university) => university.id === this.selectedUniversityId());
-      });
-      this.selectedFaculty = signal(undefined);
+      this.selectedStudyId = signal(undefined);
 
-      this.majors = signal([]);
-
-      this.universities = toSignal(this.universitiesService.universities$.pipe(
-         takeUntilDestroyed(),
-         startWith([])
-      )) as Signal<University[]>;
-
-      effect(() => {
-         if(!this.selectedUniversityId()) {
-            this.selectedFaculty.set(undefined);
-         }
-      }, { allowSignalWrites: true });
-
-      effect(() => {
-         const control = this.userSettingsForm.get('faculty');
-         if(this.selectedUniversityId()) {
-            control?.enable();
-         } else {
-            control?.disable();
-         }
-      });
-
-      effect(() => {
-         if(this.selectedFaculty() === undefined) {
-            this.majors.set([]);
-         } else if(this.selectedUniversityId()) {
-            this.universitiesService.getMajorsForUniversity(this.selectedUniversityId()!).pipe(
-               take(1)
-            ).subscribe(majors => {
-               this.majors.set(majors.filter(major => major.facultyId === this.selectedFaculty()));
-            });
-         }
-      }, { allowSignalWrites: true });
-
-      effect(() => {
-         const control = this.userSettingsForm.get('major');
-         if(this.selectedFaculty() !== undefined) {
-            control?.enable();
-         } else {
-            control?.disable();
-         }
-      });
+      this.universities = toSignal(this.universitiesService.universities$, { initialValue: [] });
    }
 
    public ngOnInit(): void {
-      this.userSettingsForm = AuthFormsUtils.buildUserSettingsForm(this.formBuilder, this.user);
-      this.selectedLanguage = this.user.selectedLanguage;
-      this.selectedUniversityId.set(this.user.university);
-      this.selectedFaculty.set(this.user.faculty);
+      const user = this.user();
+      this.userSettingsForm = AuthFormsUtils.buildUserSettingsForm(this.fb, user);
+      this.selectedLanguage = user.selectedLanguage;
+      this.selectedStudyId.set(user.settings.selectedStudyId);
    }
 
-   public onSelectLanguage(language: string): void {
+   public onSelectLanguage(language: Language): void {
       this.selectedLanguage = language;
    }
 
-   public onSelectUniversity(universityId: string): void {
-      this.selectedUniversityId.set(universityId);
+   public onSelectStudy(studyId: string): void {
+      this.selectedStudyId.set(studyId);
    }
 
-   public onSelectFaculty(facultyId: number | undefined): void {
-      this.selectedFaculty.set(facultyId);
+   public onUniversityChange(universityId: string | undefined, studyFormGroup: StudyFormGroup): void {
+      const facultyControl = studyFormGroup.controls.faculty;
+
+      facultyControl.setValue(undefined);
+      if(universityId) {
+         facultyControl.enable();
+      } else {
+         facultyControl.disable();
+      }
+   }
+
+   public onFacultyChange(facultyId: number | undefined, studyFormGroup: StudyFormGroup): void {
+      const majorControl = studyFormGroup.controls.major;
+
+      majorControl.setValue(undefined);
+      if(facultyId !== undefined) {
+         majorControl.enable();
+      } else {
+         majorControl.disable();
+      }
    }
 
    public onSave(): void {
+      const user = this.user();
       const newUser: ApolloUser = {
-         ...this.userSettingsForm.value,
+         ...this.userSettingsForm.value as any,
          selectedLanguage: this.selectedLanguage,
-         email: this.user.email,
-         isAdmin: this.user.isAdmin
+         email: user.email,
+         isAdmin: user.isAdmin,
+         settings: {
+            ...user.settings,
+            selectedStudyId: this.selectedStudyId()
+         }
       };
 
       if(!this.selectedLanguage) {

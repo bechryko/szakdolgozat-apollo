@@ -5,12 +5,18 @@ export interface ApolloUser {
    username: string;
    isAdmin: boolean;
    selectedLanguage?: Language;
-   university?: string;
-   faculty?: number;
-   major?: string;
+   studies: ApolloUserStudy[];
    settings: ApolloUserSettings;
 }
 
+export interface ApolloUserStudy {
+   studyId?: string;
+   university?: string;
+   faculty?: number;
+   major?: string;
+}
+
 export interface ApolloUserSettings {
-   selectedSemesterId?: string;
+   selectedStudyId?: string;
+   selectedTimetableSemesterId?: string;
 }

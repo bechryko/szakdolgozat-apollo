@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, Firestore, collection, doc, docData, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, Firestore, collection, doc, docData } from '@angular/fire/firestore';
 import { ApolloUser } from '@apollo/shared/models';
 import { setDoc } from '@firebase/firestore';
 import { isEqual } from 'lodash';
@@ -31,6 +31,7 @@ export class UserFetcherService {
          email: userData.email,
          username: userData.username,
          isAdmin: false,
+         studies: [],
          settings: {}
       };
       return from(setDoc(doc(this.collection, user.email), user)).pipe(
@@ -39,7 +40,7 @@ export class UserFetcherService {
    }
 
    public updateUserData(user: ApolloUser): Observable<void> {
-      return from(updateDoc(doc(this.collection, user.email), user as any)).pipe(
+      return from(setDoc(doc(this.collection, user.email), user as any)).pipe(
          map(() => undefined)
       );
    }

@@ -8,13 +8,13 @@ export const userMajorResolver: ResolveFn<UniversityMajor | null> = () => {
    const userService = inject(UserService);
    const universitiesService = inject(UniversitiesService);
 
-   return userService.user$.pipe(
-      switchMap(user => {
-         if (!user?.major) {
+   return userService.selectedStudy$.pipe(
+      switchMap(study => {
+         if (!study?.major) {
             return of(null);
          }
 
-         return universitiesService.getMajor(user.major).pipe(
+         return universitiesService.getMajor(study.major).pipe(
             map(major => major || null)
          );
       }),

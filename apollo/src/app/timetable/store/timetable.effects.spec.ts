@@ -93,7 +93,7 @@ describe('TimetableEffects', () => {
       });
       
       it(`should dispatch ${ timetableActions.saveTimetableToStore.type }, with the semesters and the selected semester if the user has a saved selected semester`, () => {
-         const user = { settings: { selectedSemesterId: 'testId' } } as ApolloUser;
+         const user = { settings: { selectedTimetableSemesterId: 'testId' } } as ApolloUser;
          user$.next(user);
          actions$ = cold('a', { a: timetableActions.loadTimetable() });
 

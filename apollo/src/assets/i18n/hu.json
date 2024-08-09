@@ -128,6 +128,8 @@
    "PROFILE.SETTINGS.GENERAL_SETTINGS.DESCRIPTION": "Beállítások, ahol változtathatod a felhasználóneved, vagy testre szabhatod az alkalmazás felületét.",
    "PROFILE.SETTINGS.STUDY_SETTINGS.TITLE": "Tanulmányok",
    "PROFILE.SETTINGS.STUDY_SETTINGS.DESCRIPTION": "A tanulmányaid beállítása lehetővé teszi, hogy kiválaszd az egyetemed kurzusait a Tanulmányi átlagok és Órarendtervező oldalakon, valamint elérést biztosít a mintatantervbeli haladásod megtekintéséhez.",
+   "PROFILE.SETTINGS.STUDY_SETTINGS.SELECT_STUDY_BUTTON_LABEL": "Kiválaszt",
+   "PROFILE.SETTINGS.STUDY_SETTINGS.SELECTED_STUDY_BUTTON_LABEL": "Kiválasztott",
    "PROFILE.SETTINGS.STUDY_SETTINGS.UNIVERSITY_LABEL": "Egyetem",
    "PROFILE.SETTINGS.STUDY_SETTINGS.FACULTY_LABEL": "Kar",
    "PROFILE.SETTINGS.STUDY_SETTINGS.MAJOR_LABEL": "Szak",
