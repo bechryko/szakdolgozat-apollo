@@ -1,6 +1,6 @@
 import { NonNullableFormBuilder, ValidatorFn, Validators } from "@angular/forms";
-import { ApolloUser } from "@apollo/shared/models";
-import { LoginForm, RegisterForm, UserSettingsForm } from "../models";
+import { ApolloUser, ApolloUserStudy } from "@apollo/shared/models";
+import { LoginForm, RegisterForm, StudyFormGroup, UserSettingsForm } from "../models";
 
 export class AuthFormsUtils {
    public static buildLoginForm(fb: NonNullableFormBuilder): LoginForm {
@@ -31,12 +31,18 @@ export class AuthFormsUtils {
    public static buildUserSettingsForm(fb: NonNullableFormBuilder, user: ApolloUser): UserSettingsForm {
       return fb.group({
          username: [user.username, [ Validators.required, Validators.minLength(3) ]],
-         studies: fb.array(user.studies.map(study => fb.group({
-            studyId: study.studyId!,
+         studies: fb.array(user.studies.map(study => this.buildStudyFormGroup(fb, study))),
+      });
+   }
+
+   public static buildStudyFormGroup(fb: NonNullableFormBuilder, study?: ApolloUserStudy): StudyFormGroup {
+      study ??= { studyId: String(Math.floor(Date.now() * Math.random())) };
+      
+      return fb.group({
+         studyId: study.studyId!,
             university: study.university,
             faculty: study.faculty,
             major: study.major
-         }))),
       });
    }
 }

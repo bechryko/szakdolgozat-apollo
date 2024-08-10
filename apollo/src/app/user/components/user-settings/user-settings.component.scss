@@ -37,10 +37,16 @@
 .study-settings-container {
    display: flex;
    align-items: center;
+   margin-bottom: 1rem;
 
    apo-button {
       width: 8rem;
    }
+}
+
+.add-study-button {
+   width: 30%;
+   margin-top: 2.5rem;
 }
 
 .actions {

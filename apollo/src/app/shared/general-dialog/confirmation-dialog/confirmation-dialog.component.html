@@ -1,0 +1,21 @@
+<div class="general-dialog-container">
+   <h2>{{ config.title | transloco }}</h2>
+   <p>{{ config.description | transloco }}</p>
+   <p>{{ "GENERAL_DIALOG.CONFIRMATION_TEXT_NOTICE" | transloco: { confirmationText } }}</p>
+   <mat-form-field class="confirmation-text-input">
+      <mat-label>{{ "GENERAL_DIALOG.CONFIRMATION_INPUT_LABEL" | transloco }}</mat-label>
+      <input matInput
+         [formControl]="confirmationTextControl"
+         (paste)="$event.preventDefault()"
+         autocomplete="off">
+   </mat-form-field>
+   @if(invalidConfirmationText) {
+      <p class="error">{{ "GENERAL_DIALOG.INVALID_CONFIRMATION_TEXT" | transloco }}</p>
+   }
+   <div class="actions">
+      <apo-button apoRole="accept"
+         (click)="validate()">{{ "GENERAL_DIALOG.ACCEPT" | transloco }}</apo-button>
+      <apo-button apoRole="cancel"
+         (click)="close(false)">{{ "GENERAL_DIALOG.CANCEL" | transloco }}</apo-button>
+   </div>
+</div>

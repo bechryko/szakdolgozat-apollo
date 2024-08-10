@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, Signal, WritableSignal, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, Signal, WritableSignal, input, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { deleteNullish } from '@apollo/shared/functions';
+import { GeneralDialogService } from '@apollo/shared/general-dialog';
 import { Language, LanguageSelectionComponent, MultiLanguagePipe } from '@apollo/shared/languages';
 import { ApolloUser, University } from '@apollo/shared/models';
 import { ApolloCommonModule } from '@apollo/shared/modules';
@@ -47,7 +48,9 @@ export class UserSettingsComponent implements OnInit {
 
    constructor(
       private readonly universitiesService: UniversitiesService,
-      private readonly fb: NonNullableFormBuilder
+      private readonly fb: NonNullableFormBuilder,
+      private readonly dialogService: GeneralDialogService,
+      private readonly cdr: ChangeDetectorRef
    ) {
       this.selectedStudyId = signal(undefined);
 
@@ -89,6 +92,19 @@ export class UserSettingsComponent implements OnInit {
       } else {
          majorControl.disable();
       }
+   }
+
+   public addStudy(): void {
+      this.dialogService.openConfirmationDialog({
+         title: "PROFILE.SETTINGS.STUDY_SETTINGS.ADD_STUDY_CONFIRMATION_DIALOG.TITLE",
+         description: "PROFILE.SETTINGS.STUDY_SETTINGS.ADD_STUDY_CONFIRMATION_DIALOG.DESCRIPTION",
+         confirmationText: "PROFILE.SETTINGS.STUDY_SETTINGS.ADD_STUDY_CONFIRMATION_DIALOG.CONFIRMATION_TEXT"
+      }).subscribe(result => {
+         if(result) {
+            this.userSettingsForm.controls.studies.push(AuthFormsUtils.buildStudyFormGroup(this.fb));
+            this.cdr.markForCheck();
+         }
+      });
    }
 
    public onSave(): void {

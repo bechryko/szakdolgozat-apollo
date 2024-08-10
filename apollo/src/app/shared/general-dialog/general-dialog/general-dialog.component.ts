@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApolloCommonModule } from '@apollo/shared/modules';
-import { GeneralDialogConfig } from '../general-dialog-config';
+import { GeneralDialogConfig } from '../models';
 
 @Component({
    selector: 'apo-general-dialog',
